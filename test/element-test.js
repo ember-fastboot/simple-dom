@@ -45,3 +45,20 @@ QUnit.test("child nodes can be access via item()", function(assert) {
   assert.strictEqual(parent.childNodes.item(0), null);
   assert.strictEqual(parent.childNodes.item(1), null);
 });
+
+QUnit.test("insertBefore can insert before the last child node", function(assert) {
+  var document = new Document();
+
+  var parent = document.createElement('div');
+
+  var child1 = document.createElement('p');
+  var child2 = document.createElement('img');
+  var child3 = document.createElement('span');
+
+  parent.appendChild(child1);
+  parent.appendChild(child2);
+
+  parent.insertBefore(child3, child2);
+
+  assert.strictEqual(parent.childNodes.item(1), child3);
+});
