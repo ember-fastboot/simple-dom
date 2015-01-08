@@ -2,7 +2,7 @@
   "name": "simple-dom",
   "version": "0.1.0",
   "description": "A simple JS DOM.",
-  "main": "index.js",
+  "main": "dist/simple-dom.js",
   "scripts": {
     "prepublish": "bin/build.sh",
     "test": "testem ci"
@@ -13,7 +13,6 @@
     "serializer",
     "parser"
   ],
-  "main": "dist/simple-dom.js",
   "author": "Kris Selden",
   "license": "MIT",
   "repository": {
@@ -22,6 +21,7 @@
   },
   "devDependencies": {
     "es6-module-transpiler": "^0.9.6",
+    "qunitjs": "^1.16.0",
     "simple-html-tokenizer": "^0.1.1",
     "testem": "^0.6.24"
   }
