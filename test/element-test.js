@@ -17,3 +17,31 @@ QUnit.test("appending a document fragment appends the fragment's children and no
 
   assert.strictEqual(body.firstChild.tagName, "DIV", "fragment's child is added as child of document");
 });
+
+// http://www.w3.org/TR/DOM-Level-3-Core/core.html#ID-536297177
+QUnit.test("child nodes can be access via item()", function(assert) {
+  var document = new Document();
+
+  var parent = document.createElement('div');
+
+  var child1 = document.createElement('p');
+  var child2 = document.createElement('img');
+
+  assert.strictEqual(parent.childNodes.item(0), null, "attempting to access an item that doesn't exist returns null");
+
+  parent.appendChild(child1);
+  parent.appendChild(child2);
+
+  assert.strictEqual(parent.childNodes.item(0), child1);
+  assert.strictEqual(parent.childNodes.item(1), child2);
+  assert.strictEqual(parent.childNodes.item(2), null);
+
+  parent.removeChild(child1);
+  assert.strictEqual(parent.childNodes.item(0), child2);
+  assert.strictEqual(parent.childNodes.item(1), null);
+
+  parent.removeChild(child2);
+
+  assert.strictEqual(parent.childNodes.item(0), null);
+  assert.strictEqual(parent.childNodes.item(1), null);
+});
