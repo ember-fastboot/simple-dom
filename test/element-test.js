@@ -18,6 +18,26 @@ QUnit.test("appending a document fragment appends the fragment's children and no
   assert.strictEqual(body.firstChild.tagName, "DIV", "fragment's child is added as child of document");
 });
 
+// See http://www.w3.org/TR/2000/WD-DOM-Level-1-20000929/level-one-core.html#ID-B63ED1A3
+QUnit.test("appending a document fragment (via insertBefore) appends the fragment's children and not the fragment itself", function(assert) {
+  var document = new Document();
+
+  var frag = document.createDocumentFragment();
+  var elem = document.createElement('div');
+  var existing = document.createElement('main');
+  var body = document.body;
+  body.appendChild(existing);
+
+  assert.strictEqual(body.firstChild.tagName, "MAIN", "sanity check: the main element was actually inserted");
+  assert.strictEqual(body.lastChild.tagName, "MAIN", "sanity check: the main element was actually inserted");
+
+  frag.appendChild(elem);
+  body.insertBefore(frag, existing);
+
+  assert.strictEqual(body.firstChild.tagName, "DIV", "The body's first child is now DIV");
+  assert.strictEqual(body.lastChild.tagName, "MAIN", "The body's last child is now MAIN");
+});
+
 // http://www.w3.org/TR/DOM-Level-3-Core/core.html#ID-536297177
 QUnit.test("child nodes can be access via item()", function(assert) {
   var document = new Document();
