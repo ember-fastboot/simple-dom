@@ -1,6 +1,6 @@
 {
   "name": "simple-dom",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A simple JS DOM.",
   "main": "dist/simple-dom.js",
   "scripts": {
