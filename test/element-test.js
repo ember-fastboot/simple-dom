@@ -66,6 +66,32 @@ QUnit.test("child nodes can be access via item()", function(assert) {
   assert.strictEqual(parent.childNodes.item(1), null);
 });
 
+// http://www.w3.org/TR/2004/REC-DOM-Level-3-Core-20040407/core.html#ID-203510337
+QUnit.test("childNodes has correct length property", function(assert) {
+
+    var document = new Document();
+    var fragment = document.createDocumentFragment();
+    var childDiv = document.createElement('div');
+
+    // document.body has no children yet
+    assert.equal(document.body.childNodes.length, 0, "empty node's childNodes.length is 0");
+
+    document.body.appendChild(childDiv);
+
+    // now it has one child
+    assert.equal(document.body.childNodes.length, 1, "when node has one child, its childNodes.length is 1");
+
+    for (var i = 0; i < 4; i++) {
+	fragment.appendChild( document.createElement('div') );
+    }
+
+    document.body.appendChild(fragment);
+    
+    // now it has 1 + 4 new children = 5
+    assert.equal(document.body.childNodes.length, 5, "after appending document fragment, childNodes.length is still correct");
+    
+});
+
 QUnit.test("insertBefore can insert before the last child node", function(assert) {
   var document = new Document();
 
