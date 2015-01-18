@@ -21,10 +21,11 @@ QUnit.module('Basic HTML parsing', {
 });
 
 QUnit.test('simple parse', function (assert) {
-  var nodes = this.parser.parse('<div>Hello</div>');
-  assert.ok(nodes);
-  assert.equal(nodes.length, 1);
-  var node = nodes[0];
+  var fragment = this.parser.parse('<div>Hello</div>');
+  assert.ok(fragment);
+
+  var node = fragment.firstChild;
+  assert.ok(node);
   assert.equal(node.nodeType, 1);
   assert.equal(node.nodeName.toLowerCase(), 'div');
   assert.ok(node.firstChild);
@@ -33,40 +34,54 @@ QUnit.test('simple parse', function (assert) {
 });
 
 QUnit.test('nested parse', function (assert) {
-  var nodes = this.parser.parse('text before<div>Hello</div>text between<div id=foo title="Hello World">World</div>text after');
-  assert.ok(nodes);
-  assert.equal(nodes.length, 5);
-  assert.equal(nodes[0].nodeType, 3);
-  assert.equal(nodes[0].nodeValue, 'text before');
-  assert.equal(nodes[1].nodeType, 1);
-  assert.equal(nodes[1].nodeName, 'DIV');
-  assert.ok(nodes[1].firstChild);
-  assert.equal(nodes[1].firstChild.nodeType, 3);
-  assert.equal(nodes[1].firstChild.nodeValue, 'Hello');
-  assert.equal(nodes[2].nodeType, 3);
-  assert.equal(nodes[2].nodeValue, 'text between');
-  assert.equal(nodes[3].nodeType, 1);
-  assert.equal(nodes[3].nodeName, 'DIV');
+  var fragment = this.parser.parse('text before<div>Hello</div>text between<div id=foo title="Hello World">World</div>text after');
+  assert.ok(fragment);
+
+  var node = fragment.firstChild;
+  assert.ok(node);
+  assert.equal(node.nodeType, 3);
+  assert.equal(node.nodeValue, 'text before');
+
+  node = node.nextSibling;
+  assert.ok(node);
+  assert.equal(node.nodeType, 1);
+  assert.equal(node.nodeName, 'DIV');
+  assert.ok(node.firstChild);
+  assert.equal(node.firstChild.nodeType, 3);
+  assert.equal(node.firstChild.nodeValue, 'Hello');
+
+  node = node.nextSibling;
+  assert.ok(node);
+  assert.equal(node.nodeType, 3);
+  assert.equal(node.nodeValue, 'text between');
+
+  node = node.nextSibling;
+  assert.ok(node);
+  assert.equal(node.nodeType, 1);
+  assert.equal(node.nodeName, 'DIV');
   var expectedValues = {
     id: 'foo',
     title: 'Hello World'
   };
-  assert.equal(nodes[3].attributes.length, 2);
-  assert.equal(nodes[3].attributes[0].value, expectedValues[nodes[3].attributes[0].name]);
-  assert.equal(nodes[3].attributes[1].value, expectedValues[nodes[3].attributes[1].name]);
-  assert.equal(nodes[3].attributes.length, 2);
-  assert.ok(nodes[3].firstChild);
-  assert.equal(nodes[3].firstChild.nodeType, 3);
-  assert.equal(nodes[3].firstChild.nodeValue, 'World');
-  assert.equal(nodes[4].nodeType, 3);
-  assert.equal(nodes[4].nodeValue, 'text after');
+  assert.equal(node.attributes.length, 2);
+  assert.equal(node.attributes[0].value, expectedValues[node.attributes[0].name]);
+  assert.equal(node.attributes[1].value, expectedValues[node.attributes[1].name]);
+  assert.equal(node.attributes.length, 2);
+  assert.ok(node.firstChild);
+  assert.equal(node.firstChild.nodeType, 3);
+  assert.equal(node.firstChild.nodeValue, 'World');
+
+  node = node.nextSibling;
+  assert.ok(node);
+  assert.equal(node.nodeType, 3);
+  assert.equal(node.nodeValue, 'text after');
 });
 
 QUnit.test('void tags', function (assert) {
-  var nodes = this.parser.parse('<div>Hello<br>World<img src="http://example.com/image.png"></div>');
-  assert.ok(nodes);
-  assert.equal(nodes.length, 1);
-  var node = nodes[0];
+  var fragment = this.parser.parse('<div>Hello<br>World<img src="http://example.com/image.png"></div>');
+  assert.ok(fragment);
+  var node = fragment.firstChild;
+  assert.ok(node);
   assert.equal(node.nodeType, 1);
   assert.equal(node.nodeName, 'DIV');
   node = node.firstChild;

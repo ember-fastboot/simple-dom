@@ -12,5 +12,6 @@
       "protocol": "tap"
     }
   },
-  "launch_in_ci":  ["Node", "PhantomJS"]
+  "launch_in_ci":  ["Node", "PhantomJS"],
+  "launch_in_dev":  ["Node", "Chrome", "Firefox", "Safari"]
 }
