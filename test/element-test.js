@@ -1,4 +1,7 @@
 import Document from 'simple-dom/document';
+import Serializer from 'simple-dom/html-serializer';
+import voidMap from 'simple-dom/void-map';
+import { element, fragment, text } from './support';
 
 QUnit.module('Element');
 
@@ -81,4 +84,29 @@ QUnit.test("insertBefore can insert before the last child node", function(assert
   parent.insertBefore(child3, child2);
 
   assert.strictEqual(parent.childNodes.item(1), child3);
+});
+
+QUnit.test("cloneNode(true) recursively clones nodes", function(assert) {
+  var parent = element('div');
+
+  var child1 = element('p');
+  var child2 = element('img', { src: "hamster.png" });
+  var child3 = element('span');
+
+  parent.appendChild(child1);
+  parent.appendChild(child2);
+  parent.appendChild(child3);
+
+  var child11 = text('hello');
+  var child12 = element('span');
+  child12.appendChild(text(' world'));
+  var child13 = text('!');
+
+  child1.appendChild(child11);
+  child1.appendChild(child12);
+  child1.appendChild(child13);
+
+  var actual = new Serializer(voidMap).serialize(fragment(parent.cloneNode(true)));
+
+  assert.equal(actual, '<div><p>hello<span> world</span>!</p><img src="hamster.png"><span></span></div>');
 });
