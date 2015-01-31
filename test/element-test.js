@@ -106,7 +106,18 @@ QUnit.test("cloneNode(true) recursively clones nodes", function(assert) {
   child1.appendChild(child12);
   child1.appendChild(child13);
 
-  var actual = new Serializer(voidMap).serialize(fragment(parent.cloneNode(true)));
+  var clone = parent.cloneNode(true);
+
+  assert.notEqual(parent.firstChild, null);
+  assert.notStrictEqual(clone.firstChild, parent.firstChild);
+
+  var clone2 = parent.cloneNode(true);
+
+  assert.notEqual(parent.firstChild, null);
+  assert.notStrictEqual(clone2.firstChild, clone.firstChild);
+  assert.notStrictEqual(clone2.firstChild, parent.firstChild);
+
+  var actual = new Serializer(voidMap).serialize(fragment(clone));
 
   assert.equal(actual, '<div><p>hello<span> world</span>!</p><img src="hamster.png"><span></span></div>');
 });
