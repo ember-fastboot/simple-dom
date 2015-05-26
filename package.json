@@ -1,8 +1,8 @@
 {
   "name": "can-simple-dom",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "A simple JS DOM.",
-  "main": "dist/simple-dom.js",
+  "main": "dist/cjs/simple-dom.js",
   "scripts": {
     "build": "node build.js",
     "prepublish": "node build.js"
@@ -13,18 +13,20 @@
     "serializer",
     "parser"
   ],
-  "author": "Kris Selden",
+  "author": "Kris Selden and Bitovi",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/krisselden/simple-dom.git"
+    "url": "https://github.com/canjs/simple-dom.git"
   },
   "system": {
     "main": "simple-dom.js",
-  	"npmIgnore": ["devDependencies"],
-  	"directories": {
-  		"lib": "lib"
-  	}
+    "npmIgnore": [
+      "devDependencies"
+    ],
+    "directories": {
+      "lib": "lib"
+    }
   },
   "devDependencies": {
   	"steal-tools": "^0.10.4"
