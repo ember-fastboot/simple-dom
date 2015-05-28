@@ -2,7 +2,7 @@
   "name": "can-simple-dom",
   "version": "0.2.7",
   "description": "A simple JS DOM.",
-  "main": "dist/cjs/main.js",
+  "main": "dist/cjs/simple-dom.js",
   "scripts": {
     "build": "node build.js",
     "prepublish": "node build.js"
@@ -20,7 +20,7 @@
     "url": "https://github.com/canjs/simple-dom.git"
   },
   "system": {
-    "main": "main.js",
+    "main": "simple-dom.js",
     "npmIgnore": [
       "devDependencies"
     ],
