@@ -34,3 +34,7 @@ export function text(s) {
 export function comment(s) {
   return document.createComment(s);
 }
+
+export function cdata(s) {
+  return document.createCDATASection(s);
+}
