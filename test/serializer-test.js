@@ -1,6 +1,6 @@
 /*globals window*/
 
-import { element, fragment, text, cdata } from './support';
+import { element, fragment, text, html } from './support';
 import Serializer from 'simple-dom/html-serializer';
 import voidMap from 'simple-dom/void-map';
 
@@ -21,13 +21,15 @@ QUnit.test('serializes correctly', function (assert) {
   assert.equal(actual, '<div id="foo"><b>Foo &amp; Bar</b></div>');
 });
 
-// The CDATA DOM APIs are only available in XML documents, not HTML. For the
-// SimpleDOM case, we support the ability to store unparsed HTML in the DOM
-// tree. This is useful for environments where the output target is serialized
-// HTML, so we can avoid round-tripping from HTML to DOM and back to HTML for
-// no gain.
-if (typeof window.document !== 'undefined' && window.document.createCDATAFragment) {
-  QUnit.test('serializes CDATA nodes correctly', function(assert) {
+// SimpleDOM supports an extension of the DOM API that allows inserting strings of
+// unparsed, raw HTML into the document. When the document is subsequently serialized,
+// the raw text of the HTML nodes is inserted into the HTML.
+//
+// This performance optimization allows users of SimpleDOM (like Ember's FastBoot) to insert
+// raw HTML snippets into the final serialized output without requiring a parsing and
+// reserialization round-trip.
+if (typeof window === 'undefined') {
+  QUnit.test('serializes raw HTML', function(assert) {
     var actual = this.serializer.serialize(fragment(
       element('div', { id: 'foo' },
         text('<p></p>')
@@ -38,7 +40,7 @@ if (typeof window.document !== 'undefined' && window.document.createCDATAFragmen
 
     actual = this.serializer.serialize(fragment(
       element('div', { id: 'foo' },
-        cdata('<p></p>')
+        html('<p></p>')
       )
     ));
 
