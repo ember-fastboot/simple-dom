@@ -121,3 +121,16 @@ QUnit.test("cloneNode(true) recursively clones nodes", function(assert) {
 
   assert.equal(actual, '<div><p>hello<span> world</span>!</p><img src="hamster.png"><span></span></div>');
 });
+
+QUnit.test("head + metatags", function(assert) {
+  var document = new Document();
+
+  var meta = element('meta', { name: "description", content: "something here" });
+  var head = document.head;
+  head.appendChild(meta);
+
+  var actual = new Serializer(voidMap).serialize(head.firstChild);
+
+  assert.strictEqual(head.firstChild.tagName, "META", "sanity check: the meta element was actually inserted");
+  assert.equal(actual, '<meta name="description" content="something here">');
+});
