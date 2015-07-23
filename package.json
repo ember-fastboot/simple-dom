@@ -30,6 +30,9 @@
     "transpiler": "babel"
   },
   "devDependencies": {
-  	"steal-tools": "^0.10.4"
+    "steal-tools": "^0.10.4"
+  },
+  "dependencies": {
+    "micro-location": "^0.1.4"
   }
 }
