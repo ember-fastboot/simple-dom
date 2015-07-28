@@ -27,7 +27,12 @@
     "directories": {
       "lib": "lib"
     },
-    "transpiler": "babel"
+    "transpiler": "babel",
+    "meta": {
+      "micro-location": {
+        "exports": "Location"
+      }
+    }
   },
   "devDependencies": {
     "steal-tools": "^0.10.4"
