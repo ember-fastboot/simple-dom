@@ -1,7 +1,8 @@
-import Document from 'simple-dom/document';
-import Serializer from 'simple-dom/html-serializer';
-import voidMap from 'simple-dom/void-map';
+import Document from 'can-simple-dom/simple-dom/document';
+import Serializer from 'can-simple-dom/simple-dom/html-serializer';
+import voidMap from 'can-simple-dom/simple-dom/void-map';
 import { element, fragment, text } from './support';
+import QUnit from 'steal-qunit';
 
 QUnit.module('Element');
 
