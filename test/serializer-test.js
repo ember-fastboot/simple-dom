@@ -15,6 +15,11 @@ QUnit.test('serializes single element correctly', function (assert) {
   assert.equal(actual, '<div></div>');
 });
 
+QUnit.test('serializes element with attribute number value correctly', function (assert) {
+  var actual = this.serializer.serialize(element('div', {"height": 500}));
+  assert.equal(actual, '<div height="500"></div>');
+});
+
 QUnit.test('serializes single void element correctly', function (assert) {
   var actual = this.serializer.serialize(element('img', { src: 'foo' }));
   assert.equal(actual, '<img src="foo">');
