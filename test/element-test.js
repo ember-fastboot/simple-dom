@@ -134,3 +134,21 @@ QUnit.test("head + metatags", function(assert) {
   assert.strictEqual(head.firstChild.tagName, "META", "sanity check: the meta element was actually inserted");
   assert.equal(actual, '<meta name="description" content="something here">');
 });
+
+QUnit.test("setAttribute converts non strings", function (assert) {
+  var document = new Document();
+
+  var div = document.createElement('div');
+  div.setAttribute('a', 0);
+  assert.strictEqual(div.getAttribute('a'), '0');
+  div.setAttribute('a', 1);
+  assert.strictEqual(div.getAttribute('a'), '1');
+  div.setAttribute('a', null);
+  assert.strictEqual(div.getAttribute('a'), 'null');
+  div.setAttribute('a', undefined);
+  assert.strictEqual(div.getAttribute('a'), 'undefined');
+  div.setAttribute('a', true);
+  assert.strictEqual(div.getAttribute('a'), 'true');
+  div.setAttribute('a', false);
+  assert.strictEqual(div.getAttribute('a'), 'false');
+});
