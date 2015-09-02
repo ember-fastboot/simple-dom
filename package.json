@@ -5,7 +5,8 @@
   "main": "dist/cjs/simple-dom.js",
   "scripts": {
     "build": "node build.js",
-    "prepublish": "node build.js"
+    "prepublish": "node build.js",
+    "test": "testee test/test.html --browsers firefox --reporter Spec"
   },
   "keywords": [
     "html",
@@ -21,12 +22,12 @@
   },
   "system": {
     "main": "simple-dom.js",
-    "npmIgnore": [
-      "devDependencies"
-    ],
     "directories": {
       "lib": "lib"
     },
+    "npmIgnore": [
+      "testee"
+    ],
     "transpiler": "babel",
     "meta": {
       "micro-location": {
@@ -35,7 +36,10 @@
     }
   },
   "devDependencies": {
-    "steal-tools": "^0.10.4"
+    "steal": "^0.10.5",
+    "steal-qunit": "^0.1.0",
+    "steal-tools": "^0.10.4",
+    "testee": "^0.2.0"
   },
   "dependencies": {
     "micro-location": "^0.1.4"

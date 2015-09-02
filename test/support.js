@@ -1,12 +1,14 @@
-import Document from 'simple-dom/document';
+import Document from 'can-simple-dom/simple-dom/document';
 
-export var document = (function (root){
-  if (root.document) {
-    return root.document;
-  }
-  return new Document();
-}(this));
+var root = typeof window !== "undefined" ? window : global;
 
+export var document;
+
+if(root.document) {
+  document = root.document;
+} else {
+  document = new Document();
+}
 
 export function element(tagName, attrs) {
   var el = document.createElement(tagName);

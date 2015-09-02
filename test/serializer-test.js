@@ -1,6 +1,7 @@
 import { element, fragment, text } from './support';
-import Serializer from 'simple-dom/html-serializer';
-import voidMap from 'simple-dom/void-map';
+import Serializer from 'can-simple-dom/simple-dom/html-serializer';
+import voidMap from 'can-simple-dom/simple-dom/void-map';
+import QUnit from 'steal-qunit';
 
 QUnit.module('Serializer', {
   beforeEach: function() {
