@@ -1,7 +1,6 @@
 import Document from 'simple-dom/document';
 import Serializer from 'simple-dom/html-serializer';
 import voidMap from 'simple-dom/void-map';
-import { element, fragment, text } from './support';
 
 QUnit.module('Element');
 
@@ -87,20 +86,22 @@ QUnit.test("insertBefore can insert before the last child node", function(assert
 });
 
 QUnit.test("cloneNode(true) recursively clones nodes", function(assert) {
-  var parent = element('div');
+  var document = new Document();
+  var parent = document.createElement('div');
 
-  var child1 = element('p');
-  var child2 = element('img', { src: "hamster.png" });
-  var child3 = element('span');
+  var child1 = document.createElement('p');
+  var child2 = document.createElement('img');
+  child2.setAttribute('src', 'hamster.png');
+  var child3 = document.createElement('span');
 
   parent.appendChild(child1);
   parent.appendChild(child2);
   parent.appendChild(child3);
 
-  var child11 = text('hello');
-  var child12 = element('span');
-  child12.appendChild(text(' world'));
-  var child13 = text('!');
+  var child11 = document.createTextNode('hello');
+  var child12 = document.createElement('span');
+  child12.appendChild(document.createTextNode(' world'));
+  var child13 = document.createTextNode('!');
 
   child1.appendChild(child11);
   child1.appendChild(child12);
@@ -117,7 +118,10 @@ QUnit.test("cloneNode(true) recursively clones nodes", function(assert) {
   assert.notStrictEqual(clone2.firstChild, clone.firstChild);
   assert.notStrictEqual(clone2.firstChild, parent.firstChild);
 
-  var actual = new Serializer(voidMap).serialize(fragment(clone));
+  var fragment = document.createDocumentFragment();
+  fragment.appendChild(clone);
+
+  var actual = new Serializer(voidMap).serialize(fragment);
 
   assert.equal(actual, '<div><p>hello<span> world</span>!</p><img src="hamster.png"><span></span></div>');
 });
@@ -125,7 +129,10 @@ QUnit.test("cloneNode(true) recursively clones nodes", function(assert) {
 QUnit.test("head + metatags", function(assert) {
   var document = new Document();
 
-  var meta = element('meta', { name: "description", content: "something here" });
+  var meta = document.createElement('meta');
+  meta.setAttribute('name', 'description');
+  meta.setAttribute('content', 'something here');
+
   var head = document.head;
   head.appendChild(meta);
 

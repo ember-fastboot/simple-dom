@@ -1,7 +1,7 @@
 {
   "test_page": "test/index.html",
   "parallel": 5,
-  "before_tests": "bin/build.sh",
+  "before_tests": "npm run build",
   "src_files": [
     "lib/**/*.js",
     "test/*.js"

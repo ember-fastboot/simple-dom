@@ -2,17 +2,7 @@ import { document } from './support';
 
 import Parser from 'simple-dom/html-parser';
 import voidMap from 'simple-dom/void-map';
-import HTMLTokenizer from 'simple-html-tokenizer/tokenizer';
-import EntityParser from 'simple-html-tokenizer/entity-parser';
-// make test rebuilds fast
-import namedCodepoints from 'simple-html-tokenizer/char-refs/min';
-
-function tokenize(input) {
-  // TODO: make Tokenizer take input on the tokenize method like tokenizePart
-  // just init state, I'd rather pass in the tokenizer instance and call tokenize(input)
-  var tokenizer = new HTMLTokenizer(input, new EntityParser(namedCodepoints));
-  return tokenizer.tokenize();
-}
+import tokenize from 'simple-html-tokenizer/tokenize';
 
 QUnit.module('Basic HTML parsing', {
   beforeEach: function() {

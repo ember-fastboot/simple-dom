@@ -1,10 +1,12 @@
 {
   "name": "simple-dom",
-  "version": "0.2.7",
+  "version": "0.3.0",
   "description": "A simple JS DOM.",
   "main": "dist/simple-dom.js",
+  "jsnext:main": "lib/simple-dom.js",
   "scripts": {
-    "prepublish": "bin/build.sh",
+    "prepublish": "npm run build",
+    "build": "node bin/build.js",
     "test": "testem ci"
   },
   "keywords": [
@@ -20,10 +22,9 @@
     "url": "https://github.com/krisselden/simple-dom.git"
   },
   "devDependencies": {
-    "es6-module-transpiler": "^0.9.6",
     "qunit-extras": "^1.4.1",
     "qunitjs": "^1.16.0",
-    "simple-html-tokenizer": "^0.1.1",
+    "simple-html-tokenizer": "^0.2.0",
     "testem": "^0.6.24"
   }
 }

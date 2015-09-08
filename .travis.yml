@@ -12,7 +12,7 @@ before_install:
   - "npm install -g npm@^2"
 
 install:
-  - npm install
+  - npm install --no-optional
 
 script:
   - npm test

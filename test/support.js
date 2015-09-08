@@ -1,12 +1,11 @@
 import Document from 'simple-dom/document';
 
-export var document = (function (root){
-  if (root.document) {
-    return root.document;
+export var document = (function (){
+  if (typeof window !== 'undefined' && window.document) {
+    return window.document;
   }
   return new Document();
-}(this));
-
+}());
 
 export function element(tagName, attrs) {
   var el = document.createElement(tagName);
