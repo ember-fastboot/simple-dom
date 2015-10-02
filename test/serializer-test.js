@@ -56,6 +56,20 @@ QUnit.test('does not serialize siblings of an element', function (assert) {
   assert.equal(actual, '<body></body>');
 });
 
+QUnit.test('serializes children but not self', function (assert) {
+  var actual = this.serializer.serializeChildren(fragment(
+    element('div', { id: 'foo' },
+      element('b', {},
+        text('Foo & Bar')
+      ),
+      text('!'),
+      element('img', { src: 'foo' })
+    )
+  ).firstChild);
+  assert.equal(actual, '<b>Foo &amp; Bar</b>!<img src="foo">');
+});
+
+
 // SimpleDOM supports an extension of the DOM API that allows inserting strings of
 // unparsed, raw HTML into the document. When the document is subsequently serialized,
 // the raw text of the HTML nodes is inserted into the HTML.
