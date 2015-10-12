@@ -132,6 +132,5 @@ QUnit.test("anchor element is created successfully - micro-location works (see #
     document.createElement("a");
   } catch (ex) {
     assert.ok(false, "Anchor throws exception");
-    console.log(ex.stack);
   }
 });
