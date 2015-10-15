@@ -122,3 +122,10 @@ QUnit.test("cloneNode(true) recursively clones nodes", function(assert) {
 
   assert.equal(actual, '<div><p>hello<span> world</span>!</p><img src="hamster.png"><span></span></div>');
 });
+
+
+QUnit.test("style.cssText is two way bound to the style attribute (#13)", function(assert){
+	 var el = element('div');
+	 el.style.cssText = "color: green;";
+	 assert.equal(el.getAttribute("style"), "color: green;");
+});
