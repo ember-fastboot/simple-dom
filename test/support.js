@@ -4,11 +4,7 @@ var root = typeof window !== "undefined" ? window : global;
 
 export var document;
 
-if(root.document) {
-  document = root.document;
-} else {
-  document = new Document();
-}
+document = new Document();
 
 export function element(tagName, attrs) {
   var el = document.createElement(tagName);
