@@ -134,3 +134,10 @@ QUnit.test("anchor element is created successfully - micro-location works (see #
     assert.ok(false, "Anchor throws exception");
   }
 });
+
+QUnit.test("style.cssText is two way bound to the style attribute (#13)", function(assert){
+  var document = new Document();
+  var el = document.createElement('div');
+  el.style.cssText = "color: green;";
+  assert.equal(el.getAttribute("style"), "color: green;");
+});
