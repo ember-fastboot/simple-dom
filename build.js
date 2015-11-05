@@ -6,7 +6,9 @@ stealTools.export({
 	},
 	outputs: {
 		"+amd": {},
-		"+global-js": {},
+		"+global-js": {
+			exports: { "micro-location": "Location" }
+		},
 		"+cjs": {}
 	}
 }).catch(function(e){

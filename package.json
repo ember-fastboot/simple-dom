@@ -28,12 +28,7 @@
     "npmIgnore": [
       "testee"
     ],
-    "transpiler": "babel",
-    "meta": {
-      "micro-location": {
-        "exports": "Location"
-      }
-    }
+    "transpiler": "babel"
   },
   "devDependencies": {
     "steal": "^0.11.4",
