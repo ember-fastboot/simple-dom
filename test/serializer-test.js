@@ -19,3 +19,13 @@ QUnit.test('serializes correctly', function (assert) {
   ));
   assert.equal(actual, '<div id="foo"><b>Foo &amp; Bar</b></div>');
 });
+
+QUnit.test('serializes textContent', function(assert) {
+  var el, actual, frag;
+
+  el = element('div', {});
+  el.textContent = 'hello world';
+  actual = this.serializer.serialize(fragment(el));
+
+  assert.equal(actual, '<div>hello world</div>');
+});
