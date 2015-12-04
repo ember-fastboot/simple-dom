@@ -141,3 +141,19 @@ QUnit.test("style.cssText is two way bound to the style attribute (#13)", functi
   el.style.cssText = "color: green;";
   assert.equal(el.getAttribute("style"), "color: green;");
 });
+
+QUnit.test("replaceChild works", function(assert){
+	var document = new Document();
+	var parent = document.createElement('div');
+	var one = document.createElement('p');
+	var two = document.createElement('span');
+
+	parent.appendChild(one);
+
+	assert.equal(parent.firstChild.nodeName, 'P', 'first child is a p');
+
+	var oldChild = parent.replaceChild(two, one);
+
+	assert.equal(oldChild, one, 'correct return value');
+	assert.equal(parent.firstChild.nodeName, 'SPAN', 'child is now the span');
+});
