@@ -157,3 +157,11 @@ QUnit.test("replaceChild works", function(assert){
 	assert.equal(oldChild, one, 'correct return value');
 	assert.equal(parent.firstChild.nodeName, 'SPAN', 'child is now the span');
 });
+
+QUnit.test("setAttribute('class', value) updates the className", function(assert){
+	var document = new Document();
+	var el = document.createElement("div");
+	el.setAttribute("class", "foo bar");
+
+	assert.equal(el.className, "foo bar", "Element's className is same as the attribute class");
+});
