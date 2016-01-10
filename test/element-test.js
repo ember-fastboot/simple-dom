@@ -165,3 +165,6 @@ QUnit.test("setAttribute('class', value) updates the className", function(assert
 
 	assert.equal(el.className, "foo bar", "Element's className is same as the attribute class");
 });
+
+
+

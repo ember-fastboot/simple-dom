@@ -34,9 +34,11 @@
     "steal": "^0.11.4",
     "steal-qunit": "^0.1.0",
     "steal-tools": "^0.11.2",
-    "testee": "^0.2.0"
+    "testee": "^0.2.0",
+    "jquery": "^2.2.0"
   },
   "dependencies": {
-    "micro-location": "^0.1.4"
+    "micro-location": "^0.1.4",
+    "simple-html-tokenizer": "^0.2.1"
   }
 }
