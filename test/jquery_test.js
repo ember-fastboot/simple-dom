@@ -18,8 +18,10 @@ steal.import('can-simple-dom').then(function(simpleDOMMod){
 	return steal.import('can-simple-dom/simple-dom/default-tokenize').then(function(tokenizeMod){
 
 		var document = global.document = new simpleDOMMod.Document();
-		document.__serializer = new simpleDOMMod.HTMLSerializer(simpleDOMMod.voidMap), 
-    	document.__parser = new simpleDOMMod.HTMLParser(tokenizeMod.default, document, simpleDOMMod.voidMap);
+		document.__addSerializerAndParser(
+			new simpleDOMMod.HTMLSerializer(simpleDOMMod.voidMap),
+			new simpleDOMMod.HTMLParser(tokenizeMod.default, document, simpleDOMMod.voidMap)
+		);
 
 		global.location = {};
 

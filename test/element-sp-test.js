@@ -13,8 +13,7 @@ QUnit.module('Element with serialization and parsing');
 QUnit.test("document.implementation is supported (#23)", function(){
   
   var document = new Document();
-  document.__serializer = new Serializer(voidMap), 
-  document.__parser = new Parser(tokenize, document, voidMap);
+  document.__addSerializerAndParser(new Serializer(voidMap), new Parser(tokenize, document, voidMap));
 
   ok(document.implementation, "implementation exists");
   var doc2 = document.implementation.createHTMLDocument("");
