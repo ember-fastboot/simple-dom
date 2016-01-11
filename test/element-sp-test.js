@@ -20,4 +20,31 @@ QUnit.test("document.implementation is supported (#23)", function(){
   ok(doc2.body, "has a body");
 });
 
+QUnit.test("innerHTML supported", function(){
+  
+  var document = new Document();
+  document.__addSerializerAndParser(new Serializer(voidMap), new Parser(tokenize, document, voidMap));
 
+  document.body.innerHTML = "<span class='bar'>HI</span>";
+  
+  QUnit.equal( document.body.firstChild.nodeName, "SPAN");
+  QUnit.equal( document.body.firstChild.className, "bar");
+  QUnit.equal( document.body.firstChild.firstChild.nodeValue, "HI");
+  
+  QUnit.equal( document.body.innerHTML, "<span class=\"bar\">HI</span>");
+});
+
+QUnit.test("outerHTML supported", function(){
+  
+  var document = new Document();
+  document.__addSerializerAndParser(new Serializer(voidMap), new Parser(tokenize, document, voidMap));
+ 
+  document.body.innerHTML = "<span/><div id='item'>HI</div><span/>";
+  
+  var item = document.getElementById('item');
+  
+  QUnit.equal( item.outerHTML, "<div id=\"item\">HI</div>", "getter");
+  item.outerHTML = "<label>IT</label>";
+  
+  QUnit.equal( document.body.innerHTML,  "<span></span><label>IT</label><span></span>", "setter");
+});
