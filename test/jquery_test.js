@@ -20,23 +20,23 @@ steal.import('can-simple-dom').then(function(simpleDOMMod){
 		var document = global.document = new simpleDOMMod.Document();
 		document.__addSerializerAndParser(
 			new simpleDOMMod.HTMLSerializer(simpleDOMMod.voidMap),
-			new simpleDOMMod.HTMLParser(tokenizeMod.default, document, simpleDOMMod.voidMap)
+			new simpleDOMMod.HTMLParser(tokenizeMod["default"], document, simpleDOMMod.voidMap)
 		);
 
 		global.location = {};
 
 		console.log("importing jQuery");
-		return steal.import('jquery')
+		return steal.import('jquery');
 
 
 	});
 	
 }).then(function(){
-	console.log("worked")
+	console.log("worked");
 }, function(e){
 	console.log("fail",e);
 
 	setTimeout(function(){
 		throw e;
-	},1)
-})
+	},1);
+});

@@ -1,6 +1,6 @@
 {
   "name": "can-simple-dom",
-  "version": "0.2.23",
+  "version": "0.3.0-pre.0",
   "description": "A simple JS DOM.",
   "main": "dist/cjs/simple-dom.js",
   "scripts": {
@@ -18,7 +18,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/canjs/simple-dom.git"
+    "url": "https://github.com/canjs/can-simple-dom.git"
   },
   "system": {
     "main": "simple-dom.js",
