@@ -166,5 +166,25 @@ QUnit.test("setAttribute('class', value) updates the className", function(assert
 	assert.equal(el.className, "foo bar", "Element's className is same as the attribute class");
 });
 
+QUnit.test("innerHTML does not parse the contents of SCRIPT and STYLE nodes", function (assert) {
+  var document = new Document();
+  var div = document.createElement("div");
+  var script = document.createElement("script");
 
+  try {
+    div.innerHTML = "<span>foo</span>";
+    ok(0, "should not make it here b/c no parser is shipped");
+  } catch (ex) {
+    ok(1, "tried to parse content");
+  }
 
+  var jsCode = "var foo = '<span>bar</span>';";
+  try {
+    script.innerHTML = jsCode;
+    equal(script.firstChild, script.lastChild, "script has one child");
+    equal(script.firstChild.nodeType, 3, "only child is a text node");
+    equal(script.firstChild.nodeValue, jsCode, "code matches");
+  } catch (ex) {
+    ok(0, "should not cause an error")
+  }
+});
