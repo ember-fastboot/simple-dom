@@ -1,18 +1,4 @@
 ---
 language: node_js
-
-sudo: false
-
-cache:
-  directories:
-    - node_modules
-
-before_install:
-  - "npm config set spin false"
-  - "npm install -g npm@^2"
-
-install:
-  - npm install --no-optional
-
-script:
-  - npm test
+node_js:
+  - stable
