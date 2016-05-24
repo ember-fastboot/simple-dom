@@ -19,7 +19,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/krisselden/simple-dom.git"
+    "url": "https://github.com/ember-fastboot/simple-dom.git"
   },
   "devDependencies": {
     "qunit-extras": "^1.4.1",
