@@ -188,3 +188,18 @@ QUnit.test("innerHTML does not parse the contents of SCRIPT and STYLE nodes", fu
     ok(0, "should not cause an error")
   }
 });
+
+// http://www.w3.org/TR/DOM-Level-3-Core/core.html#ID-1734834066
+QUnit.test("removeChild should return the removed node", function(assert) {
+	var document = new Document();
+
+	var parent = document.createElement('div');
+
+	var child = document.createElement('p');
+
+	parent.appendChild(child);
+
+	var removedNode = parent.removeChild(child);
+
+	assert.strictEqual(removedNode, child, "removeChild should return the removed node");
+});
