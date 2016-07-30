@@ -1,18 +1,9 @@
 import { document } from './support';
 
-import Parser from 'simple-dom/html-parser';
-import voidMap from 'simple-dom/void-map';
-import HTMLTokenizer from 'simple-html-tokenizer/tokenizer';
-import EntityParser from 'simple-html-tokenizer/entity-parser';
-// make test rebuilds fast
-import namedCodepoints from 'simple-html-tokenizer/char-refs/min';
-
-function tokenize(input) {
-  // TODO: make Tokenizer take input on the tokenize method like tokenizePart
-  // just init state, I'd rather pass in the tokenizer instance and call tokenize(input)
-  var tokenizer = new HTMLTokenizer(input, new EntityParser(namedCodepoints));
-  return tokenizer.tokenize();
-}
+import Parser from 'can-simple-dom/simple-dom/html-parser';
+import voidMap from 'can-simple-dom/simple-dom/void-map';
+import tokenize from 'can-simple-dom/simple-dom/default-tokenize';
+import QUnit from 'steal-qunit';
 
 QUnit.module('Basic HTML parsing', {
   beforeEach: function() {
@@ -78,7 +69,7 @@ QUnit.test('nested parse', function (assert) {
 });
 
 QUnit.test('void tags', function (assert) {
-  var fragment = this.parser.parse('<div>Hello<br>World<img src="http://example.com/image.png"></div>');
+  var fragment = this.parser.parse('<div>Hello<br>World<img src="http://example.com/image.png?foo=bar&bar=foo"></div>');
   assert.ok(fragment);
   var node = fragment.firstChild;
   assert.ok(node);
@@ -100,6 +91,51 @@ QUnit.test('void tags', function (assert) {
   assert.ok(node);
   assert.equal(node.nodeType, 1);
   assert.equal(node.nodeName, 'IMG');
-  assert.equal(node.getAttribute('src'), 'http://example.com/image.png');
+  assert.equal(node.getAttribute('src'), 'http://example.com/image.png?foo=bar&bar=foo');
   assert.equal(node.nextSibling, null);
+});
+
+QUnit.test('simple charater encode', function(assert) {
+
+  var fragment = this.parser.parse('hello > world &amp; goodbye');
+  assert.ok(fragment);
+
+  var node = fragment.firstChild;
+  assert.ok(node);
+  assert.equal(node.nodeType, 3);
+  assert.equal(node.nodeValue, 'hello &#x3E; world &#x26; goodbye');
+});
+
+QUnit.test('node child charater encode', function(assert) {
+  var fragment = this.parser.parse('<div>Foo & Bar &amp; Baz &lt; Buz &gt; Biz</div>');
+  assert.ok(fragment);
+  console.log(fragment);
+  var node = fragment.firstChild;
+  assert.ok(node);
+  assert.equal(node.nodeType, 1);
+  assert.equal(node.nodeName, 'DIV');
+
+  node = node.firstChild;
+  assert.ok(node);
+  assert.equal(node.nodeType, 3);
+  assert.equal(node.nodeValue, 'Foo &#x26; Bar &#x26; Baz &#x3C; Buz &#x3E; Biz');
+
+});
+
+QUnit.test('node attribute charater encode', function(assert) {
+
+  var fragment = this.parser.parse('<div title="foo & bar &amp; baz < buz > biz"></div>');
+  assert.ok(fragment);
+  console.log(fragment);
+
+  var node = fragment.firstChild;
+  assert.ok(node);
+  assert.equal(node.nodeType, 1);
+  assert.equal(node.nodeName, 'DIV');
+
+  var attibutes = node.attributes;
+  assert.ok(attibutes.length);
+  var title = attibutes[0];
+  assert.equal(title.name, 'title');
+  assert.equal(title.value, 'foo &#x26; bar &#x26; baz &#x3C; buz &#x3E; biz');
 });
