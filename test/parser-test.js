@@ -97,19 +97,18 @@ QUnit.test('void tags', function (assert) {
 
 QUnit.test('simple charater encode', function(assert) {
 
-  var fragment = this.parser.parse('hello > world &amp; goodbye');
+  var fragment = this.parser.parse('hello > world &amp; &nbsp;&nbsp;goodbye');
   assert.ok(fragment);
 
   var node = fragment.firstChild;
   assert.ok(node);
   assert.equal(node.nodeType, 3);
-  assert.equal(node.nodeValue, 'hello &#x3E; world &#x26; goodbye');
+  assert.equal(node.nodeValue, 'hello &#x3E; world &#x26; &#xA0;&#xA0;goodbye');
 });
 
 QUnit.test('node child charater encode', function(assert) {
   var fragment = this.parser.parse('<div>Foo & Bar &amp; Baz &lt; Buz &gt; Biz</div>');
   assert.ok(fragment);
-  console.log(fragment);
   var node = fragment.firstChild;
   assert.ok(node);
   assert.equal(node.nodeType, 1);
@@ -124,9 +123,8 @@ QUnit.test('node child charater encode', function(assert) {
 
 QUnit.test('node attribute charater encode', function(assert) {
 
-  var fragment = this.parser.parse('<div title="foo & bar &amp; baz < buz > biz"></div>');
+  var fragment = this.parser.parse('<div title="&nbsp;foo & bar &amp; baz < buz > biz"></div>');
   assert.ok(fragment);
-  console.log(fragment);
 
   var node = fragment.firstChild;
   assert.ok(node);
@@ -137,5 +135,5 @@ QUnit.test('node attribute charater encode', function(assert) {
   assert.ok(attibutes.length);
   var title = attibutes[0];
   assert.equal(title.name, 'title');
-  assert.equal(title.value, 'foo &#x26; bar &#x26; baz &#x3C; buz &#x3E; biz');
+  assert.equal(title.value, '&#xA0;foo &#x26; bar &#x26; baz &#x3C; buz &#x3E; biz');
 });
