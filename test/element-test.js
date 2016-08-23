@@ -85,6 +85,27 @@ QUnit.test("insertBefore can insert before the last child node", function(assert
   assert.strictEqual(parent.childNodes.item(1), child3);
 });
 
+QUnit.test("insertBefore removes the node from its parent before inserting", function(assert) {
+  var document = new Document();
+  var body = document.body;
+
+  var parent = document.createElement('div');
+  var child =  document.createElement('span');
+  parent.appendChild(child);
+  body.appendChild(parent);
+
+  assert.strictEqual(parent.firstChild, child, 'precond - parent.firstChild === child');
+  assert.strictEqual(parent.lastChild, child, 'precond - parent.lastChild === child');
+  assert.strictEqual(body.firstChild, parent, 'precond - body.firstChild === parent');
+
+  document.body.insertBefore(child, body.firstChild);
+
+  assert.strictEqual(body.firstChild, child, 'body firstChild replaced with child');
+  assert.strictEqual(child.parentNode, body, 'child parentNode updated to body');
+  assert.strictEqual(parent.firstChild, null, 'child removed from parent (firstChild)');
+  assert.strictEqual(parent.lastChild, null, 'child removed from parent (lastChild)');
+});
+
 QUnit.test("cloneNode(true) recursively clones nodes", function(assert) {
   var document = new Document();
   var parent = document.createElement('div');
