@@ -91,3 +91,21 @@ QUnit.test("initEvent without bubbling", 2,function(assert) {
 
   elem.dispatchEvent(ev);
 });
+
+QUnit.test("this inside event handler", function(assert) {
+  var document = new Document();
+
+  var elem = document.createElement('div');
+
+  document.body.appendChild(elem);
+
+  elem.addEventListener("foo", function(){
+	assert.equal(this, elem, "this is the element");
+  });
+
+  var ev = document.createEvent('HTMLEvents');
+  ev.initEvent("foo", true, false);
+
+  elem.dispatchEvent(ev);
+});
+
