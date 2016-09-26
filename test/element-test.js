@@ -252,3 +252,34 @@ QUnit.test("Select's value attribute is two-way bound", function(assert){
 	assert.equal(select.value, "bar");
 	assert.equal(select.getAttribute("value"), "bar");
 });
+
+QUnit.test("Option's value attribute is two-way bound", function(assert){
+	var document = new Document();
+	var option = document.createElement("option");
+
+	option.setAttribute("value", "foo");
+
+	assert.equal(option.value, "foo");
+
+	option.value = "bar";
+	assert.equal(option.value, "bar");
+	assert.equal(option.getAttribute("value"), "bar");
+});
+
+QUnit.test("Option's selected value is tied to parent select's value", function(assert){
+	var document = new Document();
+	var select = document.createElement("select");
+	var option = document.createElement("option");
+	select.appendChild(option);
+
+	select.value = "foo";
+	option.value = "foo";
+
+	assert.equal(option.selected, true);
+
+	option.value = "bar";
+	assert.equal(option.selected, false);
+
+	option.selected = true;
+	assert.equal(select.value, "bar");
+});
