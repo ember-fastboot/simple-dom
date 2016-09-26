@@ -203,3 +203,52 @@ QUnit.test("removeChild should return the removed node", function(assert) {
 
 	assert.strictEqual(removedNode, child, "removeChild should return the removed node");
 });
+
+QUnit.test("Input's type property is two-way bound to the attribute", function(assert){
+	var document = new Document();
+	var input = document.createElement("input");
+	input.setAttribute("type", "text");
+
+	assert.equal(input.type, "text");
+
+	input.type = "radio";
+	assert.equal(input.type, "radio");
+	assert.equal(input.getAttribute("type"), "radio");
+});
+
+QUnit.test("Input's value property is two-way bound to the attribute", function(assert){
+	var document = new Document();
+	var input = document.createElement("input");
+	input.setAttribute("value", "foo");
+
+	assert.equal(input.value, "foo");
+
+	input.value = "bar";
+	assert.equal(input.value, "bar");
+	assert.equal(input.getAttribute("value"), "bar");
+});
+
+QUnit.test("Input's checked value is two-way bound", function(assert){
+	var document = new Document();
+	var input = document.createElement("input");
+
+	input.setAttribute("checked", "");
+	assert.ok(input.checked);
+
+	input.checked = false;
+	assert.equal(input.hasAttribute("checked"), false);
+	assert.equal(input.checked, false);
+});
+
+QUnit.test("Select's value attribute is two-way bound", function(assert){
+	var document = new Document();
+	var select = document.createElement("select");
+
+	select.setAttribute("value", "foo");
+
+	assert.equal(select.value, "foo");
+
+	select.value = "bar";
+	assert.equal(select.value, "bar");
+	assert.equal(select.getAttribute("value"), "bar");
+});
