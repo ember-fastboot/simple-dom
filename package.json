@@ -36,9 +36,9 @@
     "transpiler": "babel"
   },
   "devDependencies": {
-    "steal": "^0.11.4",
+    "steal": "^0.16.0",
     "steal-qunit": "^0.1.0",
-    "steal-tools": "^0.11.2",
+    "steal-tools": "^0.16.0",
     "testee": "^0.2.0",
     "jquery": "^2.2.0"
   },
