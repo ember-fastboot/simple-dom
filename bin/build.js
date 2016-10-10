@@ -13,7 +13,7 @@ rollup.rollup({
     sourceMap: true,
     dest: path.join(distDir, 'simple-dom.js'),
     format: 'umd',
-    moduleName: 'SimpleDOMTests'
+    moduleName: 'SimpleDOM'
   });
 }).catch(function (e) {
   console.error(e);
