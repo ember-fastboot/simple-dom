@@ -8,7 +8,9 @@ QUnit.test("#insertBefore", function(assert) {
   var span = new Node(1, 'span');
   var ul = new Node(1, 'ul');
   span.previousSibling = new Node(1, 'p');
-  body.appendChild(div);
+  var appendChildReturn = body.appendChild(div);
+
+  assert.strictEqual(appendChildReturn, div, 'appendChild should return the node it is appending');
 
   body.insertBefore(span, div);
   assert.strictEqual(span.parentNode, body, "nodes parent is set");
