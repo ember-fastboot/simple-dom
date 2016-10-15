@@ -32,8 +32,7 @@
     },
     "npmIgnore": [
       "testee"
-    ],
-    "transpiler": "babel"
+    ]
   },
   "devDependencies": {
     "steal": "^1.0.0-rc.0",
