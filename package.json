@@ -1,6 +1,6 @@
 {
   "name": "can-simple-dom",
-  "version": "0.4.2",
+  "version": "1.0.0",
   "description": "A simple JS DOM.",
   "main": "dist/cjs/simple-dom.js",
   "scripts": {
@@ -33,13 +33,12 @@
     "npmIgnore": [
       "testee"
     ],
-    "transpiler": "babel",
-    "npmAlgorithm": "flat"
+    "transpiler": "babel"
   },
   "devDependencies": {
-    "steal": "^0.16.33",
-    "steal-qunit": "^0.1.1",
-    "steal-tools": "^0.16.6",
+    "steal": "^1.0.0-rc.0",
+    "steal-qunit": "^0.1.0",
+    "steal-tools": "^1.0.0-rc.0",
     "testee": "^0.2.0",
     "jquery": "^2.2.0",
     "simple-html-tokenizer": "^0.2.1"
