@@ -32,18 +32,18 @@
     },
     "npmIgnore": [
       "testee"
-    ],
-    "transpiler": "babel"
+    ]
   },
   "devDependencies": {
     "steal": "^1.0.0-rc.0",
     "steal-qunit": "^0.1.0",
     "steal-tools": "^1.0.0-rc.0",
     "testee": "^0.2.0",
-    "jquery": "^2.2.0"
+    "jquery": "^2.2.0",
+    "simple-html-tokenizer": "^0.2.1"
   },
   "dependencies": {
-    "micro-location": "^0.1.4",
-    "simple-html-tokenizer": "^0.2.1"
+    "he": "^1.1.0",
+    "micro-location": "^0.1.4"
   }
 }

@@ -9,15 +9,29 @@ QUnit.module('Serializer', {
   }
 });
 
+QUnit.test('simple text', function(assert) {
+  var actual = this.serializer.serialize(fragment(
+    text('hello > world &amp; &nbsp;&nbsp; & goodbye')
+  ));
+  assert.equal(actual, 'hello &gt; world &amp; &nbsp;&nbsp; &amp; goodbye');
+});
+
 QUnit.test('serializes correctly', function (assert) {
   var actual = this.serializer.serialize(fragment(
-    element('div', { id:'foo' },
+    element('div', { id:'foo', title: '&amp;&"'},
       element('b', {},
-        text('Foo & Bar')
+        text('Foo & Bar &amp; Baz < Buz > Biz ©')
       )
     )
   ));
-  assert.equal(actual, '<div id="foo"><b>Foo &amp; Bar</b></div>');
+  assert.equal(actual, '<div id="foo" title="&amp;&amp;&quot;"><b>Foo &amp; Bar &amp; Baz &lt; Buz &gt; Biz ©</b></div>');
+});
+
+QUnit.test('serializes image correctly', function (assert) {
+  var actual = this.serializer.serialize(fragment(
+    element('img', { src:'https://foo.com/foobar.jpg?foo=bar&bar=foo'})
+  ));
+  assert.equal(actual, '<img src="https://foo.com/foobar.jpg?foo=bar&bar=foo">');
 });
 
 QUnit.test('serializes textContent', function(assert) {
