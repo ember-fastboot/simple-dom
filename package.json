@@ -25,7 +25,7 @@
     "type": "git",
     "url": "https://github.com/canjs/can-simple-dom.git"
   },
-  "system": {
+  "steal": {
     "main": "simple-dom.js",
     "directories": {
       "lib": "lib"
@@ -35,11 +35,11 @@
     ]
   },
   "devDependencies": {
-    "steal": "^1.0.0-rc.0",
-    "steal-qunit": "^0.1.0",
-    "steal-tools": "^1.0.0-rc.0",
-    "testee": "^0.2.0",
-    "jquery": "^2.2.0"
+    "jquery": "^2.2.0",
+    "steal": "^1.2.9",
+    "steal-qunit": "^1.0.1",
+    "steal-tools": "^1.1.2",
+    "testee": "^0.3.1"
   },
   "dependencies": {
     "he": "^1.1.0",
