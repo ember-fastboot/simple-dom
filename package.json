@@ -6,6 +6,7 @@
   "scripts": {
     "build": "node build.js",
     "prepublish": "node build.js",
+    "preversion": "npm test",
     "publish": "git push origin && git push origin --tags",
     "release:prerelease": "npm version prerelease && npm publish",
     "release:patch": "npm version patch && npm publish",
