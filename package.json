@@ -26,7 +26,7 @@
     "type": "git",
     "url": "https://github.com/canjs/can-simple-dom.git"
   },
-  "steal": {
+  "system": {
     "main": "simple-dom.js",
     "directories": {
       "lib": "lib"
