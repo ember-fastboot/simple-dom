@@ -22,10 +22,10 @@
     "url": "https://github.com/ember-fastboot/simple-dom.git"
   },
   "devDependencies": {
-    "qunit-extras": "^1.4.1",
-    "qunitjs": "^1.16.0",
-    "rollup": "^0.15.0",
-    "simple-html-tokenizer": "^0.2.0",
+    "qunit-extras": "^3.0.0",
+    "qunitjs": "^2.4.0",
+    "rollup": "^0.45.2",
+    "simple-html-tokenizer": "^0.4.1",
     "testem": "^1.4.0"
   }
 }
