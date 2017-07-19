@@ -29,7 +29,7 @@ rollup.rollup({
     if (/^simple-dom/.test(id)) {
       return path.join(libDir, id + '.js');
     } else if (/^simple-html-tokenizer/.test(id)) {
-      return path.join(projectDir, 'node_modules/simple-html-tokenizer/lib', id + '.js');
+      return path.join(projectDir, 'node_modules/simple-html-tokenizer/dist/es6/', id.replace('simple-html-tokenizer', '') + '.js');
     }
   },
 }).then(function (bundle) {
