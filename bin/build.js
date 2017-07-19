@@ -1,3 +1,5 @@
+'use strict';
+
 var rollup = require('rollup');
 var path = require('path');
 
@@ -18,6 +20,7 @@ rollup.rollup({
 }).catch(function (e) {
   console.error(e);
   console.error(e.stack);
+  process.exit(1);
 });
 
 rollup.rollup({
@@ -39,4 +42,5 @@ rollup.rollup({
 }).catch(function (e) {
   console.error(e);
   console.error(e.stack);
+  process.exit(1);
 });
