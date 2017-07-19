@@ -5,6 +5,10 @@
   "main": "dist/simple-dom.js",
   "module": "lib/simple-dom.js",
   "jsnext:main": "lib/simple-dom.js",
+  "files": [
+    "lib",
+    "dist"
+  ],
   "scripts": {
     "prepublish": "npm run build",
     "build": "node bin/build.js",
