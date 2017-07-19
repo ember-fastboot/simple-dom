@@ -25,13 +25,19 @@ rollup.rollup({
 
 rollup.rollup({
   entry: path.join(testDir, 'index.js'),
-  resolveExternal: function (id) {
-    if (/^simple-dom/.test(id)) {
-      return path.join(libDir, id + '.js');
-    } else if (/^simple-html-tokenizer/.test(id)) {
-      return path.join(projectDir, 'node_modules/simple-html-tokenizer/dist/es6/', id.replace('simple-html-tokenizer', '') + '.js');
+
+  plugins: [
+    {
+      name: 'resolve modules (local and from simple-html-tokenizer)',
+      resolveId(id) {
+        if (/^simple-dom/.test(id)) {
+          return path.join(libDir, id + '.js');
+        } else if (/^simple-html-tokenizer/.test(id)) {
+          return path.join(projectDir, 'node_modules/simple-html-tokenizer/dist/es6/', id.replace('simple-html-tokenizer', '') + '.js');
+        }
+      },
     }
-  },
+  ]
 }).then(function (bundle) {
   return bundle.write({
     sourceMap: true,
