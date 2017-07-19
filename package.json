@@ -29,7 +29,7 @@
   "devDependencies": {
     "qunit-extras": "^3.0.0",
     "qunitjs": "^2.4.0",
-    "rollup": "^0.15.0",
+    "rollup": "0.19.2",
     "simple-html-tokenizer": "^0.4.1",
     "testem": "^1.4.0"
   }
