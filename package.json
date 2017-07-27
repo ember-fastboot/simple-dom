@@ -12,7 +12,8 @@
   "scripts": {
     "prepublish": "npm run build",
     "build": "node bin/build.js",
-    "test": "testem ci"
+    "test": "testem ci",
+    "bench": "npm run build && node ./benches/serialize.js"
   },
   "keywords": [
     "html",
@@ -27,6 +28,7 @@
     "url": "https://github.com/ember-fastboot/simple-dom.git"
   },
   "devDependencies": {
+    "do-you-even-bench": "^1.0.4",
     "qunit-extras": "^3.0.0",
     "qunitjs": "^2.4.0",
     "rollup": "^0.45.2",
