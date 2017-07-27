@@ -12,7 +12,8 @@
   "scripts": {
     "prepublish": "npm run build",
     "build": "node bin/build.js",
-    "test": "testem ci"
+    "test": "testem ci",
+    "bench": "npm run build && node ./benches/serialize.js"
   },
   "keywords": [
     "html",
