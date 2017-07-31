@@ -8,7 +8,7 @@
   ],
   "launchers": {
     "Node": {
-      "command": "node test/node-runner.js testem",
+      "command": "./node_modules/.bin/qunit dist/simple-dom.js dist/simple-dom-test.js",
       "protocol": "tap"
     }
   },
