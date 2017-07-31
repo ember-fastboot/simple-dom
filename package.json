@@ -29,7 +29,6 @@
   },
   "devDependencies": {
     "do-you-even-bench": "^1.0.4",
-    "qunit-extras": "^3.0.0",
     "qunitjs": "^2.4.0",
     "rollup": "^0.45.2",
     "simple-html-tokenizer": "^0.4.1",
