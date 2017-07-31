@@ -1,6 +1,4 @@
-import Document from 'simple-dom/document';
-import Serializer from 'simple-dom/html-serializer';
-import voidMap from 'simple-dom/void-map';
+import { Document, HTMLSerializer as Serializer, voidMap } from 'simple-dom';
 
 QUnit.module('Element');
 

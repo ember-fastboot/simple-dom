@@ -1,8 +1,7 @@
 import { document } from './support';
 
-import Parser from 'simple-dom/html-parser';
-import voidMap from 'simple-dom/void-map';
-import tokenize from 'simple-html-tokenizer/tokenize';
+import { HTMLParser as Parser, voidMap } from 'simple-dom';
+import { tokenize } from 'simple-html-tokenizer';
 
 QUnit.module('Basic HTML parsing', {
   beforeEach: function() {
