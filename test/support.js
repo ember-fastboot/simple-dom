@@ -1,4 +1,4 @@
-import Document from 'simple-dom/document';
+import { Document } from 'simple-dom';
 
 export var document = (function (){
   if (typeof window !== 'undefined' && window.document) {

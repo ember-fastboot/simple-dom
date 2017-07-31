@@ -1,8 +1,7 @@
 /*globals window*/
 
 import { element, fragment, text, html } from './support';
-import Serializer from 'simple-dom/html-serializer';
-import voidMap from 'simple-dom/void-map';
+import { HTMLSerializer as Serializer, voidMap } from 'simple-dom';
 
 QUnit.module('Serializer', {
   beforeEach: function() {

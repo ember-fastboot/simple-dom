@@ -1,4 +1,4 @@
-import Document from 'simple-dom/document';
+import { Document } from 'simple-dom';
 
 QUnit.module('Document');
 
