@@ -30,7 +30,7 @@
   "devDependencies": {
     "do-you-even-bench": "^1.0.4",
     "qunitjs": "^2.4.0",
-    "rollup": "^0.45.2",
+    "rollup": "^0.46.0",
     "simple-html-tokenizer": "^0.4.1",
     "testem": "^1.4.0"
   }
