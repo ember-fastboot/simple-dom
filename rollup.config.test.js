@@ -4,10 +4,8 @@ const ENTRY = resolve('lib/simple-dom.js');
 const EXPORTS = ['Node', 'Element', 'DocumentFragment', 'Document', 'HTMLParser', 'HTMLSerializer', 'voidMap'];
 
 export default {
-  entry: 'test/index.js',
-  format: 'umd',
-  sourceMap: true,
-  moduleName: 'SimpleDOMTests',
+  input: 'test/index.js',
+  name: 'SimpleDOMTests',
   plugins: [
     {
       name: 'resolve modules (local and from simple-html-tokenizer)',
@@ -30,5 +28,9 @@ export default {
     'simple-html-tokenizer': 'HTML5Tokenizer',
   },
   external: ['simple-html-tokenizer'],
-  dest: 'dist/simple-dom-test.js',
+  sourcemap: true,
+  output: {
+    file: 'dist/simple-dom-test.js',
+    format: 'umd',
+  },
 };
