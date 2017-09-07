@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "lib",
+    "moduleResolution": "node",
+    "module": "es2015",
+    "declaration": true,
+    "sourceMap": true
+  },
+  "files": [
+    "src/simple-dom.ts"
+  ]
+}
