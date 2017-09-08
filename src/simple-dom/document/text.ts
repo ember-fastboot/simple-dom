@@ -1,15 +1,13 @@
-import Node from './node';
+import Node, { NodeType } from './node';
 
-function Text(text) {
-  this.nodeConstructor(3, '#text', text);
+export default class Text extends Node {
+  nodeValue: string;
+
+  constructor(text: string) {
+    super(NodeType.TEXT_NODE, '#text', text);
+  }
+
+  protected _cloneNode() {
+    return new Text(this.nodeValue);
+  }
 }
-
-Text.prototype._cloneNode = function() {
-  return new Text(this.nodeValue);
-};
-
-Text.prototype = Object.create(Node.prototype);
-Text.prototype.constructor = Text;
-Text.prototype.nodeConstructor = Node;
-
-export default Text;

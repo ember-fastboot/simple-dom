@@ -1,15 +1,11 @@
-import Node from './node';
+import Node, { NodeType } from './node';
 
-function DocumentFragment() {
-  this.nodeConstructor(11, '#document-fragment', null);
+export default class DocumentFragment extends Node {
+  constructor() {
+    super(NodeType.DOCUMENT_FRAGMENT_NODE, '#document-fragment', null);
+  }
+
+  protected _cloneNode() {
+    return new DocumentFragment();
+  }
 }
-
-DocumentFragment.prototype._cloneNode = function() {
-  return new DocumentFragment();
-};
-
-DocumentFragment.prototype = Object.create(Node.prototype);
-DocumentFragment.prototype.constructor = DocumentFragment;
-DocumentFragment.prototype.nodeConstructor = Node;
-
-export default DocumentFragment;

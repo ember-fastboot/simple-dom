@@ -1,15 +1,13 @@
-import Node from './node';
+import Node, { NodeType } from './node';
 
-function Comment(text) {
-  this.nodeConstructor(8, '#comment', text);
+export default class Comment extends Node {
+  nodeValue: string;
+
+  constructor(text: string) {
+    super(NodeType.COMMENT_NODE, '#comment', text);
+  }
+
+  protected _cloneNode() {
+    return new Comment(this.nodeValue);
+  }
 }
-
-Comment.prototype._cloneNode = function() {
-  return new Comment(this.nodeValue);
-};
-
-Comment.prototype = Object.create(Node.prototype);
-Comment.prototype.constructor = Comment;
-Comment.prototype.nodeConstructor = Node;
-
-export default Comment;

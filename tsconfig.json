@@ -4,8 +4,10 @@
     "outDir": "lib",
     "moduleResolution": "node",
     "module": "es2015",
+    "target": "es2017",
     "declaration": true,
-    "sourceMap": true
+    "sourceMap": true,
+    "strict": true
   },
   "files": [
     "src/simple-dom.ts"

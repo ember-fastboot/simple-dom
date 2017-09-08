@@ -1,11 +1,7 @@
-import Node from './node';
+import Node, { NodeType } from './node';
 
-function RawHTMLSection(text) {
-  this.nodeConstructor(-1, "#raw-html-section", text);
+export default class RawHTMLSection extends Node {
+  constructor(text: string) {
+    super(NodeType.RAW, "#raw-html-section", text);
+  }
 }
-
-RawHTMLSection.prototype = Object.create(Node.prototype);
-RawHTMLSection.prototype.constructor = RawHTMLSection;
-RawHTMLSection.prototype.nodeConstructor = Node;
-
-export default RawHTMLSection;
