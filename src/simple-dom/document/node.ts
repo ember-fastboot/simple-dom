@@ -34,12 +34,19 @@ export default class Node {
   public firstChild: Node | null = null;
   public lastChild: Node | null = null;
 
-  public childNodes: {
-    item(index: number): Node | null;
-  };
+  private _childNodes: ChildNodes | undefined = undefined;
 
   constructor(public nodeType: NodeType, public nodeName: string, public nodeValue: string | null) {
-    this.childNodes = new ChildNodes(this);
+  }
+
+  public get childNodes(): {
+    item(index: number): Node | null;
+  } {
+    let children = this._childNodes;
+    if (children === undefined) {
+      children = this._childNodes = new ChildNodes(this);
+    }
+    return children;
   }
 
   public cloneNode(deep: true) {
