@@ -1,14 +1,14 @@
-import Node from './document/node';
-import Element from './document/element';
-import Text from './document/text';
 import Comment from './document/comment';
-import RawHTMLSection from './document/raw-html-section';
 import DocumentFragment from './document/document-fragment';
+import Element from './document/element';
+import Node from './document/node';
+import RawHTMLSection from './document/raw-html-section';
+import Text from './document/text';
 
 export default class Document extends Node {
-  documentElement: Element;
-  head: Element;
-  body: Element;
+  public documentElement: Element;
+  public head: Element;
+  public body: Element;
 
   constructor() {
     super(9, '#document', null);
@@ -20,23 +20,23 @@ export default class Document extends Node {
     this.appendChild(this.documentElement);
   }
 
-  createElement(tagName: string) {
+  public createElement(tagName: string) {
     return new Element(tagName);
   }
 
-  createTextNode(text: string) {
+  public createTextNode(text: string) {
     return new Text(text);
   }
 
-  createComment(text: string) {
+  public createComment(text: string) {
     return new Comment(text);
   }
 
-  createRawHTMLSection(text: string) {
+  public createRawHTMLSection(text: string) {
     return new RawHTMLSection(text);
   }
 
-  createDocumentFragment() {
+  public createDocumentFragment() {
     return new DocumentFragment();
   }
 }

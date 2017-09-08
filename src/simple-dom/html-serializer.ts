@@ -1,8 +1,8 @@
 const ESC = {
+  '"': '&quot;',
+  '&': '&amp;',
   '<': '&lt;',
   '>': '&gt;',
-  '"': '&quot;',
-  '&': '&amp;'
 };
 
 function matcher(char: keyof typeof ESC) {
@@ -14,31 +14,31 @@ function matcher(char: keyof typeof ESC) {
 
 export default class HTMLSerializer {
   constructor(private voidMap: {
-    [tagName: string]: boolean
+    [tagName: string]: boolean,
   }) {
   }
 
-  openTag(element: Node) {
+  public openTag(element: Node) {
     return '<' + element.nodeName.toLowerCase() + this.attributes(element.attributes) + '>';
   }
 
-  closeTag(element: Node) {
+  public closeTag(element: Node) {
     return '</' + element.nodeName.toLowerCase() + '>';
   }
 
-  isVoid(element: Node) {
+  public isVoid(element: Node) {
     return this.voidMap[element.nodeName] === true;
   }
 
-  attributes(namedNodeMap: NamedNodeMap) {
-    var buffer = '';
-    for (var i=0, l=namedNodeMap.length; i<l; i++) {
+  public attributes(namedNodeMap: NamedNodeMap) {
+    let buffer = '';
+    for (let i = 0, l = namedNodeMap.length; i < l; i++) {
       buffer += this.attr(namedNodeMap[i]);
     }
     return buffer;
   }
 
-  escapeAttrValue(attrValue: string) {
+  public escapeAttrValue(attrValue: string) {
     if (attrValue.indexOf('&') > -1 || attrValue.indexOf('"') > -1) {
       return attrValue.replace(/[&"]/g, matcher);
     }
@@ -46,7 +46,7 @@ export default class HTMLSerializer {
     return attrValue;
   }
 
-  attr(attr: Attr) {
+  public attr(attr: Attr) {
     if (!attr.specified) {
       return '';
     }
@@ -56,7 +56,7 @@ export default class HTMLSerializer {
     return ' ' + attr.name;
   }
 
-  escapeText(textNodeValue: string) {
+  public escapeText(textNodeValue: string) {
     if (textNodeValue.indexOf('>') > -1 ||
         textNodeValue.indexOf('<') > -1 ||
         textNodeValue.indexOf('&') > -1
@@ -67,33 +67,30 @@ export default class HTMLSerializer {
     return textNodeValue;
   }
 
-  text(text: Node) {
+  public text(text: Node) {
     return this.escapeText(text.nodeValue!);
   }
 
-  rawHTMLSection(text: Node): string {
+  public rawHTMLSection(text: Node): string {
     return text.nodeValue!;
   }
 
-  comment(comment: Node) {
-    return '<!--'+comment.nodeValue+'-->';
+  public comment(comment: Node) {
+    return '<!--' + comment.nodeValue + '-->';
   }
 
-  serializeChildren(node: Node) {
-    var buffer = '';
-    var next = node.firstChild;
-    if (next) {
+  public serializeChildren(node: Node) {
+    let buffer = '';
+    let next = node.firstChild;
+    while (next !== null) {
       buffer += this.serialize(next);
-
-      while(next = next.nextSibling) {
-        buffer += this.serialize(next);
-      }
+      next = next.nextSibling;
     }
     return buffer;
   }
 
-  serialize(node: Node) {
-    var buffer = '';
+  public serialize(node: Node) {
+    let buffer = '';
 
     // open
     switch (node.nodeType) {

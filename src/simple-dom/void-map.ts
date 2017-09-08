@@ -14,5 +14,5 @@ export default {
   PARAM: true,
   SOURCE: true,
   TRACK: true,
-  WBR: true
+  WBR: true,
 };

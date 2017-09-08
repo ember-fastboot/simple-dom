@@ -1,7 +1,7 @@
 import Node, { NodeType } from './node';
 
 export default class Text extends Node {
-  nodeValue: string;
+  public nodeValue: string;
 
   constructor(text: string) {
     super(NodeType.TEXT_NODE, '#text', text);

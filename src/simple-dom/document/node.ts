@@ -42,16 +42,12 @@ export default class Node {
     this.childNodes = new ChildNodes(this);
   }
 
-  protected _cloneNode() {
-    return new Node(this.nodeType, this.nodeName, this.nodeValue);
-  }
-
   public cloneNode(deep: true) {
-    var node = this._cloneNode();
+    const node = this._cloneNode();
 
     if (deep) {
-      var child = this.firstChild;
-      var nextChild = child;
+      let child = this.firstChild;
+      let nextChild = child;
 
       while (child !== null) {
         nextChild = child.nextSibling;
@@ -72,7 +68,7 @@ export default class Node {
     if (node.parentNode) { node.parentNode.removeChild(node); }
 
     node.parentNode = this;
-    var refNode = this.lastChild;
+    const refNode = this.lastChild;
     if (refNode === null) {
       this.firstChild = node;
       this.lastChild = node;
@@ -99,7 +95,7 @@ export default class Node {
 
     node.parentNode = this;
 
-    var previousSibling = refNode.previousSibling;
+    const previousSibling = refNode.previousSibling;
     if (previousSibling) {
       previousSibling.nextSibling = node;
       node.previousSibling = previousSibling;
@@ -113,7 +109,7 @@ export default class Node {
     if (this.firstChild === refNode) {
       this.firstChild = node;
     }
-  };
+  }
 
   public removeChild(refNode: Node) {
     if (this.firstChild === refNode) {
@@ -132,12 +128,16 @@ export default class Node {
     refNode.nextSibling = null;
     refNode.previousSibling = null;
   }
+
+  protected _cloneNode() {
+    return new Node(this.nodeType, this.nodeName, this.nodeValue);
+  }
 }
 
 function insertFragment(fragment: Node, newParent: Node, before: Node | null, after: Node | null) {
   if (!fragment.firstChild) { return; }
 
-  let firstChild = fragment.firstChild;
+  const firstChild = fragment.firstChild;
   let lastChild = firstChild;
   let node: Node | null = firstChild;
 
@@ -163,13 +163,13 @@ function insertFragment(fragment: Node, newParent: Node, before: Node | null, af
 }
 
 class ChildNodes {
-  constructor (private node: Node) {
+  constructor(private node: Node) {
   }
 
   public item(index: number) {
-    var child = this.node.firstChild;
+    let child = this.node.firstChild;
 
-    for (var i = 0; child && index !== i; i++) {
+    for (let i = 0; child && index !== i; i++) {
       child = child.nextSibling;
     }
 

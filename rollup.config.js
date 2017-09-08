@@ -6,7 +6,9 @@ export default {
   name: 'SimpleDOM',
   plugins: [
     sourcemaps(),
-    buble(),
+    buble({
+      transforms: { dangerousForOf: true, generator: false }
+    }),
   ],
   output: {
     file: 'dist/simple-dom.js',

@@ -3,25 +3,24 @@ import DocumentFragment from './document/document-fragment';
 import Element from './document/element';
 import Node from './document/node';
 
-class HTMLParser {
+export default class HTMLParser {
   private parentStack: Node[];
 
-  constructor(private tokenize: Tokenizer, private document: Document, private voidMap: VoidMap) {
+  constructor(private tokenize: Tokenizer, private document: Document, private voidMap: IVoidMap) {
     this.tokenize = tokenize;
     this.document = document;
     this.voidMap = voidMap;
     this.parentStack = [];
   }
 
-  isVoid(element: Element) {
+  public isVoid(element: Element) {
     return this.voidMap[element.nodeName] === true;
   }
 
-  pushElement(token: StartTag) {
-    var el = this.document.createElement(token.tagName);
+  public pushElement(token: IStartTag) {
+    const el = this.document.createElement(token.tagName);
 
-    for (var i=0;i<token.attributes.length;i++) {
-      var attr = token.attributes[i];
+    for (const attr of token.attributes) {
       el.setAttribute(attr[0], attr[1]);
     }
 
@@ -32,8 +31,8 @@ class HTMLParser {
     this.parentStack.push(el);
   }
 
-  popElement(token: EndTag) {
-    var el = this.parentStack.pop()!;
+  public popElement(token: IEndTag) {
+    const el = this.parentStack.pop()!;
 
     if (el.nodeName !== token.tagName.toUpperCase()) {
       throw new Error('unbalanced tag');
@@ -42,28 +41,26 @@ class HTMLParser {
     this.appendChild(el);
   }
 
-  appendText(token: Chars) {
-    var text = this.document.createTextNode(token.chars);
-    this.appendChild(text);
+  public appendText(token: IChars) {
+    this.appendChild(this.document.createTextNode(token.chars));
   }
 
-  appendComment(token: Comment) {
-    var comment = this.document.createComment(token.chars);
-    this.appendChild(comment);
+  public appendComment(token: IComment) {
+    this.appendChild(this.document.createComment(token.chars));
   }
 
-  appendChild(node: Node) {
-    var parentNode = this.parentStack[this.parentStack.length-1];
+  public appendChild(node: Node) {
+    const parentNode = this.parentStack[this.parentStack.length - 1];
     parentNode.appendChild(node);
   }
 
-  parse(html: string) {
-    var fragment = this.document.createDocumentFragment();
+  public parse(html: string) {
+    const fragment = this.document.createDocumentFragment();
     this.parentStack.push(fragment);
 
-    var tokens = this.tokenize(html);
-    for (var i=0, l=tokens.length; i<l; i++) {
-      var token = tokens[i];
+    const tokens = this.tokenize(html);
+    for (let i = 0, l = tokens.length; i < l; i++) {
+      const token = tokens[i];
       switch (token.type) {
         case 'StartTag':
           this.pushElement(token);
@@ -84,35 +81,33 @@ class HTMLParser {
   }
 }
 
-export default HTMLParser;
-
-export interface VoidMap {
+export interface IVoidMap {
   [tagName: string]: boolean | undefined;
 }
 
 export type Tokenizer = (s: string) => Token[];
 
-export type Token = StartTag | EndTag | Chars | Comment;
+export type Token = IStartTag | IEndTag | IChars | IComment;
 
 export type Attr = [string, string];
 
-export interface StartTag {
+export interface IStartTag {
   type: 'StartTag';
   tagName: string;
   attributes: Attr[];
 }
 
-export interface EndTag {
+export interface IEndTag {
   type: 'EndTag';
   tagName: string;
 }
 
-export interface Chars {
+export interface IChars {
   type: 'Chars';
   chars: string;
 }
 
-export interface Comment {
+export interface IComment {
   type: 'Comment';
   chars: string;
 }
