@@ -5,14 +5,17 @@
   "main": "dist/simple-dom.js",
   "module": "lib/simple-dom.js",
   "jsnext:main": "lib/simple-dom.js",
+  "types": "lib/simple-dom.d.ts",
   "files": [
     "lib",
-    "dist"
+    "dist",
+    "src"
   ],
   "scripts": {
     "prepublish": "npm run build",
-    "build": "rollup -c rollup.config.js && rollup -c rollup.config.test.js",
+    "build": "tsc && rollup -c rollup.config.js && rollup -c rollup.config.test.js",
     "test": "testem ci",
+    "lint": "tslint -p tsconfig.json",
     "bench": "npm run build && node ./benches/serialize.js"
   },
   "keywords": [
@@ -31,7 +34,11 @@
     "do-you-even-bench": "^1.0.5",
     "qunitjs": "^2.4.0",
     "rollup": "^0.49.2",
+    "rollup-plugin-buble": "^0.15.0",
+    "rollup-plugin-sourcemaps": "^0.4.2",
     "simple-html-tokenizer": "^0.4.1",
-    "testem": "^1.18.4"
+    "testem": "^1.18.4",
+    "tslint": "^5.7.0",
+    "typescript": "^2.5.2"
   }
 }
