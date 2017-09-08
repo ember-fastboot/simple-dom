@@ -15,6 +15,7 @@
     "prepublish": "npm run build",
     "build": "tsc && rollup -c rollup.config.js && rollup -c rollup.config.test.js",
     "test": "testem ci",
+    "lint": "tslint -p tsconfig.json",
     "bench": "npm run build && node ./benches/serialize.js"
   },
   "keywords": [
