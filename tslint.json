@@ -8,7 +8,10 @@
         "quotemark": [
             "single"
         ],
-        "max-classes-per-file": false
+        "max-classes-per-file": false,
+        "variable-name": [
+            "allow-leading-underscore"
+        ]
     },
     "rulesDirectory": []
 }
