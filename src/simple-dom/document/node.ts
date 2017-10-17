@@ -1,32 +1,22 @@
 export const enum NodeType {
   RAW = -1,
   ELEMENT_NODE = 1,
-  ATTRIBUTE_NODE = 2,
   TEXT_NODE = 3,
-  CDATA_SECTION_NODE = 4,
-  ENTITY_REFERENCE_NODE = 5,
-  ENTITY_NODE = 6,
-  PROCESSING_INSTRUCTION_NODE = 7,
   COMMENT_NODE = 8,
   DOCUMENT_NODE = 9,
-  DOCUMENT_TYPE_NODE = 10,
   DOCUMENT_FRAGMENT_NODE = 11,
-  NOTATION_NODE = 12,
+}
+
+export interface NodeList {
+  item(index: number): Node;
 }
 
 export default class Node {
-  public static ELEMENT_NODE = NodeType.ELEMENT_NODE;
-  public static ATTRIBUTE_NODE = NodeType.ATTRIBUTE_NODE;
-  public static TEXT_NODE = NodeType.TEXT_NODE;
-  public static CDATA_SECTION_NODE = NodeType.CDATA_SECTION_NODE;
-  public static ENTITY_REFERENCE_NODE = NodeType.ENTITY_REFERENCE_NODE;
-  public static ENTITY_NODE = NodeType.ENTITY_NODE;
-  public static PROCESSING_INSTRUCTION_NODE = NodeType.PROCESSING_INSTRUCTION_NODE;
-  public static COMMENT_NODE = NodeType.COMMENT_NODE;
-  public static DOCUMENT_NODE = NodeType.DOCUMENT_NODE;
-  public static DOCUMENT_TYPE_NODE = NodeType.DOCUMENT_TYPE_NODE;
-  public static DOCUMENT_FRAGMENT_NODE = NodeType.DOCUMENT_FRAGMENT_NODE;
-  public static NOTATION_NODE = NodeType.NOTATION_NODE;
+  public static ELEMENT_NODE: number = NodeType.ELEMENT_NODE;
+  public static TEXT_NODE: number = NodeType.TEXT_NODE;
+  public static COMMENT_NODE: number = NodeType.COMMENT_NODE;
+  public static DOCUMENT_NODE: number = NodeType.DOCUMENT_NODE;
+  public static DOCUMENT_FRAGMENT_NODE: number = NodeType.DOCUMENT_FRAGMENT_NODE;
 
   public parentNode: Node | null = null;
   public previousSibling: Node | null = null;
@@ -36,23 +26,21 @@ export default class Node {
 
   private _childNodes: ChildNodes | undefined = undefined;
 
-  constructor(public nodeType: NodeType, public nodeName: string, public nodeValue: string | null) {
+  constructor(public readonly nodeType: number, public readonly nodeName: string, public nodeValue: string | null) {
   }
 
-  public get childNodes(): {
-    item(index: number): Node | null;
-  } {
+  public get childNodes() {
     let children = this._childNodes;
     if (children === undefined) {
       children = this._childNodes = new ChildNodes(this);
     }
-    return children;
+    return children as NodeList;
   }
 
-  public cloneNode(deep: true) {
+  public cloneNode(deep?: boolean) {
     const node = this._cloneNode();
 
-    if (deep) {
+    if (deep === true) {
       let child = this.firstChild;
       let nextChild = child;
 
@@ -66,74 +54,77 @@ export default class Node {
     return node;
   }
 
-  public appendChild(node: Node) {
-    if (node.nodeType === NodeType.DOCUMENT_FRAGMENT_NODE) {
-      insertFragment(node, this, this.lastChild, null);
-      return node;
+  public appendChild<T extends Node>(newChild: T): T {
+    if (newChild.nodeType === NodeType.DOCUMENT_FRAGMENT_NODE) {
+      insertFragment(newChild, this, this.lastChild, null);
+      return newChild;
     }
 
-    if (node.parentNode) { node.parentNode.removeChild(node); }
+    if (newChild.parentNode) { newChild.parentNode.removeChild(newChild); }
 
-    node.parentNode = this;
+    newChild.parentNode = this;
     const refNode = this.lastChild;
     if (refNode === null) {
-      this.firstChild = node;
-      this.lastChild = node;
+      this.firstChild = newChild;
+      this.lastChild = newChild;
     } else {
-      node.previousSibling = refNode;
-      refNode.nextSibling = node;
-      this.lastChild = node;
+      newChild.previousSibling = refNode;
+      refNode.nextSibling = newChild;
+      this.lastChild = newChild;
     }
 
-    return node;
+    return newChild;
   }
 
-  public insertBefore(node: Node, refNode: Node | null) {
-    if (refNode == null) {
-      return this.appendChild(node);
+  public insertBefore<T extends Node>(newChild: T, refChild: Node | null): T {
+    if (refChild == null) {
+      return this.appendChild(newChild);
     }
 
-    if (node.nodeType === NodeType.DOCUMENT_FRAGMENT_NODE) {
-      insertFragment(node, this, refNode ? refNode.previousSibling : null, refNode);
-      return;
+    if (newChild.nodeType === NodeType.DOCUMENT_FRAGMENT_NODE) {
+      insertFragment(newChild, this, refChild ? refChild.previousSibling : null, refChild);
+      return newChild;
     }
 
-    if (node.parentNode) { node.parentNode.removeChild(node); }
+    if (newChild.parentNode) { newChild.parentNode.removeChild(newChild); }
 
-    node.parentNode = this;
+    newChild.parentNode = this;
 
-    const previousSibling = refNode.previousSibling;
+    const previousSibling = refChild.previousSibling;
     if (previousSibling) {
-      previousSibling.nextSibling = node;
-      node.previousSibling = previousSibling;
+      previousSibling.nextSibling = newChild;
+      newChild.previousSibling = previousSibling;
     } else {
-      node.previousSibling = null;
+      newChild.previousSibling = null;
     }
 
-    refNode.previousSibling = node;
-    node.nextSibling = refNode;
+    refChild.previousSibling = newChild;
+    newChild.nextSibling = refChild;
 
-    if (this.firstChild === refNode) {
-      this.firstChild = node;
+    if (this.firstChild === refChild) {
+      this.firstChild = newChild;
     }
+
+    return newChild;
   }
 
-  public removeChild(refNode: Node) {
-    if (this.firstChild === refNode) {
-      this.firstChild = refNode.nextSibling;
+  public removeChild<T extends Node>(oldChild: T): T {
+    if (this.firstChild === oldChild) {
+      this.firstChild = oldChild.nextSibling;
     }
-    if (this.lastChild === refNode) {
-      this.lastChild = refNode.previousSibling;
+    if (this.lastChild === oldChild) {
+      this.lastChild = oldChild.previousSibling;
     }
-    if (refNode.previousSibling) {
-      refNode.previousSibling.nextSibling = refNode.nextSibling;
+    if (oldChild.previousSibling) {
+      oldChild.previousSibling.nextSibling = oldChild.nextSibling;
     }
-    if (refNode.nextSibling) {
-      refNode.nextSibling.previousSibling = refNode.previousSibling;
+    if (oldChild.nextSibling) {
+      oldChild.nextSibling.previousSibling = oldChild.previousSibling;
     }
-    refNode.parentNode = null;
-    refNode.nextSibling = null;
-    refNode.previousSibling = null;
+    oldChild.parentNode = null;
+    oldChild.nextSibling = null;
+    oldChild.previousSibling = null;
+    return oldChild;
   }
 
   protected _cloneNode() {
