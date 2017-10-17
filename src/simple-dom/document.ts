@@ -1,11 +1,12 @@
 import Comment from './document/comment';
 import DocumentFragment from './document/document-fragment';
 import Element from './document/element';
-import Node from './document/node';
+import Node, { NodeType } from './document/node';
 import RawHTMLSection from './document/raw-html-section';
 import Text from './document/text';
 
 export default class Document extends Node {
+  public nodeType: NodeType.DOCUMENT_NODE;
   public documentElement: Element;
   public head: Element;
   public body: Element;

@@ -1,6 +1,7 @@
 import Node, { NodeType } from './node';
 
 export default class Comment extends Node {
+  public nodeType: NodeType.COMMENT_NODE;
   public nodeValue: string;
 
   constructor(text: string) {
