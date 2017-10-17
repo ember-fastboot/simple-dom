@@ -5,13 +5,14 @@
     ],
     "jsRules": {},
     "rules": {
-        "quotemark": [
-            "single"
-        ],
+        "quotemark": {
+            "options": "single"
+        },
         "max-classes-per-file": false,
-        "variable-name": [
-            "allow-leading-underscore"
-        ]
+        "variable-name": {
+            "options": "allow-leading-underscore"
+        },
+        "interface-name": false
     },
     "rulesDirectory": []
 }

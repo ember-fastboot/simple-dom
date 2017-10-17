@@ -1,16 +1,23 @@
 import Node, { NodeType } from './node';
 
+export interface Attr {
+  readonly name: string;
+  readonly specified: boolean;
+  value: string;
+}
+
 export default class Element extends Node {
-  public nodeType: NodeType.ELEMENT_NODE;
-  public tagName: string;
-  public attributes: IAttr[] = [];
+  public attributes: Attr[] = [];
 
   constructor(tagName: string) {
     super(NodeType.ELEMENT_NODE, tagName.toUpperCase(), null);
-    this.tagName = this.nodeName;
   }
 
-  public getAttribute(name: string) {
+  public get tagName(): string {
+    return this.nodeName;
+  }
+
+  public getAttribute(name: string): string | null {
     const attributes = this.attributes;
     const n = name.toLowerCase();
     let attr;
@@ -20,10 +27,10 @@ export default class Element extends Node {
         return attr.value;
       }
     }
-    return '';
+    return null;
   }
 
-  public setAttribute(name: string, value: any) {
+  public setAttribute(name: string, value: string): void {
     const attributes = this.attributes;
     const n = name.toLowerCase();
     let v: string;
@@ -47,7 +54,7 @@ export default class Element extends Node {
     });
   }
 
-  public removeAttribute(name: string) {
+  public removeAttribute(name: string): void {
     const n = name.toLowerCase();
     const attributes = this.attributes;
     for (let i = 0, l = attributes.length; i < l; i++) {
@@ -62,7 +69,7 @@ export default class Element extends Node {
   protected _cloneNode() {
     const node = new Element(this.tagName);
 
-    const attrs = node.attributes = [] as IAttr[];
+    const attrs = node.attributes = [] as Attr[];
 
     for (const attr of this.attributes) {
       attrs.push({ name: attr.name, specified: attr.specified, value: attr.value });
@@ -70,10 +77,4 @@ export default class Element extends Node {
 
     return node;
   }
-}
-
-export interface IAttr {
-  name: string;
-  value: string;
-  specified: boolean;
 }

@@ -6,13 +6,12 @@ import RawHTMLSection from './document/raw-html-section';
 import Text from './document/text';
 
 export default class Document extends Node {
-  public nodeType: NodeType.DOCUMENT_NODE;
   public documentElement: Element;
   public head: Element;
   public body: Element;
 
   constructor() {
-    super(9, '#document', null);
+    super(NodeType.DOCUMENT_NODE, '#document', null);
     this.documentElement = new Element('html');
     this.head = new Element('head');
     this.body = new Element('body');
