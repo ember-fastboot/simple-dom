@@ -1,7 +1,8 @@
-import Document from './document';
-import DocumentFragment from './document/document-fragment';
-import Element from './document/element';
-import Node from './document/node';
+import {
+  Document,
+  Element,
+  Node,
+} from '@simple-dom/document';
 
 export default class HTMLParser {
   private parentStack: Node[];
@@ -19,8 +20,9 @@ export default class HTMLParser {
 
   public pushElement(token: IStartTag) {
     const el = this.document.createElement(token.tagName);
-
-    for (const attr of token.attributes) {
+    const attributes = token.attributes;
+    for (let i = 0; i < attributes.length; i++) {
+      const attr = attributes[i];
       el.setAttribute(attr[0], attr[1]);
     }
 

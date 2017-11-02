@@ -1,4 +1,4 @@
-import { Document } from 'simple-dom';
+const Document = require('@simple-dom/document').Document;
 
 QUnit.module('Document');
 

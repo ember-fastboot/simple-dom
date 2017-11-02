@@ -1,7 +1,7 @@
-import { document } from './support';
-
-import { HTMLParser as Parser, voidMap } from 'simple-dom';
-import { tokenize } from 'simple-html-tokenizer';
+const document = require('./support').document;
+const Parser = require('@simple-dom/parser');
+const voidMap = require('@simple-dom/void-map');
+const tokenize = require('simple-html-tokenizer').tokenize;
 
 QUnit.module('Basic HTML parsing', {
   beforeEach: function() {

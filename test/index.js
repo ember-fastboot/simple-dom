@@ -1,5 +1,5 @@
-import './document-test';
-import './element-test';
-import './node-test';
-import './parser-test';
-import './serializer-test';
+require('./document-test');
+require('./element-test');
+require('./node-test');
+require('./parser-test');
+require('./serializer-test');

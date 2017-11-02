@@ -6,6 +6,6 @@ export default class Comment extends Node {
   }
 
   protected _cloneNode() {
-    return new Comment(this.nodeValue as string);
+    return new Comment(this.nodeValue!);
   }
 }

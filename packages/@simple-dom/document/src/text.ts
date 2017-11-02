@@ -5,7 +5,7 @@ export default class Text extends Node {
     super(NodeType.TEXT_NODE, '#text', text);
   }
 
-  protected _cloneNode() {
+  protected _cloneNode(): Text {
     return new Text(this.nodeValue as string);
   }
 }

@@ -1,14 +1,40 @@
-const ESC = {
+export interface INode {
+  nodeType: number;
+  nodeName: string;
+  nodeValue: string | null;
+
+  parentNode: INode | null;
+  previousSibling: INode | null;
+  nextSibling: INode | null;
+  firstChild: INode | null;
+  lastChild: INode | null;
+}
+
+export interface INamedNodeMap {
+  [index: number]: IAttr;
+  length: number;
+}
+
+export interface IAttr {
+  specified: boolean;
+  name: string;
+  value: string;
+}
+
+export interface IElement extends INode {
+  attributes: INamedNodeMap;
+}
+
+const ESC: {
+  [char: string]: string;
+} = {
   '"': '&quot;',
   '&': '&amp;',
   '<': '&lt;',
   '>': '&gt;',
 };
 
-function matcher(char: keyof typeof ESC) {
-  if (ESC[char] === undefined) {
-    return char;
-  }
+function matcher(char: string) {
   return ESC[char];
 }
 
@@ -18,19 +44,19 @@ export default class HTMLSerializer {
   }) {
   }
 
-  public openTag(element: Node) {
+  public openTag(element: IElement) {
     return '<' + element.nodeName.toLowerCase() + this.attributes(element.attributes) + '>';
   }
 
-  public closeTag(element: Node) {
+  public closeTag(element: IElement) {
     return '</' + element.nodeName.toLowerCase() + '>';
   }
 
-  public isVoid(element: Node) {
+  public isVoid(element: IElement) {
     return this.voidMap[element.nodeName] === true;
   }
 
-  public attributes(namedNodeMap: NamedNodeMap) {
+  public attributes(namedNodeMap: INamedNodeMap) {
     let buffer = '';
     for (let i = 0, l = namedNodeMap.length; i < l; i++) {
       buffer += this.attr(namedNodeMap[i]);
@@ -46,7 +72,7 @@ export default class HTMLSerializer {
     return attrValue;
   }
 
-  public attr(attr: Attr) {
+  public attr(attr: IAttr) {
     if (!attr.specified) {
       return '';
     }
@@ -67,19 +93,19 @@ export default class HTMLSerializer {
     return textNodeValue;
   }
 
-  public text(text: Node) {
+  public text(text: INode) {
     return this.escapeText(text.nodeValue!);
   }
 
-  public rawHTMLSection(text: Node): string {
+  public rawHTMLSection(text: INode): string {
     return text.nodeValue!;
   }
 
-  public comment(comment: Node) {
+  public comment(comment: INode) {
     return '<!--' + comment.nodeValue + '-->';
   }
 
-  public serializeChildren(node: Node) {
+  public serializeChildren(node: INode) {
     let buffer = '';
     let next = node.firstChild;
     while (next !== null) {
@@ -89,13 +115,13 @@ export default class HTMLSerializer {
     return buffer;
   }
 
-  public serialize(node: Node) {
+  public serialize(node: INode) {
     let buffer = '';
 
     // open
     switch (node.nodeType) {
       case 1:
-        buffer += this.openTag(node);
+        buffer += this.openTag(node as IElement);
         break;
       case 3:
         buffer += this.text(node);
@@ -112,8 +138,8 @@ export default class HTMLSerializer {
 
     buffer += this.serializeChildren(node);
 
-    if (node.nodeType === 1 && !this.isVoid(node)) {
-      buffer += this.closeTag(node);
+    if (node.nodeType === 1 && !this.isVoid(node as IElement)) {
+      buffer += this.closeTag(node as IElement);
     }
 
     return buffer;

@@ -11,7 +11,7 @@ export interface NodeList {
   item(index: number): Node;
 }
 
-export default class Node {
+export default abstract class Node {
   public static ELEMENT_NODE: number = NodeType.ELEMENT_NODE;
   public static TEXT_NODE: number = NodeType.TEXT_NODE;
   public static COMMENT_NODE: number = NodeType.COMMENT_NODE;
@@ -82,7 +82,7 @@ export default class Node {
     }
 
     if (newChild.nodeType === NodeType.DOCUMENT_FRAGMENT_NODE) {
-      insertFragment(newChild, this, refChild ? refChild.previousSibling : null, refChild);
+      insertFragment(newChild, this, refChild.previousSibling, refChild);
       return newChild;
     }
 
@@ -127,15 +127,14 @@ export default class Node {
     return oldChild;
   }
 
-  protected _cloneNode() {
-    return new Node(this.nodeType, this.nodeName, this.nodeValue);
-  }
+  protected abstract _cloneNode(): Node;
 }
 
 function insertFragment(fragment: Node, newParent: Node, before: Node | null, after: Node | null) {
   if (!fragment.firstChild) { return; }
 
   const firstChild = fragment.firstChild;
+  fragment.firstChild = fragment.lastChild = null;
   let lastChild = firstChild;
   let node: Node | null = firstChild;
 

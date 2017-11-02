@@ -1,4 +1,6 @@
-import { Document, HTMLSerializer as Serializer, voidMap } from 'simple-dom';
+const Document = require('@simple-dom/document').Document;
+const Serializer = require('@simple-dom/serializer');
+const voidMap = require('@simple-dom/void-map');
 
 QUnit.module('Element');
 
@@ -36,6 +38,59 @@ QUnit.test("appending a document fragment (via insertBefore) appends the fragmen
 
   assert.strictEqual(body.firstChild.tagName, "DIV", "The body's first child is now DIV");
   assert.strictEqual(body.lastChild.tagName, "MAIN", "The body's last child is now MAIN");
+});
+
+QUnit.test("insert a document fragment before a node with a previousSibling", function(assert) {
+  var document = new Document();
+  var parent = document.createElement('div');
+  var before = document.createComment('before');
+  var after = document.createComment('after');
+  parent.appendChild(before);
+  parent.appendChild(after);
+
+  var frag = document.createDocumentFragment();
+  var child1 = document.createElement('p');
+  var child2 = document.createElement('p');
+  frag.appendChild(child1);
+  frag.appendChild(child2);
+
+  assert.strictEqual(after.previousSibling, before);
+
+  parent.insertBefore(frag, after);
+
+  assert.strictEqual(frag.firstChild, null);
+  assert.strictEqual(frag.lastChild, null);
+
+  assert.strictEqual(child1.parentNode, parent);
+  assert.strictEqual(child2.parentNode, parent);
+
+  assert.strictEqual(before.previousSibling, null);
+  assert.strictEqual(before.nextSibling,     child1);
+  assert.strictEqual(child1.previousSibling, before);
+  assert.strictEqual(child1.nextSibling,     child2);
+  assert.strictEqual(child2.previousSibling, child1);
+  assert.strictEqual(child2.nextSibling,     after);
+  assert.strictEqual(after.previousSibling,  child2);
+  assert.strictEqual(after.nextSibling,      null);
+});
+
+QUnit.test("insert an empty document fragment does nothing", function(assert) {
+  var document = new Document();
+  var parent = document.createElement('div');
+  var before = document.createComment('before');
+  var after = document.createComment('after');
+  parent.appendChild(before);
+  parent.appendChild(after);
+
+  var frag = document.createDocumentFragment();
+
+  parent.insertBefore(frag, after);
+
+  assert.strictEqual(parent.firstChild, before);
+  assert.strictEqual(parent.lastChild, after);
+  assert.strictEqual(before.nextSibling,     after);
+  assert.strictEqual(after.previousSibling,  before);
+  assert.strictEqual(after.nextSibling,      null);
 });
 
 // http://www.w3.org/TR/DOM-Level-3-Core/core.html#ID-536297177
@@ -112,6 +167,10 @@ QUnit.test("cloneNode(true) recursively clones nodes", function(assert) {
   var child2 = document.createElement('img');
   child2.setAttribute('src', 'hamster.png');
   var child3 = document.createElement('span');
+  var child31 = document.createComment('');
+  var child32 = document.createRawHTMLSection('<p data-attr="herp">derp</p>');
+  child3.appendChild(child31);
+  child3.appendChild(child32);
 
   parent.appendChild(child1);
   parent.appendChild(child2);
@@ -140,9 +199,11 @@ QUnit.test("cloneNode(true) recursively clones nodes", function(assert) {
   var fragment = document.createDocumentFragment();
   fragment.appendChild(clone);
 
+  fragment = fragment.cloneNode(true);
+
   var actual = new Serializer(voidMap).serialize(fragment);
 
-  assert.equal(actual, '<div><p>hello<span> world</span>!</p><img src="hamster.png"><span></span></div>');
+  assert.equal(actual, '<div><p>hello<span> world</span>!</p><img src="hamster.png"><span><!----><p data-attr="herp">derp</p></span></div>');
 });
 
 QUnit.test("head + metatags", function(assert) {
@@ -177,4 +238,19 @@ QUnit.test("setAttribute converts non strings", function (assert) {
   assert.strictEqual(div.getAttribute('a'), 'true');
   div.setAttribute('a', false);
   assert.strictEqual(div.getAttribute('a'), 'false');
+});
+
+QUnit.test("removeAttribute", function (assert) {
+  var document = new Document();
+  var div = document.createElement('div');
+  div.setAttribute('a', 'something');
+  div.setAttribute('b', 'something else');
+  assert.strictEqual(div.getAttribute('a'), 'something');
+  assert.strictEqual(div.getAttribute('b'), 'something else');
+  div.removeAttribute('b');
+  assert.strictEqual(div.getAttribute('a'), 'something');
+  assert.strictEqual(div.getAttribute('b'), null);
+  div.removeAttribute('a');
+  assert.strictEqual(div.getAttribute('a'), null);
+  assert.strictEqual(div.getAttribute('b'), null);
 });

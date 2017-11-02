@@ -1,9 +1,9 @@
-import Comment from './document/comment';
-import DocumentFragment from './document/document-fragment';
-import Element from './document/element';
-import Node, { NodeType } from './document/node';
-import RawHTMLSection from './document/raw-html-section';
-import Text from './document/text';
+import Comment from './comment';
+import DocumentFragment from './document-fragment';
+import Element from './element';
+import Node, { NodeType } from './node';
+import RawHTMLSection from './raw-html-section';
+import Text from './text';
 
 export default class Document extends Node {
   public documentElement: Element;
@@ -38,5 +38,9 @@ export default class Document extends Node {
 
   public createDocumentFragment() {
     return new DocumentFragment();
+  }
+
+  protected _cloneNode() {
+    return new Document();
   }
 }

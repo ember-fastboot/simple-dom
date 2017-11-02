@@ -1,43 +1,29 @@
 {
-  "name": "simple-dom",
-  "version": "1.3.0",
-  "description": "A simple JS DOM.",
-  "main": "dist/simple-dom.js",
-  "module": "lib/simple-dom.js",
-  "jsnext:main": "lib/simple-dom.js",
-  "types": "lib/simple-dom.d.ts",
-  "files": [
-    "lib",
-    "dist",
-    "src"
-  ],
+  "private": true,
   "scripts": {
-    "prepublish": "npm run build",
-    "build": "tsc && rollup -c rollup.config.js && rollup -c rollup.config.test.js",
-    "test": "testem ci",
+    "prepare": "ember build",
     "lint": "tslint -p tsconfig.json",
-    "bench": "npm run build && node ./benches/serialize.js"
+    "test": "nyc --check-coverage -- qunit test/index.js"
   },
-  "keywords": [
-    "html",
-    "dom",
-    "serializer",
-    "parser"
+  "workspaces": [
+    "packages/@simple-dom/document",
+    "packages/@simple-dom/parser",
+    "packages/@simple-dom/serializer",
+    "packages/@simple-dom/void-map",
+    "packages/simple-dom"
   ],
-  "author": "Kris Selden",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/ember-fastboot/simple-dom.git"
-  },
   "devDependencies": {
-    "do-you-even-bench": "^1.0.5",
-    "qunitjs": "^2.4.0",
-    "rollup": "^0.49.2",
-    "rollup-plugin-buble": "^0.16.0",
+    "broccoli-funnel": "^2.0.1",
+    "broccoli-merge-trees": "^2.0.0",
+    "broccoli-rollup": "^1.3.0",
+    "broccoli-tee": "^1.0.2",
+    "broccoli-typescript-compiler": "^2.1.0",
+    "ember-cli": "^2.16.2",
+    "lerna": "^2.5.1",
+    "nyc": "^11.3.0",
+    "qunit": "^2.4.1",
+    "rollup-plugin-buble": "^0.17.0",
     "rollup-plugin-sourcemaps": "^0.4.2",
-    "simple-html-tokenizer": "^0.4.1",
-    "testem": "^1.18.4",
     "tslint": "^5.7.0",
     "typescript": "^2.5.2"
   }

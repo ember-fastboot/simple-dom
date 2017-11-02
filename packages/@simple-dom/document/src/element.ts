@@ -71,7 +71,10 @@ export default class Element extends Node {
 
     const attrs = node.attributes = [] as Attr[];
 
-    for (const attr of this.attributes) {
+    const src = this.attributes;
+
+    for (let i = 0; i < src.length; i++) {
+      const attr = src[i];
       attrs.push({ name: attr.name, specified: attr.specified, value: attr.value });
     }
 

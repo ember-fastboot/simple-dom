@@ -1,13 +1,13 @@
-import { Document } from 'simple-dom';
+const Document = require('@simple-dom/document').Document;
 
-export var document = (function (){
+const document = (function (){
   if (typeof window !== 'undefined' && window.document) {
     return window.document;
   }
   return new Document();
 }());
 
-export function element(tagName, attrs) {
+function element(tagName, attrs) {
   var el = document.createElement(tagName);
   for (var key in attrs) {
     el.setAttribute(key, attrs[key]);
@@ -18,7 +18,7 @@ export function element(tagName, attrs) {
   return el;
 }
 
-export function fragment() {
+function fragment() {
   var frag = document.createDocumentFragment();
   for (var i=0; i<arguments.length; i++) {
     frag.appendChild(arguments[i]);
@@ -26,14 +26,20 @@ export function fragment() {
   return frag;
 }
 
-export function text(s) {
+function text(s) {
   return document.createTextNode(s);
 }
 
-export function comment(s) {
+function comment(s) {
   return document.createComment(s);
 }
 
-export function html(s) {
+function html(s) {
   return document.createRawHTMLSection(s);
 }
+
+exports.document = document;
+exports.element = element;
+exports.fragment = fragment;
+exports.text = text;
+exports.html = html;
