@@ -13,6 +13,9 @@
     "serializer",
     "parser"
   ],
+  "scripts": {
+    "prepare": "ember build"
+  },
   "repository": "https://github.com/ember-fastboot/simple-dom",
   "main": "dist/commonjs/es5/index.js",
   "jsnext:main": "dist/modules/es5/index.js",

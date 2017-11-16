@@ -10,6 +10,7 @@
     "noImplicitAny": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
+    "noEmit": true,
     "baseUrl" : "packages",
     "rootDir": "packages",
     "lib": [ "es5", "es2015.core" ],
@@ -17,11 +18,12 @@
       "@simple-dom/*": ["@simple-dom/*/src/index.ts"]
     }
   },
-  "files": [
-    "packages/@simple-dom/document/src/index.ts",
-    "packages/@simple-dom/parser/src/index.ts",
-    "packages/@simple-dom/serializer/src/index.ts",
-    "packages/@simple-dom/void-map/src/index.ts",
-    "packages/simple-dom/src/index.ts"
+  "include": [
+    "packages/**/src/index.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "tmp"
   ]
 }
