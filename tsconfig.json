@@ -13,7 +13,7 @@
     "noEmit": true,
     "baseUrl" : "packages",
     "rootDir": "packages",
-    "lib": [ "es5", "es2015.core" ],
+    "lib": [ "es2015" ],
     "paths": {
       "@simple-dom/*": ["@simple-dom/*/src/index.ts"]
     }
