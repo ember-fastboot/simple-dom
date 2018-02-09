@@ -1,0 +1,22 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "QUnit simple-dom",
+      "program": "${workspaceFolder}/node_modules/.bin/qunit",
+      "args": [
+        "packages/**/commonjs/es5/test.js"
+      ],
+      "sourceMaps": true,
+      "outFiles": [
+        "${workspaceFolder}/packages/@simple-dom/*/dist/**/*.js",
+        "${workspaceFolder}/packages/simple-dom/dist/**/*.js"
+      ]
+    }
+  ]
+}

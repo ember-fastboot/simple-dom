@@ -1,15 +1,31 @@
 {
   "compilerOptions": {
-    "rootDir": "src",
-    "outDir": "lib",
+    "outDir": "dist/packages",
     "moduleResolution": "node",
     "module": "es2015",
     "target": "es2017",
     "declaration": true,
     "sourceMap": true,
-    "strict": true
+    "strict": true,
+    "noImplicitAny": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noEmit": true,
+    "baseUrl" : "packages",
+    "rootDir": "packages",
+    "lib": [ "es2015" ],
+    "paths": {
+      "@simple-dom/*": ["@simple-dom/*/src/index.ts"]
+    }
   },
-  "files": [
-    "src/simple-dom.ts"
+  "include": [
+    "packages/@simple-dom/*/src/index.ts",
+    "packages/simple-dom/src/index.ts",
+    "packages/simple-dom/test/index.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "tmp"
   ]
 }

@@ -1,0 +1,30 @@
+{
+  "name": "@simple-dom/parser",
+  "version": "1.3.0",
+  "description": "A simple HTML parser",
+  "author": "Kris Selden",
+  "license": "MIT",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "keywords": [
+    "html",
+    "dom",
+    "parser"
+  ],
+  "scripts": {
+    "prepare": "ember build"
+  },
+  "repository": "https://github.com/ember-fastboot/simple-dom/tree/master/packages/@simple-dom/parser",
+  "main": "dist/commonjs/es5/index.js",
+  "jsnext:main": "dist/modules/es5/index.js",
+  "module": "dist/modules/es2017/index.js",
+  "types": "dist/types/index.d.ts",
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "simple-html-tokenizer": "^0.4.3"
+  }
+}

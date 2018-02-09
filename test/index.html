@@ -2,14 +2,30 @@
 <head>
   <meta charset="utf-8">
   <title>Simple DOM Tests</title>
-  <link rel="stylesheet" href="../node_modules/qunitjs/qunit/qunit.css" />
+  <link rel="stylesheet" href="../node_modules/qunit/qunit/qunit.css" />
 </head>
 <body>
   <div id="qunit"></div>
-  <script src="../node_modules/qunitjs/qunit/qunit.js"></script>
+  <script src="../node_modules/qunit/qunit/qunit.js"></script>
   <script src="../node_modules/simple-html-tokenizer/dist/simple-html-tokenizer.js"></script>
-  <script src="../dist/simple-dom.js"></script>
-  <script src="../dist/simple-dom-test.js"></script>
+
+  <script src="../node_modules/loader.js/dist/loader/loader.js"></script>
+  <script>
+  define('simple-html-tokenizer', ['exports'], (exports) => {
+    exports.default = HTML5Tokenizer;
+    exports.tokenize = HTML5Tokenizer.tokenize;
+  });
+  </script>
+
+  <script src="../dist/packages/@simple-dom/document/dist/amd/es5/index.js"></script>
+  <script src="../dist/packages/@simple-dom/serializer/dist/amd/es5/index.js"></script>
+  <script src="../dist/packages/@simple-dom/parser/dist/amd/es5/index.js"></script>
+  <script src="../dist/packages/@simple-dom/void-map/dist/amd/es5/index.js"></script>
+  <script src="../dist/packages/simple-dom/dist/amd/es5/test.js"></script>
+  <script>
+  require('simple-dom/test');
+  </script>
+
   <script src="/testem.js"></script>
 </body>
 </html>

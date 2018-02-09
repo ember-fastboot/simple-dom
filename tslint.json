@@ -12,7 +12,8 @@
         "variable-name": {
             "options": "allow-leading-underscore"
         },
-        "interface-name": false
+        "interface-name": false,
+        "prefer-for-of": false
     },
     "rulesDirectory": []
 }
