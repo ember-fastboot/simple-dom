@@ -4,7 +4,7 @@
     "prepare": "ember build --environment=production",
     "build": "ember build",
     "lint": "tslint -p tsconfig.json",
-    "test": "nyc --check-coverage -- qunit packages/simple-dom/dist/commonjs/es5/test.js"
+    "test": "ember test && nyc --check-coverage -- qunit packages/simple-dom/dist/commonjs/es5/test.js"
   },
   "workspaces": [
     "packages/@simple-dom/void-map",

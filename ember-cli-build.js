@@ -5,7 +5,7 @@ const mergeTrees = require('broccoli-merge-trees');
 const tee = require('broccoli-tee');
 const build = require('./lib/build');
 
-module.exports = function (opts) {
+module.exports = function () {
   const workspaces = require('./package').workspaces.filter((workspace) => {
     return fs.existsSync(`${__dirname}/${workspace}/src`);
   });
@@ -16,7 +16,19 @@ module.exports = function (opts) {
 
   const compiled = build.compileSrc(src);
 
-  return mergeTrees(workspaces.map((workspace) => {
+  const qunit = new Funnel('node_modules/qunit/qunit', {
+    include: ['qunit.js', 'qunit.css']
+  });
+
+  const loader = new Funnel('node_modules/loader.js/dist/loader', {
+    include: ['loader.js']
+  });
+
+  const simpleHTMLTokenizer = new Funnel('node_modules/simple-html-tokenizer/dist', {
+    include: ['simple-html-tokenizer.js']
+  });
+
+  return mergeTrees([qunit, loader, simpleHTMLTokenizer, 'test'].concat(workspaces.map((workspace) => {
     const dist = build.packageDist(compiled, workspace);
 
     tee(dist, `${__dirname}/${workspace}/dist`);
@@ -26,5 +38,5 @@ module.exports = function (opts) {
       destDir: `${workspace}/dist`,
       annotation: `mv . to ${workspace}/dist`
     });
-  }));
+  })));
 }
