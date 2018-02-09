@@ -27,6 +27,7 @@ export class SimpleKind {
 export class RealKind {
   public type: typeof REAL_TYPE = REAL_TYPE;
 
+  /* istanbul ignore next */
   public helper(): Helper {
     return new RealHelper();
   }
@@ -86,6 +87,7 @@ export class SimpleHelper extends Helper {
 
   public insertAdjacentHTML(element: Element, position: InsertPosition, text: string): Element {
     const raw = this.document.createRawHTMLSection(text);
+    /* istanbul ignore next */
     switch (position) {
       case 'beforebegin':
         element.parentNode!.insertBefore(raw, element);
@@ -105,6 +107,7 @@ export class SimpleHelper extends Helper {
   }
 }
 
+/* istanbul ignore next */
 export class RealHelper extends Helper {
   constructor() {
     super(self.document.implementation.createHTMLDocument());
@@ -121,6 +124,7 @@ export type DomKind = SimpleKind | RealKind;
 export type ModuleCallback = (kind: DomKind) => void;
 
 export function runBoth(defModule: ModuleCallback): void {
+  /* istanbul ignore next */
   if (typeof self !== 'undefined' && self.document) {
     QUnit.module(REAL_TYPE, () => {
       defModule(new RealKind());
