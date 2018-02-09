@@ -4,3 +4,4 @@ dist/
 tmp/
 /coverage/
 /instrumentation.*.json
+/DEBUG/

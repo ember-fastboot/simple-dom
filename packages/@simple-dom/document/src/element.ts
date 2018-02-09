@@ -30,7 +30,7 @@ export default class Element extends Node {
     return null;
   }
 
-  public setAttribute(name: string, value: string): void {
+  public setAttribute(name: string, value: any | undefined | null): void {
     const attributes = this.attributes;
     const n = name.toLowerCase();
     let v: string;

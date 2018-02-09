@@ -19,7 +19,9 @@
     }
   },
   "include": [
-    "packages/**/src/index.ts"
+    "packages/@simple-dom/*/src/index.ts",
+    "packages/simple-dom/src/index.ts",
+    "packages/simple-dom/test/index.ts"
   ],
   "exclude": [
     "node_modules",

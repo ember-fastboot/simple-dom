@@ -1,56 +1,57 @@
-const Document = require('@simple-dom/document').Document;
-const Serializer = require('@simple-dom/serializer');
-const voidMap = require('@simple-dom/void-map');
+import { Document, DocumentFragment } from '@simple-dom/document';
+import Serializer from '@simple-dom/serializer';
+import voidMap from '@simple-dom/void-map';
 
 QUnit.module('Element');
 
 // See http://www.w3.org/TR/2000/WD-DOM-Level-1-20000929/level-one-core.html#ID-B63ED1A3
-QUnit.test("appending a document fragment appends the fragment's children and not the fragment itself", function(assert) {
-  var document = new Document();
+QUnit.test('appending a document fragment appends the fragment\'s children and not the fragment itself', (assert) => {
+  const document = new Document();
 
-  var frag = document.createDocumentFragment();
-  var elem = document.createElement('div');
-  var body = document.body;
+  const frag = document.createDocumentFragment();
+  const elem = document.createElement('div');
+  const body = document.body;
 
-  assert.strictEqual(body.firstChild, null, "body has no children");
+  assert.strictEqual(body.firstChild, null, 'body has no children');
 
   frag.appendChild(elem);
   body.appendChild(frag);
 
-  assert.strictEqual(body.firstChild.tagName, "DIV", "fragment's child is added as child of document");
+  assert.strictEqual(body.firstChild!.nodeName, 'DIV', 'fragment\'s child is added as child of document');
 });
 
 // See http://www.w3.org/TR/2000/WD-DOM-Level-1-20000929/level-one-core.html#ID-B63ED1A3
-QUnit.test("appending a document fragment (via insertBefore) appends the fragment's children and not the fragment itself", function(assert) {
-  var document = new Document();
+// tslint:disable-next-line:max-line-length
+QUnit.test('appending a document fragment (via insertBefore) appends the fragment\'s children and not the fragment itself', (assert) => {
+  const document = new Document();
 
-  var frag = document.createDocumentFragment();
-  var elem = document.createElement('div');
-  var existing = document.createElement('main');
-  var body = document.body;
+  const frag = document.createDocumentFragment();
+  const elem = document.createElement('div');
+  const existing = document.createElement('main');
+  const body = document.body;
   body.appendChild(existing);
 
-  assert.strictEqual(body.firstChild.tagName, "MAIN", "sanity check: the main element was actually inserted");
-  assert.strictEqual(body.lastChild.tagName, "MAIN", "sanity check: the main element was actually inserted");
+  assert.strictEqual(body.firstChild!.nodeName, 'MAIN', 'sanity check: the main element was actually inserted');
+  assert.strictEqual(body.lastChild!.nodeName, 'MAIN', 'sanity check: the main element was actually inserted');
 
   frag.appendChild(elem);
   body.insertBefore(frag, existing);
 
-  assert.strictEqual(body.firstChild.tagName, "DIV", "The body's first child is now DIV");
-  assert.strictEqual(body.lastChild.tagName, "MAIN", "The body's last child is now MAIN");
+  assert.strictEqual(body.firstChild!.nodeName, 'DIV', 'The body\'s first child is now DIV');
+  assert.strictEqual(body.lastChild!.nodeName, 'MAIN', 'The body\'s last child is now MAIN');
 });
 
-QUnit.test("insert a document fragment before a node with a previousSibling", function(assert) {
-  var document = new Document();
-  var parent = document.createElement('div');
-  var before = document.createComment('before');
-  var after = document.createComment('after');
+QUnit.test('insert a document fragment before a node with a previousSibling', (assert) => {
+  const document = new Document();
+  const parent = document.createElement('div');
+  const before = document.createComment('before');
+  const after = document.createComment('after');
   parent.appendChild(before);
   parent.appendChild(after);
 
-  var frag = document.createDocumentFragment();
-  var child1 = document.createElement('p');
-  var child2 = document.createElement('p');
+  const frag = document.createDocumentFragment();
+  const child1 = document.createElement('p');
+  const child2 = document.createElement('p');
   frag.appendChild(child1);
   frag.appendChild(child2);
 
@@ -74,15 +75,15 @@ QUnit.test("insert a document fragment before a node with a previousSibling", fu
   assert.strictEqual(after.nextSibling,      null);
 });
 
-QUnit.test("insert an empty document fragment does nothing", function(assert) {
-  var document = new Document();
-  var parent = document.createElement('div');
-  var before = document.createComment('before');
-  var after = document.createComment('after');
+QUnit.test('insert an empty document fragment does nothing', (assert) => {
+  const document = new Document();
+  const parent = document.createElement('div');
+  const before = document.createComment('before');
+  const after = document.createComment('after');
   parent.appendChild(before);
   parent.appendChild(after);
 
-  var frag = document.createDocumentFragment();
+  const frag = document.createDocumentFragment();
 
   parent.insertBefore(frag, after);
 
@@ -94,15 +95,15 @@ QUnit.test("insert an empty document fragment does nothing", function(assert) {
 });
 
 // http://www.w3.org/TR/DOM-Level-3-Core/core.html#ID-536297177
-QUnit.test("child nodes can be access via item()", function(assert) {
-  var document = new Document();
+QUnit.test('child nodes can be access via item()', (assert) => {
+  const document = new Document();
 
-  var parent = document.createElement('div');
+  const parent = document.createElement('div');
 
-  var child1 = document.createElement('p');
-  var child2 = document.createElement('img');
+  const child1 = document.createElement('p');
+  const child2 = document.createElement('img');
 
-  assert.strictEqual(parent.childNodes.item(0), null, "attempting to access an item that doesn't exist returns null");
+  assert.strictEqual(parent.childNodes.item(0), null, 'attempting to access an item that doesn\'t exist returns null');
 
   parent.appendChild(child1);
   parent.appendChild(child2);
@@ -121,14 +122,14 @@ QUnit.test("child nodes can be access via item()", function(assert) {
   assert.strictEqual(parent.childNodes.item(1), null);
 });
 
-QUnit.test("insertBefore can insert before the last child node", function(assert) {
-  var document = new Document();
+QUnit.test('insertBefore can insert before the last child node', (assert) => {
+  const document = new Document();
 
-  var parent = document.createElement('div');
+  const parent = document.createElement('div');
 
-  var child1 = document.createElement('p');
-  var child2 = document.createElement('img');
-  var child3 = document.createElement('span');
+  const child1 = document.createElement('p');
+  const child2 = document.createElement('img');
+  const child3 = document.createElement('span');
 
   parent.appendChild(child1);
   parent.appendChild(child2);
@@ -138,12 +139,12 @@ QUnit.test("insertBefore can insert before the last child node", function(assert
   assert.strictEqual(parent.childNodes.item(1), child3);
 });
 
-QUnit.test("insertBefore removes the node from its parent before inserting", function(assert) {
-  var document = new Document();
-  var body = document.body;
+QUnit.test('insertBefore removes the node from its parent before inserting', (assert) => {
+  const document = new Document();
+  const body = document.body;
 
-  var parent = document.createElement('div');
-  var child =  document.createElement('span');
+  const parent = document.createElement('div');
+  const child =  document.createElement('span');
   parent.appendChild(child);
   body.appendChild(parent);
 
@@ -159,16 +160,16 @@ QUnit.test("insertBefore removes the node from its parent before inserting", fun
   assert.strictEqual(parent.lastChild, null, 'child removed from parent (lastChild)');
 });
 
-QUnit.test("cloneNode(true) recursively clones nodes", function(assert) {
-  var document = new Document();
-  var parent = document.createElement('div');
+QUnit.test('cloneNode(true) recursively clones nodes', (assert) => {
+  const document = new Document();
+  const parent = document.createElement('div');
 
-  var child1 = document.createElement('p');
-  var child2 = document.createElement('img');
+  const child1 = document.createElement('p');
+  const child2 = document.createElement('img');
   child2.setAttribute('src', 'hamster.png');
-  var child3 = document.createElement('span');
-  var child31 = document.createComment('');
-  var child32 = document.createRawHTMLSection('<p data-attr="herp">derp</p>');
+  const child3 = document.createElement('span');
+  const child31 = document.createComment('');
+  const child32 = document.createRawHTMLSection('<p data-attr="herp">derp</p>');
   child3.appendChild(child31);
   child3.appendChild(child32);
 
@@ -176,56 +177,57 @@ QUnit.test("cloneNode(true) recursively clones nodes", function(assert) {
   parent.appendChild(child2);
   parent.appendChild(child3);
 
-  var child11 = document.createTextNode('hello');
-  var child12 = document.createElement('span');
+  const child11 = document.createTextNode('hello');
+  const child12 = document.createElement('span');
   child12.appendChild(document.createTextNode(' world'));
-  var child13 = document.createTextNode('!');
+  const child13 = document.createTextNode('!');
 
   child1.appendChild(child11);
   child1.appendChild(child12);
   child1.appendChild(child13);
 
-  var clone = parent.cloneNode(true);
+  const clone = parent.cloneNode(true);
 
   assert.notEqual(parent.firstChild, null);
   assert.notStrictEqual(clone.firstChild, parent.firstChild);
 
-  var clone2 = parent.cloneNode(true);
+  const clone2 = parent.cloneNode(true);
 
   assert.notEqual(parent.firstChild, null);
   assert.notStrictEqual(clone2.firstChild, clone.firstChild);
   assert.notStrictEqual(clone2.firstChild, parent.firstChild);
 
-  var fragment = document.createDocumentFragment();
+  let fragment = document.createDocumentFragment();
   fragment.appendChild(clone);
 
-  fragment = fragment.cloneNode(true);
+  fragment = fragment.cloneNode(true) as DocumentFragment;
 
-  var actual = new Serializer(voidMap).serialize(fragment);
+  const actual = new Serializer(voidMap).serialize(fragment);
 
+  // tslint:disable-next-line:max-line-length
   assert.equal(actual, '<div><p>hello<span> world</span>!</p><img src="hamster.png"><span><!----><p data-attr="herp">derp</p></span></div>');
 });
 
-QUnit.test("head + metatags", function(assert) {
-  var document = new Document();
+QUnit.test('head + metatags', (assert) => {
+  const document = new Document();
 
-  var meta = document.createElement('meta');
+  const meta = document.createElement('meta');
   meta.setAttribute('name', 'description');
   meta.setAttribute('content', 'something here');
 
-  var head = document.head;
+  const head = document.head;
   head.appendChild(meta);
 
-  var actual = new Serializer(voidMap).serialize(head.firstChild);
+  const actual = new Serializer(voidMap).serialize(head.firstChild!);
 
-  assert.strictEqual(head.firstChild.tagName, "META", "sanity check: the meta element was actually inserted");
+  assert.strictEqual(head.firstChild!.nodeName, 'META', 'sanity check: the meta element was actually inserted');
   assert.equal(actual, '<meta name="description" content="something here">');
 });
 
-QUnit.test("setAttribute converts non strings", function (assert) {
-  var document = new Document();
+QUnit.test('setAttribute converts non strings', (assert) => {
+  const document = new Document();
 
-  var div = document.createElement('div');
+  const div = document.createElement('div');
   div.setAttribute('a', 0);
   assert.strictEqual(div.getAttribute('a'), '0');
   div.setAttribute('a', 1);
@@ -240,9 +242,9 @@ QUnit.test("setAttribute converts non strings", function (assert) {
   assert.strictEqual(div.getAttribute('a'), 'false');
 });
 
-QUnit.test("removeAttribute", function (assert) {
-  var document = new Document();
-  var div = document.createElement('div');
+QUnit.test('removeAttribute', (assert) => {
+  const document = new Document();
+  const div = document.createElement('div');
   div.setAttribute('a', 'something');
   div.setAttribute('b', 'something else');
   assert.strictEqual(div.getAttribute('a'), 'something');

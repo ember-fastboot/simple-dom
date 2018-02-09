@@ -1,9 +1,10 @@
 {
   "private": true,
   "scripts": {
-    "prepare": "ember build",
+    "prepare": "ember build --environment=production",
+    "build": "ember build",
     "lint": "tslint -p tsconfig.json",
-    "test": "nyc --check-coverage -- qunit test/index.js"
+    "test": "nyc --check-coverage -- qunit packages/simple-dom/dist/commonjs/es5/test.js"
   },
   "workspaces": [
     "packages/@simple-dom/void-map",
@@ -13,6 +14,8 @@
     "packages/simple-dom"
   ],
   "devDependencies": {
+    "@types/qunit": "^2.0.31",
+    "broccoli-debug": "^0.6.4",
     "broccoli-funnel": "^2.0.1",
     "broccoli-merge-trees": "^2.0.0",
     "broccoli-rollup": "^2.0.0",
@@ -20,6 +23,7 @@
     "broccoli-typescript-compiler": "^2.1.0",
     "ember-cli": "^2.16.2",
     "lerna": "^2.5.1",
+    "loader.js": "^4.6.0",
     "nyc": "^11.3.0",
     "qunit": "^2.4.1",
     "rollup-plugin-buble": "^0.17.0",
