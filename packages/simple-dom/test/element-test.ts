@@ -1,12 +1,15 @@
-import { Document, DocumentFragment } from '@simple-dom/document';
+import { DocumentFragment } from '@simple-dom/document';
 import Serializer from '@simple-dom/serializer';
 import voidMap from '@simple-dom/void-map';
+import { runBoth } from './support';
 
+runBoth((kind) => {
 QUnit.module('Element');
 
 // See http://www.w3.org/TR/2000/WD-DOM-Level-1-20000929/level-one-core.html#ID-B63ED1A3
+// tslint:disable-next-line:max-line-length
 QUnit.test('appending a document fragment appends the fragment\'s children and not the fragment itself', (assert) => {
-  const document = new Document();
+  const { document } = kind.helper();
 
   const frag = document.createDocumentFragment();
   const elem = document.createElement('div');
@@ -23,7 +26,7 @@ QUnit.test('appending a document fragment appends the fragment\'s children and n
 // See http://www.w3.org/TR/2000/WD-DOM-Level-1-20000929/level-one-core.html#ID-B63ED1A3
 // tslint:disable-next-line:max-line-length
 QUnit.test('appending a document fragment (via insertBefore) appends the fragment\'s children and not the fragment itself', (assert) => {
-  const document = new Document();
+  const { document } = kind.helper();
 
   const frag = document.createDocumentFragment();
   const elem = document.createElement('div');
@@ -42,7 +45,8 @@ QUnit.test('appending a document fragment (via insertBefore) appends the fragmen
 });
 
 QUnit.test('insert a document fragment before a node with a previousSibling', (assert) => {
-  const document = new Document();
+  const { document } = kind.helper();
+
   const parent = document.createElement('div');
   const before = document.createComment('before');
   const after = document.createComment('after');
@@ -76,7 +80,8 @@ QUnit.test('insert a document fragment before a node with a previousSibling', (a
 });
 
 QUnit.test('insert an empty document fragment does nothing', (assert) => {
-  const document = new Document();
+  const { document } = kind.helper();
+
   const parent = document.createElement('div');
   const before = document.createComment('before');
   const after = document.createComment('after');
@@ -96,13 +101,14 @@ QUnit.test('insert an empty document fragment does nothing', (assert) => {
 
 // http://www.w3.org/TR/DOM-Level-3-Core/core.html#ID-536297177
 QUnit.test('child nodes can be access via item()', (assert) => {
-  const document = new Document();
+  const { document } = kind.helper();
 
   const parent = document.createElement('div');
 
   const child1 = document.createElement('p');
   const child2 = document.createElement('img');
 
+  // tslint:disable-next-line:max-line-length
   assert.strictEqual(parent.childNodes.item(0), null, 'attempting to access an item that doesn\'t exist returns null');
 
   parent.appendChild(child1);
@@ -123,7 +129,7 @@ QUnit.test('child nodes can be access via item()', (assert) => {
 });
 
 QUnit.test('insertBefore can insert before the last child node', (assert) => {
-  const document = new Document();
+  const { document } = kind.helper();
 
   const parent = document.createElement('div');
 
@@ -140,7 +146,8 @@ QUnit.test('insertBefore can insert before the last child node', (assert) => {
 });
 
 QUnit.test('insertBefore removes the node from its parent before inserting', (assert) => {
-  const document = new Document();
+  const { document } = kind.helper();
+
   const body = document.body;
 
   const parent = document.createElement('div');
@@ -161,7 +168,8 @@ QUnit.test('insertBefore removes the node from its parent before inserting', (as
 });
 
 QUnit.test('cloneNode(true) recursively clones nodes', (assert) => {
-  const document = new Document();
+  const { document, insertAdjacentHTML } = kind.helper();
+
   const parent = document.createElement('div');
 
   const child1 = document.createElement('p');
@@ -169,9 +177,9 @@ QUnit.test('cloneNode(true) recursively clones nodes', (assert) => {
   child2.setAttribute('src', 'hamster.png');
   const child3 = document.createElement('span');
   const child31 = document.createComment('');
-  const child32 = document.createRawHTMLSection('<p data-attr="herp">derp</p>');
   child3.appendChild(child31);
-  child3.appendChild(child32);
+
+  insertAdjacentHTML(child3, 'beforeend', '<p data-attr="herp">derp</p>');
 
   parent.appendChild(child1);
   parent.appendChild(child2);
@@ -209,7 +217,7 @@ QUnit.test('cloneNode(true) recursively clones nodes', (assert) => {
 });
 
 QUnit.test('head + metatags', (assert) => {
-  const document = new Document();
+  const { document } = kind.helper();
 
   const meta = document.createElement('meta');
   meta.setAttribute('name', 'description');
@@ -225,7 +233,7 @@ QUnit.test('head + metatags', (assert) => {
 });
 
 QUnit.test('setAttribute converts non strings', (assert) => {
-  const document = new Document();
+  const { document } = kind.helper();
 
   const div = document.createElement('div');
   div.setAttribute('a', 0);
@@ -243,7 +251,7 @@ QUnit.test('setAttribute converts non strings', (assert) => {
 });
 
 QUnit.test('removeAttribute', (assert) => {
-  const document = new Document();
+  const { document } = kind.helper();
   const div = document.createElement('div');
   div.setAttribute('a', 'something');
   div.setAttribute('b', 'something else');
@@ -255,4 +263,6 @@ QUnit.test('removeAttribute', (assert) => {
   div.removeAttribute('a');
   assert.strictEqual(div.getAttribute('a'), null);
   assert.strictEqual(div.getAttribute('b'), null);
+});
+
 });

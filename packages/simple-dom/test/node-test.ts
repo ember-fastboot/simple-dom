@@ -1,9 +1,11 @@
-import { Document } from '@simple-dom/document';
+import { runBoth } from './support';
+
+runBoth((kind) => {
 
 QUnit.module('Node');
 
 QUnit.test('#insertBefore', (assert) => {
-  const doc = new Document();
+  const doc = kind.helper().document;
   const body = doc.body;
   const div = doc.createElement('div');
   const span = doc.createElement('span');
@@ -27,4 +29,6 @@ QUnit.test('#insertBefore', (assert) => {
   assert.strictEqual(div.parentNode, body, 'next sibling\'s parent is set');
   assert.strictEqual(body.firstChild, span, 'parents first child is set');
   assert.strictEqual(body.lastChild, div, 'parents last child is set');
+});
+
 });
