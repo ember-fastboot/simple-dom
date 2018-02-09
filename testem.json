@@ -1,17 +1,16 @@
 {
-  "test_page": "test/index.html",
+  "test_page": "index.html",
   "parallel": 5,
-  "before_tests": "npm run build",
-  "src_files": [
-    "lib/**/*.js",
-    "test/*.js"
-  ],
-  "launchers": {
-    "Node": {
-      "command": "./node_modules/.bin/qunit dist/simple-dom.js dist/simple-dom-test.js",
-      "protocol": "tap"
-    }
-  },
-  "launch_in_ci":  ["Node", "PhantomJS"],
-  "launch_in_dev":  ["Node", "Chrome", "Firefox", "Safari"]
+  "before_tests": "yarn run build",
+  "launch_in_ci":  ["Chrome"],
+  "launch_in_dev":  ["Chrome", "Firefox", "Safari"],
+  "browser_args": {
+    "Chrome": [
+      "--headless",
+      "--disable-gpu",
+      "--remote-debugging-port=0",
+      "--no-sandbox",
+      "--mute-audio"
+    ]
+  }
 }
