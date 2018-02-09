@@ -1,11 +1,11 @@
-/*globals window*/
 import Serializer from '@simple-dom/serializer';
 import voidMap from '@simple-dom/void-map';
-import { element, fragment, html, text } from './support';
+import { runBoth } from './support';
 
-declare const window: any;
+runBoth((kind) => {
 
 let serializer: Serializer;
+
 QUnit.module('Serializer', {
   beforeEach() {
     serializer = new Serializer(voidMap);
@@ -16,11 +16,13 @@ QUnit.module('Serializer', {
 });
 
 QUnit.test('serializes single element correctly', (assert) => {
+  const { element } = kind.helper();
   const actual = serializer.serialize(element('div'));
   assert.equal(actual, '<div></div>');
 });
 
 QUnit.test('serializes element with attribute number value correctly', (assert) => {
+  const { element } = kind.helper();
   const actual = serializer.serialize(element('div', {
     height: 500,
   }));
@@ -28,11 +30,13 @@ QUnit.test('serializes element with attribute number value correctly', (assert) 
 });
 
 QUnit.test('serializes single void element correctly', (assert) => {
+  const { element } = kind.helper();
   const actual = serializer.serialize(element('img', { src: 'foo' }));
   assert.equal(actual, '<img src="foo">');
 });
 
 QUnit.test('serializes complex tree correctly', (assert) => {
+  const { element, fragment, text } = kind.helper();
   const actual = serializer.serialize(fragment(
     element('div', { id: 'foo' },
       element('b', {},
@@ -46,6 +50,7 @@ QUnit.test('serializes complex tree correctly', (assert) => {
 });
 
 QUnit.test('does not serialize siblings of an element', (assert) => {
+  const { element } = kind.helper();
   const htmlEl = element('html');
   const head = element('head');
   const body = element('body');
@@ -64,6 +69,7 @@ QUnit.test('does not serialize siblings of an element', (assert) => {
 });
 
 QUnit.test('serializes children but not self', (assert) => {
+  const { element, fragment, text } = kind.helper();
   const actual = serializer.serializeChildren(fragment(
     element('div', { id: 'foo' },
       element('b', {},
@@ -73,25 +79,18 @@ QUnit.test('serializes children but not self', (assert) => {
   assert.equal(actual, '<b>Foo &amp; Bar</b>!<img src="foo">');
 });
 
-// SimpleDOM supports an extension of the DOM API that allows inserting strings of
-// unparsed, raw HTML into the document. When the document is subsequently serialized,
-// the raw text of the HTML nodes is inserted into the HTML.
-//
-// This performance optimization allows users of SimpleDOM (like Ember's FastBoot) to insert
-// raw HTML snippets into the final serialized output without requiring a parsing and
-// reserialization round-trip.
-if (typeof window === 'undefined') {
-  QUnit.test('serializes raw HTML', (assert) => {
-    let actual = serializer.serialize(fragment(
-      element('div', { id: 'foo' },
-        text('<p></p>'))));
+QUnit.test('serializes raw HTML', (assert) => {
+  const { element, fragment, text, insertAdjacentHTML } = kind.helper();
+  let actual = serializer.serialize(fragment(
+    element('div', { id: 'foo' },
+      text('<p></p>'))));
 
-    assert.equal(actual, '<div id="foo">&lt;p&gt;&lt;/p&gt;</div>');
+  assert.equal(actual, '<div id="foo">&lt;p&gt;&lt;/p&gt;</div>');
 
-    actual = serializer.serialize(fragment(
-      element('div', { id: 'foo' },
-        html('<p></p>'))));
+  actual = serializer.serialize(fragment(insertAdjacentHTML(
+    element('div', { id: 'foo' }), 'afterbegin', '<p></p>')));
 
-    assert.equal(actual, '<div id="foo"><p></p></div>');
-  });
-}
+  assert.equal(actual, '<div id="foo"><p></p></div>');
+});
+
+});

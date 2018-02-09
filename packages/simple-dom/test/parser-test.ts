@@ -2,13 +2,15 @@ import { Element, Text } from '@simple-dom/document';
 import Parser from '@simple-dom/parser';
 import voidMap from '@simple-dom/void-map';
 import { tokenize } from 'simple-html-tokenizer';
-import { document } from './support';
+import { runBoth } from './support';
 
 let parser: Parser;
 
+runBoth((kind) => {
+
 QUnit.module('Basic HTML parsing', {
   beforeEach() {
-    parser = new Parser(tokenize as any, document, voidMap);
+    parser = new Parser(tokenize as any, kind.helper().document, voidMap);
   },
   afterEach() {
     parser = undefined as any;
@@ -99,4 +101,6 @@ QUnit.test('void tags', (assert) => {
   assert.equal(node.nodeName, 'IMG');
   assert.equal(node.getAttribute('src'), 'http://example.com/image.png');
   assert.equal(node.nextSibling, null);
+});
+
 });
