@@ -1,4 +1,4 @@
-let SimpleDOM = require('../dist/simple-dom');
+let SimpleDOM = require('../packages/simple-dom/dist/commonjs/es5/index.js');
 let Tokenizer = require('simple-html-tokenizer');
 let fs = require('fs');
 let doc = new SimpleDOM.Document();

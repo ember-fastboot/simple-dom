@@ -4,6 +4,7 @@
     "prepare": "ember build --environment=production",
     "build": "ember build",
     "lint": "tslint -p tsconfig.json",
+    "bench": "node benches/serialize.js",
     "test": "ember test && nyc --check-coverage -- qunit packages/simple-dom/dist/commonjs/es5/test.js"
   },
   "workspaces": [
@@ -21,6 +22,7 @@
     "broccoli-rollup": "^2.0.0",
     "broccoli-tee": "^1.0.2",
     "broccoli-typescript-compiler": "^2.1.0",
+    "do-you-even-bench": "^1.0.5",
     "ember-cli": "^2.16.2",
     "lerna": "^2.5.1",
     "loader.js": "^4.6.0",
