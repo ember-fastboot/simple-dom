@@ -1,43 +1,29 @@
-export const enum NodeType {
-  RAW = -1,
-  ELEMENT_NODE = 1,
-  TEXT_NODE = 3,
-  COMMENT_NODE = 8,
-  DOCUMENT_NODE = 9,
-  DOCUMENT_FRAGMENT_NODE = 11,
-}
+import {
+  SimpleChildNodes, SimpleNode, SimpleNodeType } from '@simple-dom/interface';
 
-export interface NodeList {
-  item(index: number): Node;
-}
+export default abstract class Node implements SimpleNode {
+  public abstract readonly nodeType: SimpleNodeType;
 
-export default abstract class Node {
-  public static ELEMENT_NODE: number = NodeType.ELEMENT_NODE;
-  public static TEXT_NODE: number = NodeType.TEXT_NODE;
-  public static COMMENT_NODE: number = NodeType.COMMENT_NODE;
-  public static DOCUMENT_NODE: number = NodeType.DOCUMENT_NODE;
-  public static DOCUMENT_FRAGMENT_NODE: number = NodeType.DOCUMENT_FRAGMENT_NODE;
-
-  public parentNode: Node | null = null;
-  public previousSibling: Node | null = null;
-  public nextSibling: Node | null = null;
-  public firstChild: Node | null = null;
-  public lastChild: Node | null = null;
+  public parentNode: SimpleNode | null = null;
+  public previousSibling: SimpleNode | null = null;
+  public nextSibling: SimpleNode | null = null;
+  public firstChild: SimpleNode | null = null;
+  public lastChild: SimpleNode | null = null;
 
   private _childNodes: ChildNodes | undefined = undefined;
 
-  constructor(public readonly nodeType: number, public readonly nodeName: string, public nodeValue: string | null) {
+  constructor(public readonly nodeName: string, public nodeValue: string | null) {
   }
 
-  public get childNodes() {
+  public get childNodes(): SimpleChildNodes {
     let children = this._childNodes;
     if (children === undefined) {
       children = this._childNodes = new ChildNodes(this);
     }
-    return children as NodeList;
+    return children as SimpleChildNodes;
   }
 
-  public cloneNode(deep?: boolean) {
+  public cloneNode(deep?: boolean): SimpleNode {
     const node = this._cloneNode();
 
     if (deep === true) {
@@ -54,8 +40,8 @@ export default abstract class Node {
     return node;
   }
 
-  public appendChild<T extends Node>(newChild: T): T {
-    if (newChild.nodeType === NodeType.DOCUMENT_FRAGMENT_NODE) {
+  public appendChild<T extends SimpleNode>(newChild: T): T {
+    if (newChild.nodeType === SimpleNodeType.DOCUMENT_FRAGMENT_NODE) {
       insertFragment(newChild, this, this.lastChild, null);
       return newChild;
     }
@@ -76,12 +62,12 @@ export default abstract class Node {
     return newChild;
   }
 
-  public insertBefore<T extends Node>(newChild: T, refChild: Node | null): T {
+  public insertBefore<T extends SimpleNode>(newChild: T, refChild: SimpleNode | null): T {
     if (refChild == null) {
       return this.appendChild(newChild);
     }
 
-    if (newChild.nodeType === NodeType.DOCUMENT_FRAGMENT_NODE) {
+    if (newChild.nodeType === SimpleNodeType.DOCUMENT_FRAGMENT_NODE) {
       insertFragment(newChild, this, refChild.previousSibling, refChild);
       return newChild;
     }
@@ -108,7 +94,7 @@ export default abstract class Node {
     return newChild;
   }
 
-  public removeChild<T extends Node>(oldChild: T): T {
+  public removeChild<T extends SimpleNode>(oldChild: T): T {
     if (this.firstChild === oldChild) {
       this.firstChild = oldChild.nextSibling;
     }
@@ -127,16 +113,17 @@ export default abstract class Node {
     return oldChild;
   }
 
-  protected abstract _cloneNode(): Node;
+  protected abstract _cloneNode(): SimpleNode;
 }
 
-function insertFragment(fragment: Node, newParent: Node, before: Node | null, after: Node | null) {
+function insertFragment(
+  fragment: SimpleNode, newParent: SimpleNode, before: SimpleNode | null, after: SimpleNode | null) {
   if (!fragment.firstChild) { return; }
 
   const firstChild = fragment.firstChild;
   fragment.firstChild = fragment.lastChild = null;
   let lastChild = firstChild;
-  let node: Node | null = firstChild;
+  let node: SimpleNode | null = firstChild;
 
   firstChild.previousSibling = before;
   if (before) {
@@ -160,7 +147,7 @@ function insertFragment(fragment: Node, newParent: Node, before: Node | null, af
 }
 
 class ChildNodes {
-  constructor(private node: Node) {
+  constructor(private node: SimpleNode) {
   }
 
   public item(index: number) {

@@ -1,4 +1,4 @@
-import { DocumentFragment } from '@simple-dom/document';
+import { SimpleDocumentFragment } from '@simple-dom/interface';
 import Serializer from '@simple-dom/serializer';
 import voidMap from '@simple-dom/void-map';
 import { runBoth } from './support';
@@ -208,7 +208,7 @@ QUnit.test('cloneNode(true) recursively clones nodes', (assert) => {
   let fragment = document.createDocumentFragment();
   fragment.appendChild(clone);
 
-  fragment = fragment.cloneNode(true) as DocumentFragment;
+  fragment = fragment.cloneNode(true) as SimpleDocumentFragment;
 
   const actual = new Serializer(voidMap).serialize(fragment);
 

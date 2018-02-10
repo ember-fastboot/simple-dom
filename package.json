@@ -11,6 +11,7 @@
     "packages/@simple-dom/void-map",
     "packages/@simple-dom/serializer",
     "packages/@simple-dom/document",
+    "packages/@simple-dom/interface",
     "packages/@simple-dom/parser",
     "packages/simple-dom"
   ],
