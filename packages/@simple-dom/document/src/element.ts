@@ -1,16 +1,12 @@
-import Node, { NodeType } from './node';
+import { SimpleAttr, SimpleElement, SimpleNodeType } from '@simple-dom/interface';
+import Node from './node';
 
-export interface Attr {
-  readonly name: string;
-  readonly specified: boolean;
-  value: string;
-}
-
-export default class Element extends Node {
-  public attributes: Attr[] = [];
+export default class Element extends Node implements SimpleElement {
+  public nodeType: SimpleNodeType.ELEMENT_NODE = SimpleNodeType.ELEMENT_NODE;
+  public attributes: SimpleAttr[] = [];
 
   constructor(tagName: string) {
-    super(NodeType.ELEMENT_NODE, tagName.toUpperCase(), null);
+    super(tagName.toUpperCase(), null);
   }
 
   public get tagName(): string {
@@ -69,7 +65,7 @@ export default class Element extends Node {
   protected _cloneNode() {
     const node = new Element(this.tagName);
 
-    const attrs = node.attributes = [] as Attr[];
+    const attrs = node.attributes = [] as SimpleAttr[];
 
     const src = this.attributes;
 

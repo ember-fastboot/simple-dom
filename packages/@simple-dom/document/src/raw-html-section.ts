@@ -1,8 +1,11 @@
-import Node, { NodeType } from './node';
+import { SimpleNodeType, SimpleRawHTMLSection } from '@simple-dom/interface';
+import Node from './node';
 
-export default class RawHTMLSection extends Node {
+export default class RawHTMLSection extends Node implements SimpleRawHTMLSection {
+  public nodeType: SimpleNodeType.RAW = SimpleNodeType.RAW;
+
   constructor(text: string) {
-    super(NodeType.RAW, '#raw-html-section', text);
+    super('#raw-html-section', text);
   }
 
   protected _cloneNode() {

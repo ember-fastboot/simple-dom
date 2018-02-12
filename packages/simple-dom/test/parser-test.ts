@@ -1,5 +1,5 @@
-import { Element, Text } from '@simple-dom/document';
-import Parser from '@simple-dom/parser';
+import { SimpleElement, SimpleText } from '@simple-dom/interface';
+import Parser, { Tokenizer } from '@simple-dom/parser';
 import voidMap from '@simple-dom/void-map';
 import { tokenize } from 'simple-html-tokenizer';
 import { runBoth } from './support';
@@ -10,7 +10,7 @@ runBoth((kind) => {
 
 QUnit.module('Basic HTML parsing', {
   beforeEach() {
-    parser = new Parser(tokenize as any, kind.helper().document, voidMap);
+    parser = new Parser(tokenize as Tokenizer, kind.helper().document, voidMap);
   },
   afterEach() {
     parser = undefined as any;
@@ -35,13 +35,13 @@ QUnit.test('nested parse', (assert) => {
   const fragment = parser.parse('text before<div>Hello</div>text between<div id=foo title="Hello World">World</div>text after');
   assert.ok(fragment);
 
-  let node: Text | Element | null = null;
-  node = fragment!.firstChild as Text;
+  let node: SimpleText | SimpleElement | null = null;
+  node = fragment!.firstChild as SimpleText;
   assert.ok(node);
   assert.equal(node.nodeType, 3);
   assert.equal(node.nodeValue, 'text before');
 
-  node = node.nextSibling as Element;
+  node = node.nextSibling as SimpleElement;
   assert.ok(node);
   assert.equal(node.nodeType, 1);
   assert.equal(node.nodeName, 'DIV');
@@ -49,12 +49,12 @@ QUnit.test('nested parse', (assert) => {
   assert.equal(node.firstChild!.nodeType, 3);
   assert.equal(node.firstChild!.nodeValue, 'Hello');
 
-  node = node.nextSibling as Text;
+  node = node.nextSibling as SimpleText;
   assert.ok(node);
   assert.equal(node.nodeType, 3);
   assert.equal(node.nodeValue, 'text between');
 
-  node = (node.nextSibling as Element);
+  node = (node.nextSibling as SimpleElement);
   assert.ok(node);
   assert.equal(node.nodeType, 1);
   assert.equal(node.nodeName, 'DIV');
@@ -70,7 +70,7 @@ QUnit.test('nested parse', (assert) => {
   assert.equal(node.firstChild!.nodeType, 3);
   assert.equal(node.firstChild!.nodeValue, 'World');
 
-  node = node.nextSibling as Text;
+  node = node.nextSibling as SimpleText;
   assert.ok(node);
   assert.equal(node.nodeType, 3);
   assert.equal(node.nodeValue, 'text after');
@@ -79,23 +79,23 @@ QUnit.test('nested parse', (assert) => {
 QUnit.test('void tags', (assert) => {
   const fragment = parser.parse('<div>Hello<br>World<img src="http://example.com/image.png"></div>')!;
   assert.ok(fragment);
-  let node: Text | Element = fragment.firstChild as Element;
+  let node: SimpleText | SimpleElement = fragment.firstChild as SimpleElement;
   assert.ok(node);
   assert.equal(node.nodeType, 1);
   assert.equal(node.nodeName, 'DIV');
-  node = node.firstChild as Text;
+  node = node.firstChild as SimpleText;
   assert.ok(node);
   assert.equal(node.nodeType, 3);
   assert.equal(node.nodeValue, 'Hello');
-  node = node.nextSibling as Element;
+  node = node.nextSibling as SimpleElement;
   assert.ok(node);
   assert.equal(node.nodeType, 1);
   assert.equal(node.nodeName, 'BR');
-  node = node.nextSibling as Text;
+  node = node.nextSibling as SimpleText;
   assert.ok(node);
   assert.equal(node.nodeType, 3);
   assert.equal(node.nodeValue, 'World');
-  node = node.nextSibling as Element;
+  node = node.nextSibling as SimpleElement;
   assert.ok(node);
   assert.equal(node.nodeType, 1);
   assert.equal(node.nodeName, 'IMG');

@@ -1,20 +1,19 @@
 import {
-  Document,
-  Element,
-  Node,
-} from '@simple-dom/document';
+  SimpleDocument,
+  SimpleNode,
+} from '@simple-dom/interface';
 
 export default class HTMLParser {
-  private parentStack: Node[];
+  private parentStack: SimpleNode[];
 
-  constructor(private tokenize: Tokenizer, private document: Document, private voidMap: IVoidMap) {
+  constructor(private tokenize: Tokenizer, private document: SimpleDocument, private voidMap: IVoidMap) {
     this.tokenize = tokenize;
     this.document = document;
     this.voidMap = voidMap;
     this.parentStack = [];
   }
 
-  public isVoid(element: Element) {
+  public isVoid(element: SimpleNode) {
     return this.voidMap[element.nodeName] === true;
   }
 
@@ -51,7 +50,7 @@ export default class HTMLParser {
     this.appendChild(this.document.createComment(token.chars));
   }
 
-  public appendChild(node: Node) {
+  public appendChild(node: SimpleNode) {
     const parentNode = this.parentStack[this.parentStack.length - 1];
     parentNode.appendChild(node);
   }

@@ -15,7 +15,8 @@
     "rootDir": "packages",
     "lib": [ "es2015" ],
     "paths": {
-      "@simple-dom/*": ["@simple-dom/*/src/index.ts"]
+      "@simple-dom/*": ["@simple-dom/*/src/index.ts"],
+      "@simple-dom/interface": ["@simple-dom/interface/index.d.ts"]
     }
   },
   "include": [

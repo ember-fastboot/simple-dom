@@ -1,7 +1,6 @@
 /* global window */
-import { Comment, Document, Text } from '@simple-dom/document';
-import DocumentFragment from '@simple-dom/document/src/document-fragment';
-import Element from '@simple-dom/document/src/element';
+import { Document } from '@simple-dom/document';
+import { SimpleComment, SimpleDocumentFragment, SimpleElement, SimpleText } from '@simple-dom/interface';
 
 declare const self: any;
 
@@ -43,18 +42,18 @@ export abstract class Helper {
     this.element = this.element.bind(this);
   }
 
-  public abstract insertAdjacentHTML(element: Element, position: InsertPosition, text: string): Element;
+  public abstract insertAdjacentHTML(element: SimpleElement, position: InsertPosition, text: string): SimpleElement;
 
-  public text(s: string): Text {
+  public text(s: string): SimpleText {
     return this.document.createTextNode(s);
   }
 
-  public comment(s: string): Comment {
+  public comment(s: string): SimpleComment {
     return this.document.createComment(s);
   }
 
-  public fragment(...children: any[]): DocumentFragment;
-  public fragment() {
+  public fragment(...children: any[]): SimpleDocumentFragment;
+  public fragment(): SimpleDocumentFragment {
     const frag = this.document.createDocumentFragment();
     for (let i = 0; i < arguments.length; i++) {
       frag.appendChild(arguments[i]);
@@ -62,7 +61,7 @@ export abstract class Helper {
     return frag;
   }
 
-  public element(tagName: string, attrs?: Attrs, ...children: any[]): Element;
+  public element(tagName: string, attrs?: Attrs, ...children: any[]): SimpleElement;
   public element(tagName: string, attrs?: Attrs) {
     const el = this.document.createElement(tagName);
     if (attrs !== undefined) {
@@ -85,7 +84,7 @@ export class SimpleHelper extends Helper {
     super(new Document());
   }
 
-  public insertAdjacentHTML(element: Element, position: InsertPosition, text: string): Element {
+  public insertAdjacentHTML(element: SimpleElement, position: InsertPosition, text: string): SimpleElement {
     const raw = this.document.createRawHTMLSection(text);
     /* istanbul ignore next */
     switch (position) {
@@ -113,7 +112,7 @@ export class RealHelper extends Helper {
     super(self.document.implementation.createHTMLDocument());
   }
 
-  public insertAdjacentHTML(element: Element, position: InsertPosition, text: string): Element {
+  public insertAdjacentHTML(element: SimpleElement, position: InsertPosition, text: string): SimpleElement {
     (element as any).insertAdjacentHTML(position, text);
     return element;
   }
