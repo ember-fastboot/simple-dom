@@ -15,5 +15,10 @@
   "jsnext:main": "dist/modules/es5/index.js",
   "module": "dist/modules/es2017/index.js",
   "types": "dist/types/index.d.ts",
-  "publishConfig": { "access": "public" }
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "ember-cli": "^2.18.2"
+  }
 }
