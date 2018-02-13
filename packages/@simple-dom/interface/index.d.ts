@@ -67,6 +67,9 @@ export interface SimpleDocumentFragment extends SimpleNode {
 export interface SimpleDocument extends SimpleNode {
   nodeType: SimpleNodeType.DOCUMENT_NODE;
 
+  head: SimpleElement;
+  body: SimpleElement;
+
   createElement(tag: string): SimpleElement;
 
   // TODO createElementNS(namespace: Namespace, tag: string): Element;

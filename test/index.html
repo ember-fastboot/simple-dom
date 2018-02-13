@@ -18,16 +18,14 @@
   });
   </script>
 
-  <script src="packages/@simple-dom/document/dist/amd/es5/index.js"></script>
-  <script src="packages/@simple-dom/serializer/dist/amd/es5/index.js"></script>
-  <script src="packages/@simple-dom/parser/dist/amd/es5/index.js"></script>
-  <script src="packages/@simple-dom/void-map/dist/amd/es5/index.js"></script>
-  <script src="packages/simple-dom/dist/amd/es5/test.js"></script>
+  <script src="amd/vendor.js"></script>
+
+  <script src="amd/index.js"></script>
 
   <script src="/testem.js"></script>
 
   <script>
-    require('simple-dom/test');
+    Object.keys(require.entries).filter((n) => /\/test/.test(n)).map(require);
   </script>
 </body>
 </html>

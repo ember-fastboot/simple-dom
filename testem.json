@@ -1,5 +1,5 @@
 {
-  "test_page": "index.html",
+  "test_page": "test/index.html",
   "parallel": 5,
   "before_tests": "yarn run build",
   "launch_in_ci":  ["Chrome"],

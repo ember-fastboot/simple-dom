@@ -8,5 +8,5 @@ module.exports = function () {
     paths: undefined,
     baseUrl: undefined,
   });
-  return build.packageDist(compiled, workspace);
+  return build.packageDist(compiled, workspace, true);
 }
