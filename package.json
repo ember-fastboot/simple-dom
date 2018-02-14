@@ -24,7 +24,7 @@
     "broccoli-tee": "^1.0.2",
     "broccoli-typescript-compiler": "^2.1.0",
     "do-you-even-bench": "^1.0.5",
-    "ember-cli": "^2.18.2",
+    "ember-cli": "^3.0.0",
     "lerna": "^2.5.1",
     "loader.js": "^4.6.0",
     "nyc": "^11.3.0",
