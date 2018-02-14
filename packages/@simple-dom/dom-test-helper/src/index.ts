@@ -1,4 +1,4 @@
-import { Document } from '@simple-dom/document';
+import createDocument from '@simple-dom/document';
 import {
   SimpleComment,
   SimpleDocument,
@@ -95,7 +95,7 @@ export const moduleWithDocument = (() => {
 
     public setup(hooks: NestedHooks) {
       hooks.beforeEach(() => {
-        this.document = new Document();
+        this.document = createDocument();
       });
 
       hooks.afterEach(() => {

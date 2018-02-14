@@ -1,26 +1,49 @@
 import {
-  SimpleChildNodes, SimpleNode, SimpleNodeType } from '@simple-dom/interface';
+  SimpleAttr,
+  SimpleChildNodes,
+  SimpleComment,
+  SimpleDocument,
+  SimpleDocumentFragment,
+  SimpleDocumentType,
+  SimpleElement,
+  SimpleNode,
+  SimpleNodeBase,
+  SimpleNodeType,
+  SimpleRawHTMLSection,
+  SimpleText,
+} from '@simple-dom/interface';
 
-export default abstract class Node implements SimpleNode {
-  public abstract readonly nodeType: SimpleNodeType;
+const EMPTY_ATTRS: SimpleAttr[] = [];
 
+// tslint:disable-next-line:max-line-length
+export default class SimpleNodeImpl<NodeType extends SimpleNodeType, OwnerDoc extends SimpleDocument | null, NodeValue extends string | null> {
   public parentNode: SimpleNode | null = null;
   public previousSibling: SimpleNode | null = null;
   public nextSibling: SimpleNode | null = null;
   public firstChild: SimpleNode | null = null;
   public lastChild: SimpleNode | null = null;
 
+  public attributes: SimpleAttr[] = EMPTY_ATTRS;
+
   private _childNodes: ChildNodes | undefined = undefined;
 
-  constructor(public readonly nodeName: string, public nodeValue: string | null) {
+  constructor(
+    public readonly ownerDocument: OwnerDoc,
+    public readonly nodeType: NodeType,
+    public readonly nodeName: string,
+    public nodeValue: NodeValue) {
+  }
+
+  public get tagName(): string {
+    return this.nodeName;
   }
 
   public get childNodes(): SimpleChildNodes {
     let children = this._childNodes;
     if (children === undefined) {
-      children = this._childNodes = new ChildNodes(this);
+      children = this._childNodes = new ChildNodes(this as SimpleNode);
     }
-    return children as SimpleChildNodes;
+    return children;
   }
 
   public cloneNode(deep?: boolean): SimpleNode {
@@ -37,10 +60,11 @@ export default abstract class Node implements SimpleNode {
       }
     }
 
-    return node;
+    return node as SimpleNode;
   }
 
-  public appendChild<T extends SimpleNode>(newChild: T): T {
+  // tslint:disable-next-line:max-line-length
+  public appendChild<N extends SimpleNode>(this: SimpleNode, newChild: N): N {
     if (newChild.nodeType === SimpleNodeType.DOCUMENT_FRAGMENT_NODE) {
       insertFragment(newChild, this, this.lastChild, null);
       return newChild;
@@ -62,7 +86,7 @@ export default abstract class Node implements SimpleNode {
     return newChild;
   }
 
-  public insertBefore<T extends SimpleNode>(newChild: T, refChild: SimpleNode | null): T {
+  public insertBefore<N extends SimpleNode>(this: SimpleNode, newChild: N, refChild: SimpleNode | null): N {
     if (refChild == null) {
       return this.appendChild(newChild);
     }
@@ -94,7 +118,7 @@ export default abstract class Node implements SimpleNode {
     return newChild;
   }
 
-  public removeChild<T extends SimpleNode>(oldChild: T): T {
+  public removeChild<N extends SimpleNode>(oldChild: N): N {
     if (this.firstChild === oldChild) {
       this.firstChild = oldChild.nextSibling;
     }
@@ -113,7 +137,117 @@ export default abstract class Node implements SimpleNode {
     return oldChild;
   }
 
-  protected abstract _cloneNode(): SimpleNode;
+  public getAttribute(name: string): string | null {
+    const attributes = this.attributes;
+    if (attributes === EMPTY_ATTRS) {
+      return null;
+    }
+    const n = name.toLowerCase();
+    let attr;
+    for (let i = 0, l = attributes.length; i < l; i++) {
+      attr = attributes[i];
+      if (attr.name === n) {
+        return attr.value;
+      }
+    }
+    return null;
+  }
+
+  public setAttribute(name: string, value: any | undefined | null): void {
+    let attributes = this.attributes;
+    const n = name.toLowerCase();
+    let v: string;
+    if (typeof value === 'string') {
+      v = value;
+    } else {
+      v = '' + value;
+    }
+    if (attributes === EMPTY_ATTRS) {
+      attributes = this.attributes = [];
+    } else {
+      let attr;
+      for (let i = 0; i < attributes.length; i++) {
+        attr = attributes[i];
+        if (attr.name === n) {
+          attr.value = v;
+          return;
+        }
+      }
+    }
+    attributes.push({
+      name: n,
+      specified: true, // serializer compat with old IE
+      value: v,
+    });
+  }
+
+  public removeAttribute(name: string): void {
+    const attributes = this.attributes;
+    if (attributes === EMPTY_ATTRS) {
+      return;
+    }
+    const n = name.toLowerCase();
+    for (let i = 0, l = attributes.length; i < l; i++) {
+      const attr = attributes[i];
+      if (attr.name === n) {
+        attributes.splice(i, 1);
+        return;
+      }
+    }
+  }
+
+  get doctype() {
+    return this.firstChild as SimpleDocumentType;
+  }
+
+  get documentElement() {
+    return this.lastChild as SimpleElement;
+  }
+
+  get head() {
+    return this.documentElement.firstChild as SimpleElement;
+  }
+
+  get body() {
+    return this.documentElement.lastChild as SimpleElement;
+  }
+
+  public createElement(this: SimpleDocument, tagName: string): SimpleElement {
+    return new SimpleNodeImpl(this, SimpleNodeType.ELEMENT_NODE, tagName.toUpperCase(), null);
+  }
+
+  public createTextNode(this: SimpleDocument, text: string): SimpleText {
+    return new SimpleNodeImpl(this, SimpleNodeType.TEXT_NODE, '#text', text);
+  }
+
+  public createComment(this: SimpleDocument, text: string): SimpleComment {
+    return new SimpleNodeImpl(this, SimpleNodeType.COMMENT_NODE, '#comment', text);
+  }
+
+  public createRawHTMLSection(this: SimpleDocument, text: string): SimpleRawHTMLSection {
+    return new SimpleNodeImpl(this, SimpleNodeType.RAW, '#raw', text);
+  }
+
+  public createDocumentFragment(this: SimpleDocument): SimpleDocumentFragment {
+    return new SimpleNodeImpl(this, SimpleNodeType.DOCUMENT_FRAGMENT_NODE, '#document-fragment', null);
+  }
+
+  protected _cloneNode(): SimpleNodeBase {
+    const node = new SimpleNodeImpl(this.ownerDocument, this.nodeType, this.nodeName, this.nodeValue);
+    const attributes = this.attributes;
+    if (attributes !== EMPTY_ATTRS) {
+      const newAttributes: SimpleAttr[] = node.attributes = [];
+      for (let i = 0; i < attributes.length; i++) {
+        const attr = attributes[0];
+        newAttributes.push({
+          name: attr.name,
+          specified: true,
+          value: attr.value,
+        });
+      }
+    }
+    return node;
+  }
 }
 
 function insertFragment(

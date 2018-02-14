@@ -1,5 +1,6 @@
 import {
   SimpleDocument,
+  SimpleDocumentFragment,
   SimpleNode,
 } from '@simple-dom/interface';
 
@@ -55,7 +56,7 @@ export default class HTMLParser {
     parentNode.appendChild(node);
   }
 
-  public parse(html: string) {
+  public parse(html: string): SimpleDocumentFragment {
     const fragment = this.document.createDocumentFragment();
     this.parentStack.push(fragment);
 
@@ -77,8 +78,9 @@ export default class HTMLParser {
           break;
       }
     }
+    this.parentStack.pop();
 
-    return this.parentStack.pop();
+    return fragment;
   }
 }
 

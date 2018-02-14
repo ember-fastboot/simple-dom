@@ -8,10 +8,19 @@ export const enum SimpleNodeType {
   DOCUMENT_FRAGMENT_NODE = 11,
 }
 
-export interface SimpleNode {
+export type SimpleNode =
+  SimpleRawHTMLSection |
+  SimpleElement |
+  SimpleText |
+  SimpleComment |
+  SimpleDocument |
+  SimpleDocumentType |
+  SimpleDocumentFragment;
+
+export interface SimpleNodeBase {
   // TODO
   // readonly namespaceURI: string;
-
+  readonly ownerDocument: SimpleDocument | null;
   readonly nodeType: SimpleNodeType;
   readonly nodeName: string;
 
@@ -47,9 +56,9 @@ export interface SimpleAttrs {
   [index: number]: SimpleAttr;
 }
 
-export interface SimpleElement extends SimpleNode {
+export interface SimpleElement extends SimpleNodeBase {
+  readonly ownerDocument: SimpleDocument;
   readonly nodeType: SimpleNodeType.ELEMENT_NODE;
-
   readonly tagName: string;
   readonly attributes: SimpleAttrs;
 
@@ -60,15 +69,27 @@ export interface SimpleElement extends SimpleNode {
   // TODO: setAttributeNS(namespaceURI: string | null, qualifiedName: string, value: string): void;
 }
 
-export interface SimpleDocumentFragment extends SimpleNode {
-  nodeType: SimpleNodeType.DOCUMENT_FRAGMENT_NODE;
+export interface SimpleDocumentType extends SimpleNodeBase {
+  readonly ownerDocument: SimpleDocument;
+  readonly nodeType: SimpleNodeType.DOCUMENT_TYPE_NODE;
+  readonly nodeValue: null;
 }
 
-export interface SimpleDocument extends SimpleNode {
-  nodeType: SimpleNodeType.DOCUMENT_NODE;
+export interface SimpleDocumentFragment extends SimpleNodeBase {
+  readonly ownerDocument: SimpleDocument;
+  readonly nodeType: SimpleNodeType.DOCUMENT_FRAGMENT_NODE;
+  readonly nodeValue: null;
+}
 
-  head: SimpleElement;
-  body: SimpleElement;
+export interface SimpleDocument extends SimpleNodeBase {
+  readonly ownerDocument: null;
+  readonly nodeType: SimpleNodeType.DOCUMENT_NODE;
+  readonly nodeValue: null;
+
+  readonly doctype: SimpleDocumentType;
+  readonly documentElement: SimpleElement;
+  readonly head: SimpleElement;
+  readonly body: SimpleElement;
 
   createElement(tag: string): SimpleElement;
 
@@ -85,16 +106,22 @@ export interface SimpleDocument extends SimpleNode {
   createRawHTMLSection?(html: string): SimpleRawHTMLSection;
 }
 
-export interface SimpleRawHTMLSection extends SimpleNode {
-  nodeType: SimpleNodeType.RAW;
+export interface SimpleRawHTMLSection extends SimpleNodeBase {
+  readonly ownerDocument: SimpleDocument;
+  readonly nodeType: SimpleNodeType.RAW;
+  readonly nodeValue: string;
 }
 
-export interface SimpleText extends SimpleNode {
-  nodeType: SimpleNodeType.TEXT_NODE;
+export interface SimpleText extends SimpleNodeBase {
+  readonly ownerDocument: SimpleDocument;
+  readonly nodeType: SimpleNodeType.TEXT_NODE;
+  readonly nodeValue: string;
 }
 
-export interface SimpleComment extends SimpleNode {
-  nodeType: SimpleNodeType.COMMENT_NODE;
+export interface SimpleComment extends SimpleNodeBase {
+  readonly ownerDocument: SimpleDocument;
+  readonly nodeType: SimpleNodeType.COMMENT_NODE;
+  readonly nodeValue: string;
 }
 
 /**
@@ -108,7 +135,7 @@ export interface SimpleChildNodes {
 }
 
 export interface SerializableNode {
-  readonly nodeType: SimpleNodeType;
+  readonly nodeType: number;
   readonly nodeName: string;
   readonly nodeValue: string | null;
 
