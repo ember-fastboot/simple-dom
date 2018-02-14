@@ -5,6 +5,7 @@
     "lint": "tslint -p tsconfig.json",
     "build": "ember build",
     "prepare": "ember build --environment=production",
+    "test": "yarn run test:browser && yarn run test:node",
     "test:node": "nyc --check-coverage -- qunit dist/test/commonjs/index.js",
     "test:browser": "ember test"
   },
