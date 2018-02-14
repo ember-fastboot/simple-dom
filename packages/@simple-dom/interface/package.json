@@ -1,10 +1,12 @@
 {
   "name": "@simple-dom/interface",
   "version": "1.4.0-alpha.82914663",
-  "description": "A simple HTML parser",
+  "description": "Simple DOM typescript interfaces",
   "keywords": [
     "dom",
-    "html"
+    "html",
+    "typescript",
+    "types"
   ],
   "license": "MIT",
   "author": "Kris Selden",

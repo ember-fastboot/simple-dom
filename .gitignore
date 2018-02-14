@@ -1,8 +1,8 @@
-/.nyc_output/
+.nyc_output/
 node_modules/
 dist/
 tmp/
-/coverage/
-/instrumentation.*.json
-/DEBUG/
-/*.log
+coverage/
+instrumentation.*.json
+DEBUG/
+*.log
