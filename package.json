@@ -2,12 +2,12 @@
   "private": true,
   "scripts": {
     "bench": "node benches/serialize.js",
-    "lint": "tslint -p tsconfig.json",
     "build": "ember build",
+    "lint": "tslint -p tsconfig.json",
     "prepare": "ember build --environment=production",
     "test": "yarn run test:browser && yarn run test:node",
-    "test:node": "nyc --check-coverage -- qunit dist/test/commonjs/index.js",
-    "test:browser": "ember test"
+    "test:browser": "ember test",
+    "test:node": "nyc --check-coverage -- qunit packages/@simple-dom/*/dist/test/commonjs/index.js packages/simple-dom/dist/test/commonjs/index.js"
   },
   "devDependencies": {
     "@types/qunit": "^2.0.31",
