@@ -144,7 +144,7 @@ export default class SimpleNodeImpl<NodeType extends SimpleNodeType, OwnerDoc ex
     if (attributes === EMPTY_ATTRS) {
       return null;
     }
-    const n = name.toLowerCase();
+    const n = this.namespaceURI === Namespace.HTML ? name.toLowerCase() : name;
     let attr;
     for (let i = 0, l = attributes.length; i < l; i++) {
       attr = attributes[i];
@@ -188,7 +188,7 @@ export default class SimpleNodeImpl<NodeType extends SimpleNodeType, OwnerDoc ex
     if (attributes === EMPTY_ATTRS) {
       return;
     }
-    const n = name.toLowerCase();
+    const n = this.namespaceURI === Namespace.HTML ? name.toLowerCase() : name;
     for (let i = 0, l = attributes.length; i < l; i++) {
       const attr = attributes[i];
       if (attr.name === n) {
