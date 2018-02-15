@@ -8,6 +8,11 @@ export const enum SimpleNodeType {
   DOCUMENT_FRAGMENT_NODE = 11,
 }
 
+export const enum Namespace {
+  HTML = 'http://www.w3.org/1999/xhtml',
+  SVG = 'http://www.w3.org/2000/svg',
+}
+
 export type SimpleNode =
   SimpleRawHTMLSection |
   SimpleElement |
@@ -59,6 +64,9 @@ export interface SimpleAttrs {
 export interface SimpleElement extends SimpleNodeBase {
   readonly ownerDocument: SimpleDocument;
   readonly nodeType: SimpleNodeType.ELEMENT_NODE;
+  readonly nodeValue: null;
+
+  readonly namespaceURI: Namespace;
   readonly tagName: string;
   readonly attributes: SimpleAttrs;
 
@@ -92,8 +100,7 @@ export interface SimpleDocument extends SimpleNodeBase {
   readonly body: SimpleElement;
 
   createElement(tag: string): SimpleElement;
-
-  // TODO createElementNS(namespace: Namespace, tag: string): Element;
+  createElementNS(namespace: Namespace, name: string): SimpleElement;
 
   createTextNode(text: string): SimpleText;
   createComment(data: string): SimpleComment;

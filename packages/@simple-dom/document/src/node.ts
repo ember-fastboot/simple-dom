@@ -1,4 +1,5 @@
 import {
+  Namespace,
   SimpleAttr,
   SimpleChildNodes,
   SimpleComment,
@@ -16,7 +17,7 @@ import {
 const EMPTY_ATTRS: SimpleAttr[] = [];
 
 // tslint:disable-next-line:max-line-length
-export default class SimpleNodeImpl<NodeType extends SimpleNodeType, OwnerDoc extends SimpleDocument | null, NodeValue extends string | null> {
+export default class SimpleNodeImpl<NodeType extends SimpleNodeType, OwnerDoc extends SimpleDocument | null, NodeValue extends string | null, NamespaceURI extends Namespace | undefined> {
   public parentNode: SimpleNode | null = null;
   public previousSibling: SimpleNode | null = null;
   public nextSibling: SimpleNode | null = null;
@@ -31,7 +32,8 @@ export default class SimpleNodeImpl<NodeType extends SimpleNodeType, OwnerDoc ex
     public readonly ownerDocument: OwnerDoc,
     public readonly nodeType: NodeType,
     public readonly nodeName: string,
-    public nodeValue: NodeValue) {
+    public nodeValue: NodeValue,
+    public readonly namespaceURI: NamespaceURI) {
   }
 
   public get tagName(): string {
@@ -213,27 +215,32 @@ export default class SimpleNodeImpl<NodeType extends SimpleNodeType, OwnerDoc ex
   }
 
   public createElement(this: SimpleDocument, tagName: string): SimpleElement {
-    return new SimpleNodeImpl(this, SimpleNodeType.ELEMENT_NODE, tagName.toUpperCase(), null);
+    return new SimpleNodeImpl(this, SimpleNodeType.ELEMENT_NODE, tagName.toUpperCase(), null, Namespace.HTML);
+  }
+
+  public createElementNS(this: SimpleDocument, namespace: Namespace, tagName: string): SimpleElement {
+    const nodeName = namespace === Namespace.HTML ? tagName.toUpperCase() : tagName;
+    return new SimpleNodeImpl(this, SimpleNodeType.ELEMENT_NODE, nodeName, null, namespace);
   }
 
   public createTextNode(this: SimpleDocument, text: string): SimpleText {
-    return new SimpleNodeImpl(this, SimpleNodeType.TEXT_NODE, '#text', text);
+    return new SimpleNodeImpl(this, SimpleNodeType.TEXT_NODE, '#text', text, void 0);
   }
 
   public createComment(this: SimpleDocument, text: string): SimpleComment {
-    return new SimpleNodeImpl(this, SimpleNodeType.COMMENT_NODE, '#comment', text);
+    return new SimpleNodeImpl(this, SimpleNodeType.COMMENT_NODE, '#comment', text, void 0);
   }
 
   public createRawHTMLSection(this: SimpleDocument, text: string): SimpleRawHTMLSection {
-    return new SimpleNodeImpl(this, SimpleNodeType.RAW, '#raw', text);
+    return new SimpleNodeImpl(this, SimpleNodeType.RAW, '#raw', text, void 0);
   }
 
   public createDocumentFragment(this: SimpleDocument): SimpleDocumentFragment {
-    return new SimpleNodeImpl(this, SimpleNodeType.DOCUMENT_FRAGMENT_NODE, '#document-fragment', null);
+    return new SimpleNodeImpl(this, SimpleNodeType.DOCUMENT_FRAGMENT_NODE, '#document-fragment', null, void 0);
   }
 
   protected _cloneNode(): SimpleNodeBase {
-    const node = new SimpleNodeImpl(this.ownerDocument, this.nodeType, this.nodeName, this.nodeValue);
+    const node = new SimpleNodeImpl(this.ownerDocument, this.nodeType, this.nodeName, this.nodeValue, void 0);
     const attributes = this.attributes;
     if (attributes !== EMPTY_ATTRS) {
       const newAttributes: SimpleAttr[] = node.attributes = [];

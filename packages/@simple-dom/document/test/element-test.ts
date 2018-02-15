@@ -1,5 +1,5 @@
 import { moduleWithDocument } from '@simple-dom/dom-test-helper';
-import { SimpleDocumentFragment } from '@simple-dom/interface';
+import { Namespace, SimpleDocumentFragment } from '@simple-dom/interface';
 import Serializer from '@simple-dom/serializer';
 import voidMap from '@simple-dom/void-map';
 
@@ -20,6 +20,17 @@ moduleWithDocument('Element', (helper) => {
     body.appendChild(frag);
 
     assert.strictEqual(body.firstChild!.nodeName, 'DIV', 'fragment\'s child is added as child of document');
+  });
+
+  QUnit.test('create svg element', (assert) => {
+    const { document } = helper;
+
+    const svg = document.createElementNS(Namespace.SVG, 'svg');
+
+    assert.strictEqual(svg.namespaceURI, Namespace.SVG, 'has svg namespace');
+
+    assert.strictEqual(svg.nodeName, 'svg', 'nodeName is svg');
+    assert.strictEqual(svg.tagName, 'svg', 'tagName is svg');
   });
 
   // See http://www.w3.org/TR/2000/WD-DOM-Level-1-20000929/level-one-core.html#ID-B63ED1A3
