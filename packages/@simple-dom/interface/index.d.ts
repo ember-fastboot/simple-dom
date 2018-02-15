@@ -162,5 +162,6 @@ export interface SerializableAttr {
 }
 
 export interface SerializableElement extends SerializableNode {
+  readonly namespaceURI: Namespace;
   readonly attributes: SerializableAttrs;
 }

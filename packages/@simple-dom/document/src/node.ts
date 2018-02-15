@@ -240,7 +240,8 @@ export default class SimpleNodeImpl<NodeType extends SimpleNodeType, OwnerDoc ex
   }
 
   protected _cloneNode(): SimpleNodeBase {
-    const node = new SimpleNodeImpl(this.ownerDocument, this.nodeType, this.nodeName, this.nodeValue, void 0);
+    const node = new SimpleNodeImpl(
+      this.ownerDocument, this.nodeType, this.nodeName, this.nodeValue, this.namespaceURI);
     const attributes = this.attributes;
     if (attributes !== EMPTY_ATTRS) {
       const newAttributes: SimpleAttr[] = node.attributes = [];

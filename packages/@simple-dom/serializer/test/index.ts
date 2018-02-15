@@ -1,4 +1,5 @@
 import { moduleWithDocument } from '@simple-dom/dom-test-helper';
+import { Namespace } from '@simple-dom/interface';
 import Serializer from '@simple-dom/serializer';
 import voidMap from '@simple-dom/void-map';
 
@@ -90,6 +91,13 @@ moduleWithDocument('Serializer', (helper, hooks) => {
       element('div', { id: 'foo' }), 'afterbegin', '<p></p>')));
 
     assert.equal(actual, '<div id="foo"><p></p></div>');
+  });
+
+  QUnit.test('svg preserves case', (assert) => {
+    const { document } = helper;
+    const svg = document.createElementNS(Namespace.SVG, 'linearGradient');
+
+    assert.equal(serializer.serialize(svg), '<linearGradient></linearGradient>');
   });
 
 });

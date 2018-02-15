@@ -1,4 +1,4 @@
-import { SerializableAttr, SerializableAttrs, SerializableElement, SerializableNode } from '@simple-dom/interface';
+import { SerializableAttr, SerializableAttrs, SerializableElement, SerializableNode, Namespace } from '@simple-dom/interface';
 
 const ESC: {
   [char: string]: string;
@@ -20,11 +20,13 @@ export default class HTMLSerializer {
   }
 
   public openTag(element: SerializableElement) {
-    return '<' + element.nodeName.toLowerCase() + this.attributes(element.attributes) + '>';
+    const tagName = element.namespaceURI === Namespace.HTML ? element.nodeName.toLowerCase() : element.nodeName;
+    return '<' + tagName + this.attributes(element.attributes) + '>';
   }
 
   public closeTag(element: SerializableElement) {
-    return '</' + element.nodeName.toLowerCase() + '>';
+    const tagName = element.namespaceURI === Namespace.HTML ? element.nodeName.toLowerCase() : element.nodeName;
+    return '</' + tagName + '>';
   }
 
   public isVoid(element: SerializableElement) {
