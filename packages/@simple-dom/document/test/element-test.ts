@@ -277,11 +277,35 @@ moduleWithDocument('Element', (helper) => {
 
   QUnit.test('setAttribute case normalization', (assert) => {
     const div = helper.document.createElement('div');
+    div.setAttribute('onClick', 'doSomething()');
     const svg = helper.document.createElementNS(Namespace.SVG, 'svg');
     svg.setAttribute('viewBox', '0 0 100 100');
-    div.setAttribute('onClick', 'doSomething()');
-    assert.strictEqual(div.attributes[0].name, 'onclick');
-    assert.strictEqual(svg.attributes[0].name, 'viewBox');
+
+    assert.equal(div.attributes[0].name, 'onclick', 'HTML case is ascii lowered');
+    assert.equal(div.getAttribute('onclick'), 'doSomething()', 'can getAttribute("onclick")');
+    assert.equal(div.getAttribute('onClick'), 'doSomething()', 'HTML is case insensitive');
+    assert.equal(svg.attributes[0].name, 'viewBox', 'non HTML case is preserved');
+    assert.equal(svg.getAttribute('viewBox'), '0 0 100 100', 'can getAttribute("viewBox")');
+    assert.strictEqual(svg.getAttribute('viewbox'), null, 'non HTML is case sensitive');
+
+    div.setAttribute('OnClick', 'doSomethingElse()');
+    svg.setAttribute('viewbox', '0 0 400 10');
+
+    assert.equal(div.attributes.length, 1);
+    assert.equal(div.getAttribute('onclick'), 'doSomethingElse()');
+    assert.equal(svg.attributes.length, 2);
+    assert.equal(svg.getAttribute('viewBox'), '0 0 100 100');
+    assert.equal(svg.getAttribute('viewbox'), '0 0 400 10');
+
+    svg.setAttribute('viewBox', '0 0 200 200');
+
+    assert.equal(svg.getAttribute('viewBox'), '0 0 200 200');
+
+    svg.removeAttribute('viewbox');
+
+    assert.equal(svg.attributes.length, 1);
+    assert.equal(svg.getAttribute('viewBox'), '0 0 200 200');
+
   });
 
 });
