@@ -275,4 +275,13 @@ moduleWithDocument('Element', (helper) => {
     assert.strictEqual(div.getAttribute('b'), null);
   });
 
+  QUnit.test('setAttribute case normalization', (assert) => {
+    const div = helper.document.createElement('div');
+    const svg = helper.document.createElementNS(Namespace.SVG, 'svg');
+    svg.setAttribute('viewBox', '0 0 100 100');
+    div.setAttribute('onClick', 'doSomething()');
+    assert.strictEqual(div.attributes[0].name, 'onclick');
+    assert.strictEqual(svg.attributes[0].name, 'viewBox');
+  });
+
 });
