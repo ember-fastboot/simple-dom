@@ -1,4 +1,10 @@
-import { SerializableAttr, SerializableAttrs, SerializableElement, SerializableNode, Namespace } from '@simple-dom/interface';
+import {
+  Namespace,
+  SerializableAttr,
+  SerializableAttrs,
+  SerializableElement,
+  SerializableNode,
+} from '@simple-dom/interface';
 
 const ESC: {
   [char: string]: string;
@@ -13,6 +19,10 @@ function matcher(char: string) {
   return ESC[char];
 }
 
+function toLowerCase(name: string) {
+  return name === 'DIV' ? 'div' : name === 'SPAN' ? 'span' : name.toLowerCase();
+}
+
 export default class HTMLSerializer {
   constructor(private voidMap: {
     [tagName: string]: boolean,
@@ -20,13 +30,15 @@ export default class HTMLSerializer {
   }
 
   public openTag(element: SerializableElement) {
-    const tagName = element.namespaceURI === Namespace.HTML ? element.nodeName.toLowerCase() : element.nodeName;
-    return '<' + tagName + this.attributes(element.attributes) + '>';
+    return '<' + this.tagName(element) + this.attributes(element.attributes) + '>';
   }
 
   public closeTag(element: SerializableElement) {
-    const tagName = element.namespaceURI === Namespace.HTML ? element.nodeName.toLowerCase() : element.nodeName;
-    return '</' + tagName + '>';
+    return '</' + this.tagName(element) + '>';
+  }
+
+  public tagName(element: SerializableElement) {
+    return element.namespaceURI === Namespace.HTML ? toLowerCase(element.nodeName) : element.nodeName;
   }
 
   public isVoid(element: SerializableElement) {
