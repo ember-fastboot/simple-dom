@@ -15,34 +15,44 @@ moduleWithDocument('Document', (helper) => {
     // https://developer.mozilla.org/en-US/docs/Web/API/Node/ownerDocument
     assert.strictEqual(document.ownerDocument, null, 'for the document itself, ownerDocument returns null');
 
-    assert.notStrictEqual(document.firstChild, null, 'has firstChild');
-    if (document.firstChild !== null) {
+    /* istanbul ignore if */
+    if (document.firstChild === null) {
+      assert.ok(false, 'document has firstChild');
+    } else {
       assert.strictEqual(document.firstChild.ownerDocument, document);
       assert.strictEqual(document.firstChild.nodeType, 10);
       assert.strictEqual(document.firstChild.nodeName, 'html');
       assert.strictEqual(document.doctype, document.firstChild, 'doctype is document.firstChild');
     }
 
-    assert.notStrictEqual(document.lastChild, null, 'has lastChild');
-    if (document.lastChild !== null) {
+    /* istanbul ignore if */
+    if (document.lastChild === null) {
+      assert.ok(false, 'document has lastChild');
+    } else {
       assert.strictEqual(document.lastChild.ownerDocument, document);
       assert.strictEqual(document.lastChild.nodeType, 1);
       assert.strictEqual(document.lastChild.nodeName, 'HTML');
       assert.strictEqual(document.documentElement, document.lastChild, 'documentElement is document.lastChild');
 
-      assert.notStrictEqual(document.documentElement.firstChild, null, 'documentElement has firstChild');
-      if (document.documentElement.firstChild !== null) {
+      /* istanbul ignore if */
+      if (document.documentElement.firstChild === null) {
+        assert.ok(false, 'documentElement has firstChild');
+      } else {
         assert.strictEqual(document.documentElement.firstChild.ownerDocument, document);
         assert.strictEqual(document.documentElement.firstChild.nodeType, 1);
         assert.strictEqual(document.documentElement.firstChild.nodeName, 'HEAD');
+        assert.strictEqual(document.documentElement.firstChild.firstChild, null);
         assert.strictEqual(document.head, document.documentElement.firstChild, 'head is documentElement.firstChild');
       }
 
-      assert.notStrictEqual(document.documentElement.lastChild, null, 'documentElement has firstChild');
-      if (document.documentElement.lastChild !== null) {
+      /* istanbul ignore if */
+      if (document.documentElement.lastChild === null) {
+        assert.ok(false, 'documentElement has firstChild');
+      } else {
         assert.strictEqual(document.documentElement.lastChild.ownerDocument, document);
         assert.strictEqual(document.documentElement.lastChild.nodeType, 1);
         assert.strictEqual(document.documentElement.lastChild.nodeName, 'BODY');
+        assert.strictEqual(document.documentElement.lastChild.firstChild, null);
         assert.strictEqual(document.body, document.documentElement.lastChild, 'body is documentElement.firstChild');
       }
     }
