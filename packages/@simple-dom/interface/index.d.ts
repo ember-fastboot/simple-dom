@@ -51,6 +51,9 @@ export interface SimpleNodeBase {
 }
 
 export interface SimpleAttr {
+  readonly namespaceURI: Namespace | null;
+  readonly prefix: string | null;
+  readonly localName: string;
   readonly name: string;
   readonly specified: true;
   value: string;

@@ -177,7 +177,10 @@ export default class SimpleNodeImpl<NodeType extends SimpleNodeType, OwnerDoc ex
       }
     }
     attributes.push({
+      localName: n,
       name: n,
+      namespaceURI: null,
+      prefix: null,
       specified: true, // serializer compat with old IE
       value: v,
     });
@@ -248,7 +251,10 @@ export default class SimpleNodeImpl<NodeType extends SimpleNodeType, OwnerDoc ex
       for (let i = 0; i < attributes.length; i++) {
         const attr = attributes[0];
         newAttributes.push({
+          localName: attr.localName,
           name: attr.name,
+          namespaceURI: attr.namespaceURI,
+          prefix: attr.prefix,
           specified: true,
           value: attr.value,
         });
