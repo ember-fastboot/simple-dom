@@ -157,7 +157,7 @@ export default class SimpleNodeImpl<NodeType extends SimpleNodeType, OwnerDoc ex
 
   public setAttribute(name: string, value: any | undefined | null): void {
     let attributes = this.attributes;
-    const n = name.toLowerCase();
+    const n = this.namespaceURI === Namespace.HTML ? name.toLowerCase() : name;
     let v: string;
     if (typeof value === 'string') {
       v = value;
