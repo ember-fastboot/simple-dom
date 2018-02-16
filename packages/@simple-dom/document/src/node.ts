@@ -144,73 +144,59 @@ export default class SimpleNodeImpl<NodeType extends SimpleNodeType, OwnerDoc ex
     if (attributes === EMPTY_ATTRS) {
       return null;
     }
-    const n = this.namespaceURI === Namespace.HTML ? name.toLowerCase() : name;
-    let attr;
-    for (let i = 0, l = attributes.length; i < l; i++) {
-      attr = attributes[i];
-      if (attr.name === n) {
-        return attr.value;
-      }
+    const localName = this.namespaceURI === Namespace.HTML ? name.toLowerCase() : name;
+    const index = this.indexOfAttribute(null, localName);
+    if (index === -1) {
+      return null;
     }
-    return null;
+    return this.attributes[index].value;
   }
 
-  public getAttributeNS(_namespaceURI: Namespace | null, localName: string): string | null {
-    return this.getAttribute(localName);
+  public getAttributeNS(namespaceURI: Namespace | null, localName: string): string | null {
+    const index = this.indexOfAttribute(namespaceURI, localName);
+    if (index === -1) {
+      return null;
+    }
+    return this.attributes[index].value;
   }
 
-  public setAttribute(name: string, value: any | undefined | null): void {
-    let attributes = this.attributes;
-    const n = this.namespaceURI === Namespace.HTML ? name.toLowerCase() : name;
-    let v: string;
-    if (typeof value === 'string') {
-      v = value;
-    } else {
-      v = '' + value;
-    }
-    if (attributes === EMPTY_ATTRS) {
-      attributes = this.attributes = [];
-    } else {
-      let attr;
-      for (let i = 0; i < attributes.length; i++) {
-        attr = attributes[i];
-        if (attr.name === n) {
-          attr.value = v;
-          return;
-        }
-      }
-    }
-    attributes.push({
-      localName: n,
-      name: n,
-      namespaceURI: null,
-      prefix: null,
-      specified: true, // serializer compat with old IE
-      value: v,
-    });
+  public setAttribute(name: string, value: any | null | undefined): void {
+    const localName = this.namespaceURI === Namespace.HTML ? name.toLowerCase() : name;
+    this.setAttributeInternal(null, null, localName, value);
   }
 
-  public setAttributeNS(_namespaceURI: Namespace | null, qualifiedName: string, value: string) {
-    this.setAttribute(qualifiedName, value);
+  /**
+   * https://dom.spec.whatwg.org/#dom-element-setattributens
+   */
+  public setAttributeNS(namespaceURI: Namespace | null, qualifiedName: string, value: string) {
+    if (namespaceURI === null) {
+      this.setAttribute(qualifiedName, value);
+    }
+    let localName = qualifiedName;
+    let prefix: string | null = null;
+    const i = qualifiedName.indexOf(':');
+    if (i !== -1) {
+      prefix = qualifiedName.slice(0, i);
+      localName = qualifiedName.slice(i + 1);
+    }
+    this.setAttributeInternal(namespaceURI, prefix, localName, value);
   }
 
   public removeAttribute(name: string): void {
-    const attributes = this.attributes;
-    if (attributes === EMPTY_ATTRS) {
+    const localName = this.namespaceURI === Namespace.HTML ? name.toLowerCase() : name;
+    const index = this.indexOfAttribute(null, localName);
+    if (index === -1) {
       return;
     }
-    const n = this.namespaceURI === Namespace.HTML ? name.toLowerCase() : name;
-    for (let i = 0, l = attributes.length; i < l; i++) {
-      const attr = attributes[i];
-      if (attr.name === n) {
-        attributes.splice(i, 1);
-        return;
-      }
-    }
+    this.attributes.splice(index, 1);
   }
 
-  public removeAttributeNS(_namespaceURI: Namespace | null, localName: string) {
-    this.removeAttribute(localName);
+  public removeAttributeNS(namespaceURI: Namespace | null, localName: string) {
+    const index = this.indexOfAttribute(namespaceURI, localName);
+    if (index === -1) {
+      return;
+    }
+    this.attributes.splice(index, 1);
   }
 
   get doctype() {
@@ -273,6 +259,47 @@ export default class SimpleNodeImpl<NodeType extends SimpleNodeType, OwnerDoc ex
       }
     }
     return node;
+  }
+
+  private indexOfAttribute(namespaceURI: Namespace | null, localName: string): number {
+    const { attributes } = this;
+    for (let i = 0; i < attributes.length; i++) {
+      const attr = attributes[i];
+      if (attr.namespaceURI === namespaceURI && attr.localName === localName) {
+        return i;
+      }
+    }
+    return -1;
+  }
+
+  private setAttributeInternal(
+    namespaceURI: Namespace | null,
+    prefix: string | null,
+    localName: string,
+    value: string,
+  ) {
+    if (typeof value !== 'string') {
+      value = '' + value;
+    }
+
+    let { attributes } = this;
+    if (attributes === EMPTY_ATTRS) {
+      attributes = this.attributes = [];
+    } else {
+      const index = this.indexOfAttribute(namespaceURI, localName);
+      if (index !== -1) {
+        attributes[index].value = value;
+        return;
+      }
+    }
+    attributes.push({
+      localName,
+      name: prefix === null ? localName : prefix + ':' + localName,
+      namespaceURI,
+      prefix,
+      specified: true, // serializer compat with old IE
+      value,
+    });
   }
 }
 
