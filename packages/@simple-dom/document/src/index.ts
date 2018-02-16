@@ -5,7 +5,7 @@ import {
 } from '@simple-dom/interface';
 import SimpleNodeImpl from './node';
 
-export default function createDocument(): SimpleDocument {
+export default function createHTMLDocument(): SimpleDocument {
   const document = new SimpleNodeImpl(null, SimpleNodeType.DOCUMENT_NODE, '#document', null, Namespace.HTML);
   const doctype = new SimpleNodeImpl(document, SimpleNodeType.DOCUMENT_TYPE_NODE, 'html', null, Namespace.HTML);
   const html = new SimpleNodeImpl(document, SimpleNodeType.ELEMENT_NODE, 'HTML', null, Namespace.HTML);

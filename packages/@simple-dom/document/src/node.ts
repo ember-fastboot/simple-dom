@@ -1,6 +1,7 @@
 import {
   Namespace,
   SimpleAttr,
+  SimpleAttrs,
   SimpleChildNodes,
   SimpleComment,
   SimpleDocument,
@@ -8,7 +9,6 @@ import {
   SimpleDocumentType,
   SimpleElement,
   SimpleNode,
-  SimpleNodeBase,
   SimpleNodeType,
   SimpleRawHTMLSection,
   SimpleText,
@@ -16,8 +16,14 @@ import {
 
 const EMPTY_ATTRS: SimpleAttr[] = [];
 
-// tslint:disable-next-line:max-line-length
-export default class SimpleNodeImpl<NodeType extends SimpleNodeType, OwnerDoc extends SimpleDocument | null, NodeValue extends string | null, NamespaceURI extends Namespace | undefined> {
+type SimpleElementImpl = SimpleNodeImpl<SimpleNodeType.ELEMENT_NODE, SimpleDocument, null, Namespace>;
+
+export default class SimpleNodeImpl<
+  T extends SimpleNodeType,
+  O extends SimpleDocument | null,
+  V extends string | null,
+  N extends Namespace | undefined
+> {
   public parentNode: SimpleNode | null = null;
   public previousSibling: SimpleNode | null = null;
   public nextSibling: SimpleNode | null = null;
@@ -29,11 +35,11 @@ export default class SimpleNodeImpl<NodeType extends SimpleNodeType, OwnerDoc ex
   private _childNodes: ChildNodes | undefined = undefined;
 
   constructor(
-    public readonly ownerDocument: OwnerDoc,
-    public readonly nodeType: NodeType,
+    public readonly ownerDocument: O,
+    public readonly nodeType: T,
     public readonly nodeName: string,
-    public nodeValue: NodeValue,
-    public readonly namespaceURI: NamespaceURI) {
+    public nodeValue: V,
+    public readonly namespaceURI: N) {
   }
 
   public get tagName(): string {
@@ -49,7 +55,7 @@ export default class SimpleNodeImpl<NodeType extends SimpleNodeType, OwnerDoc ex
   }
 
   public cloneNode(deep?: boolean): SimpleNode {
-    const node = this._cloneNode();
+    const node = cloneNode(this) as SimpleNode;
 
     if (deep === true) {
       let child = this.firstChild;
@@ -62,11 +68,11 @@ export default class SimpleNodeImpl<NodeType extends SimpleNodeType, OwnerDoc ex
       }
     }
 
-    return node as SimpleNode;
+    return node;
   }
 
   // tslint:disable-next-line:max-line-length
-  public appendChild<N extends SimpleNode>(this: SimpleNode, newChild: N): N {
+  public appendChild<Node extends SimpleNode>(this: SimpleNode, newChild: Node): Node {
     if (newChild.nodeType === SimpleNodeType.DOCUMENT_FRAGMENT_NODE) {
       insertFragment(newChild, this, this.lastChild, null);
       return newChild;
@@ -88,7 +94,7 @@ export default class SimpleNodeImpl<NodeType extends SimpleNodeType, OwnerDoc ex
     return newChild;
   }
 
-  public insertBefore<N extends SimpleNode>(this: SimpleNode, newChild: N, refChild: SimpleNode | null): N {
+  public insertBefore<Node extends SimpleNode>(this: SimpleNode, newChild: Node, refChild: SimpleNode | null): Node {
     if (refChild == null) {
       return this.appendChild(newChild);
     }
@@ -120,7 +126,7 @@ export default class SimpleNodeImpl<NodeType extends SimpleNodeType, OwnerDoc ex
     return newChild;
   }
 
-  public removeChild<N extends SimpleNode>(oldChild: N): N {
+  public removeChild<Node extends SimpleNode>(oldChild: Node): Node {
     if (this.firstChild === oldChild) {
       this.firstChild = oldChild.nextSibling;
     }
@@ -145,7 +151,7 @@ export default class SimpleNodeImpl<NodeType extends SimpleNodeType, OwnerDoc ex
       return null;
     }
     const localName = this.namespaceURI === Namespace.HTML ? name.toLowerCase() : name;
-    const index = this.indexOfAttribute(null, localName);
+    const index = indexOfAttribute(attributes, null, localName);
     if (index === -1) {
       return null;
     }
@@ -153,25 +159,24 @@ export default class SimpleNodeImpl<NodeType extends SimpleNodeType, OwnerDoc ex
   }
 
   public getAttributeNS(namespaceURI: Namespace | null, localName: string): string | null {
-    const index = this.indexOfAttribute(namespaceURI, localName);
+    const { attributes } = this;
+    const index = indexOfAttribute(attributes, namespaceURI, localName);
     if (index === -1) {
       return null;
     }
     return this.attributes[index].value;
   }
 
-  public setAttribute(name: string, value: any | null | undefined): void {
-    const localName = this.namespaceURI === Namespace.HTML ? name.toLowerCase() : name;
-    this.setAttributeInternal(null, null, localName, value);
+  public setAttribute(this: SimpleElement, name: string, value: string): void {
+    setAttribute(
+      this as SimpleElementImpl,
+      null,
+      null,
+      adjustLocalName(this.namespaceURI, name),
+      value);
   }
 
-  /**
-   * https://dom.spec.whatwg.org/#dom-element-setattributens
-   */
   public setAttributeNS(namespaceURI: Namespace | null, qualifiedName: string, value: string) {
-    if (namespaceURI === null) {
-      this.setAttribute(qualifiedName, value);
-    }
     let localName = qualifiedName;
     let prefix: string | null = null;
     const i = qualifiedName.indexOf(':');
@@ -179,24 +184,28 @@ export default class SimpleNodeImpl<NodeType extends SimpleNodeType, OwnerDoc ex
       prefix = qualifiedName.slice(0, i);
       localName = qualifiedName.slice(i + 1);
     }
-    this.setAttributeInternal(namespaceURI, prefix, localName, value);
+    setAttribute(this as SimpleElementImpl, namespaceURI, prefix, localName, value);
   }
 
   public removeAttribute(name: string): void {
+    const { attributes } = this;
     const localName = this.namespaceURI === Namespace.HTML ? name.toLowerCase() : name;
-    const index = this.indexOfAttribute(null, localName);
+
+    const index = indexOfAttribute(attributes, null, localName);
     if (index === -1) {
       return;
     }
-    this.attributes.splice(index, 1);
+
+    attributes.splice(index, 1);
   }
 
   public removeAttributeNS(namespaceURI: Namespace | null, localName: string) {
-    const index = this.indexOfAttribute(namespaceURI, localName);
-    if (index === -1) {
-      return;
-    }
-    this.attributes.splice(index, 1);
+    const { attributes } = this;
+
+    const index = indexOfAttribute(attributes, namespaceURI, localName);
+    if (index === -1) { return; }
+
+    attributes.splice(index, 1);
   }
 
   get doctype() {
@@ -215,13 +224,14 @@ export default class SimpleNodeImpl<NodeType extends SimpleNodeType, OwnerDoc ex
     return this.documentElement.lastChild as SimpleElement;
   }
 
-  public createElement(this: SimpleDocument, tagName: string): SimpleElement {
-    return new SimpleNodeImpl(this, SimpleNodeType.ELEMENT_NODE, tagName.toUpperCase(), null, Namespace.HTML);
+  public createElement(this: SimpleDocument, name: string): SimpleElement {
+    return new SimpleNodeImpl(this, SimpleNodeType.ELEMENT_NODE, name.toUpperCase(), null, Namespace.HTML);
   }
 
-  public createElementNS(this: SimpleDocument, namespace: Namespace, tagName: string): SimpleElement {
-    const nodeName = namespace === Namespace.HTML ? tagName.toUpperCase() : tagName;
-    return new SimpleNodeImpl(this, SimpleNodeType.ELEMENT_NODE, nodeName, null, namespace);
+  public createElementNS(this: SimpleDocument, namespace: Namespace, qualifiedName: string): SimpleElement {
+    // we don't care to parse the qualified name because we only support HTML documents
+    // which don't support prefixed elements
+    return new SimpleNodeImpl(this, SimpleNodeType.ELEMENT_NODE, qualifiedName, null, namespace);
   }
 
   public createTextNode(this: SimpleDocument, text: string): SimpleText {
@@ -238,68 +248,6 @@ export default class SimpleNodeImpl<NodeType extends SimpleNodeType, OwnerDoc ex
 
   public createDocumentFragment(this: SimpleDocument): SimpleDocumentFragment {
     return new SimpleNodeImpl(this, SimpleNodeType.DOCUMENT_FRAGMENT_NODE, '#document-fragment', null, void 0);
-  }
-
-  protected _cloneNode(): SimpleNodeBase {
-    const node = new SimpleNodeImpl(
-      this.ownerDocument, this.nodeType, this.nodeName, this.nodeValue, this.namespaceURI);
-    const attributes = this.attributes;
-    if (attributes !== EMPTY_ATTRS) {
-      const newAttributes: SimpleAttr[] = node.attributes = [];
-      for (let i = 0; i < attributes.length; i++) {
-        const attr = attributes[0];
-        newAttributes.push({
-          localName: attr.localName,
-          name: attr.name,
-          namespaceURI: attr.namespaceURI,
-          prefix: attr.prefix,
-          specified: true,
-          value: attr.value,
-        });
-      }
-    }
-    return node;
-  }
-
-  private indexOfAttribute(namespaceURI: Namespace | null, localName: string): number {
-    const { attributes } = this;
-    for (let i = 0; i < attributes.length; i++) {
-      const attr = attributes[i];
-      if (attr.namespaceURI === namespaceURI && attr.localName === localName) {
-        return i;
-      }
-    }
-    return -1;
-  }
-
-  private setAttributeInternal(
-    namespaceURI: Namespace | null,
-    prefix: string | null,
-    localName: string,
-    value: string,
-  ) {
-    if (typeof value !== 'string') {
-      value = '' + value;
-    }
-
-    let { attributes } = this;
-    if (attributes === EMPTY_ATTRS) {
-      attributes = this.attributes = [];
-    } else {
-      const index = this.indexOfAttribute(namespaceURI, localName);
-      if (index !== -1) {
-        attributes[index].value = value;
-        return;
-      }
-    }
-    attributes.push({
-      localName,
-      name: prefix === null ? localName : prefix + ':' + localName,
-      namespaceURI,
-      prefix,
-      specified: true, // serializer compat with old IE
-      value,
-    });
   }
 }
 
@@ -333,6 +281,44 @@ function insertFragment(
   }
 }
 
+function cloneNode<
+  T extends SimpleNodeType,
+  O extends SimpleDocument | null,
+  V extends string | null,
+  N extends Namespace | undefined
+>(
+  node: SimpleNodeImpl<T, O, V, N>,
+) {
+  const clone = new SimpleNodeImpl(
+    node.ownerDocument,
+    node.nodeType,
+    node.nodeName,
+    node.nodeValue,
+    node.namespaceURI,
+  );
+  clone.attributes = copyAttrs(node.attributes);
+  return clone;
+}
+
+function copyAttrs(attrs: SimpleAttr[]) {
+  if (attrs === EMPTY_ATTRS) {
+    return attrs;
+  }
+  const copy: SimpleAttr[] = [];
+  for (let i = 0; i < attrs.length; i++) {
+    const attr = attrs[i];
+    copy.push({
+      localName: attr.localName,
+      name: attr.name,
+      namespaceURI: attr.namespaceURI,
+      prefix: attr.prefix,
+      specified: true,
+      value: attr.value,
+    });
+  }
+  return copy;
+}
+
 class ChildNodes {
   constructor(private node: SimpleNode) {
   }
@@ -346,4 +332,49 @@ class ChildNodes {
 
     return child;
   }
+}
+
+function indexOfAttribute(attributes: SimpleAttrs, namespaceURI: Namespace | null, localName: string): number {
+  for (let i = 0; i < attributes.length; i++) {
+    const attr = attributes[i];
+    if (attr.namespaceURI === namespaceURI && attr.localName === localName) {
+      return i;
+    }
+  }
+  return -1;
+}
+
+function adjustLocalName(namespaceURI: Namespace, localName: string) {
+  return namespaceURI === Namespace.HTML ? localName.toLowerCase() : localName;
+}
+
+// https://dom.spec.whatwg.org/#dom-element-setattributens
+function setAttribute(
+  element: SimpleNodeImpl<SimpleNodeType.ELEMENT_NODE, SimpleDocument, null, Namespace>,
+  namespaceURI: Namespace | null,
+  prefix: string | null,
+  localName: string,
+  value: string,
+) {
+  if (typeof value !== 'string') {
+    value = '' + value;
+  }
+  let { attributes } = element;
+  if (attributes === EMPTY_ATTRS) {
+    attributes = element.attributes = [];
+  } else {
+    const index = indexOfAttribute(attributes, namespaceURI, localName);
+    if (index !== -1) {
+      attributes[index].value = value;
+      return;
+    }
+  }
+  attributes.push({
+    localName,
+    name: prefix === null ? localName : prefix + ':' + localName,
+    namespaceURI,
+    prefix,
+    specified: true, // serializer compat with old IE
+    value,
+  });
 }

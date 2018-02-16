@@ -20,6 +20,16 @@ export const enum Namespace {
   XMLNS = 'http://www.w3.org/2000/xmlns/'
 }
 
+/**
+ * elements that are supported in HTML5 that have a namespace but no prefix
+ */
+export type ElementNamespace = Namespace.HTML | Namespace.SVG | Namespace.MathML;
+
+/**
+ * attributes handled in HTML5 that get prefix and namespace
+ */
+export type AttrNamespace = Namespace.XLink | Namespace.XMLNS | Namespace.XML;
+
 export type SimpleNode =
   SimpleRawHTMLSection |
   SimpleElement |

@@ -1,4 +1,4 @@
-import createDocument from '@simple-dom/document';
+import createHTMLDocument from '@simple-dom/document';
 import { SimpleDocument } from '@simple-dom/interface';
 export { default as createDocument } from '@simple-dom/document';
 export { default as HTMLParser } from '@simple-dom/parser';
@@ -10,7 +10,7 @@ export { SimpleChildNodes as NodeList, SimpleNodeType as NodeType, SimpleAttr as
 // tslint:disable:variable-name
 export const Document = function Document() {
   // for backwards compatibility
-  return createDocument();
+  return createHTMLDocument();
 } as any as {
   prototype: SimpleDocument;
   new (): SimpleDocument;
