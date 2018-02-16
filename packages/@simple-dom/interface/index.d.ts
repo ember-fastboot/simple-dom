@@ -68,7 +68,7 @@ export interface SimpleNodeBase {
 }
 
 export interface SimpleAttr {
-  readonly namespaceURI: Namespace | null;
+  readonly namespaceURI: AttrNamespace | null;
   readonly prefix: string | null;
   readonly localName: string;
   readonly name: string;
@@ -86,18 +86,18 @@ export interface SimpleElement extends SimpleNodeBase {
   readonly nodeType: SimpleNodeType.ELEMENT_NODE;
   readonly nodeValue: null;
 
-  readonly namespaceURI: Namespace;
+  readonly namespaceURI: ElementNamespace;
   readonly tagName: string;
   readonly attributes: SimpleAttrs;
 
   getAttribute(name: string): string | null;
-  getAttributeNS(namespaceURI: Namespace | null, localName: string): string | null;
+  getAttributeNS(namespaceURI: AttrNamespace | null, localName: string): string | null;
 
   removeAttribute(name: string): void;
-  removeAttributeNS(namespaceURI: Namespace | null, qualifiedName: string): void;
+  removeAttributeNS(namespaceURI: AttrNamespace | null, qualifiedName: string): void;
 
   setAttribute(name: string, value: string): void;
-  setAttributeNS(namespaceURI: Namespace | null, qualifiedName: string, value: string): void;
+  setAttributeNS(namespaceURI: AttrNamespace | null, qualifiedName: string, value: string): void;
 }
 
 export interface SimpleDocumentType extends SimpleNodeBase {
@@ -123,7 +123,7 @@ export interface SimpleDocument extends SimpleNodeBase {
   readonly body: SimpleElement;
 
   createElement(tag: string): SimpleElement;
-  createElementNS(namespace: Namespace, name: string): SimpleElement;
+  createElementNS(namespace: ElementNamespace, name: string): SimpleElement;
 
   createTextNode(text: string): SimpleText;
   createComment(data: string): SimpleComment;
@@ -185,6 +185,6 @@ export interface SerializableAttr {
 }
 
 export interface SerializableElement extends SerializableNode {
-  readonly namespaceURI: Namespace;
+  readonly namespaceURI: string;
   readonly attributes: SerializableAttrs;
 }

@@ -10,7 +10,7 @@
       "name": "QUnit simple-dom",
       "program": "${workspaceFolder}/node_modules/.bin/qunit",
       "args": [
-        "packages/**/commonjs/es5/test.js"
+        "packages/**/test/commonjs/index.js"
       ],
       "sourceMaps": true,
       "outFiles": [
