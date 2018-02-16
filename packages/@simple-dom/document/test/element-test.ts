@@ -246,17 +246,17 @@ moduleWithDocument('Element', (helper) => {
     const { document } = helper;
 
     const div = document.createElement('div');
-    div.setAttribute('a', 0);
+    div.setAttribute('a', 0 as any);
     assert.strictEqual(div.getAttribute('a'), '0');
-    div.setAttribute('a', 1);
+    div.setAttribute('a', 1 as any);
     assert.strictEqual(div.getAttribute('a'), '1');
-    div.setAttribute('a', null);
+    div.setAttribute('a', null as any);
     assert.strictEqual(div.getAttribute('a'), 'null');
-    div.setAttribute('a', undefined);
+    div.setAttribute('a', undefined as any);
     assert.strictEqual(div.getAttribute('a'), 'undefined');
-    div.setAttribute('a', true);
+    div.setAttribute('a', true as any);
     assert.strictEqual(div.getAttribute('a'), 'true');
-    div.setAttribute('a', false);
+    div.setAttribute('a', false as any);
     assert.strictEqual(div.getAttribute('a'), 'false');
   });
 

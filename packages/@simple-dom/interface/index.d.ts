@@ -8,9 +8,16 @@ export const enum SimpleNodeType {
   DOCUMENT_FRAGMENT_NODE = 11,
 }
 
+/**
+ * https://infra.spec.whatwg.org/#namespaces
+ */
 export const enum Namespace {
   HTML = 'http://www.w3.org/1999/xhtml',
+  MathML = 'http://www.w3.org/1998/Math/MathML',
   SVG = 'http://www.w3.org/2000/svg',
+  XLink = 'http://www.w3.org/1999/xlink',
+  XML = 'http://www.w3.org/XML/1998/namespace',
+  XMLNS = 'http://www.w3.org/2000/xmlns/'
 }
 
 export type SimpleNode =
@@ -23,14 +30,14 @@ export type SimpleNode =
   SimpleDocumentFragment;
 
 export interface SimpleNodeBase {
-  // TODO
-  // readonly namespaceURI: string;
   readonly ownerDocument: SimpleDocument | null;
   readonly nodeType: SimpleNodeType;
   readonly nodeName: string;
 
   nodeValue: string | null;
 
+  // in the Element iterface these are readonly but we need them read/write
+  // we could check ownerDocument === this and cast them.
   parentNode: SimpleNode | null;
   previousSibling: SimpleNode | null;
   nextSibling: SimpleNode | null;
@@ -74,10 +81,13 @@ export interface SimpleElement extends SimpleNodeBase {
   readonly attributes: SimpleAttrs;
 
   getAttribute(name: string): string | null;
+  getAttributeNS(namespaceURI: Namespace | null, localName: string): string | null;
+
   removeAttribute(name: string): void;
-  // TODO: removeAttributeNS(namespaceURI: string | null, localName: string): void;
-  setAttribute(name: string, value: any | undefined | null): void;
-  // TODO: setAttributeNS(namespaceURI: string | null, qualifiedName: string, value: string): void;
+  removeAttributeNS(namespaceURI: Namespace | null, qualifiedName: string): void;
+
+  setAttribute(name: string, value: string): void;
+  setAttributeNS(namespaceURI: Namespace | null, qualifiedName: string, value: string): void;
 }
 
 export interface SimpleDocumentType extends SimpleNodeBase {

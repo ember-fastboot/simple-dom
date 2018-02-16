@@ -155,6 +155,10 @@ export default class SimpleNodeImpl<NodeType extends SimpleNodeType, OwnerDoc ex
     return null;
   }
 
+  public getAttributeNS(_namespaceURI: Namespace | null, localName: string): string | null {
+    return this.getAttribute(localName);
+  }
+
   public setAttribute(name: string, value: any | undefined | null): void {
     let attributes = this.attributes;
     const n = this.namespaceURI === Namespace.HTML ? name.toLowerCase() : name;
@@ -186,6 +190,10 @@ export default class SimpleNodeImpl<NodeType extends SimpleNodeType, OwnerDoc ex
     });
   }
 
+  public setAttributeNS(_namespaceURI: Namespace | null, qualifiedName: string, value: string) {
+    this.setAttribute(qualifiedName, value);
+  }
+
   public removeAttribute(name: string): void {
     const attributes = this.attributes;
     if (attributes === EMPTY_ATTRS) {
@@ -199,6 +207,10 @@ export default class SimpleNodeImpl<NodeType extends SimpleNodeType, OwnerDoc ex
         return;
       }
     }
+  }
+
+  public removeAttributeNS(_namespaceURI: Namespace | null, localName: string) {
+    this.removeAttribute(localName);
   }
 
   get doctype() {
