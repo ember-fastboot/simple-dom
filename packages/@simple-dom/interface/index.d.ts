@@ -161,6 +161,8 @@ export interface SimpleComment extends SimpleNodeBase {
  * @deprecated
  */
 export interface SimpleChildNodes {
+  readonly length: number;
+  [index: number]: SimpleNode;
   item(index: number): SimpleNode | null;
 }
 
