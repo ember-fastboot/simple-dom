@@ -49,7 +49,10 @@ export default class SimpleNodeImpl<
 
   public attributes: SimpleAttr[] = EMPTY_ATTRS;
 
-  private _childNodes: ChildNodes | undefined = undefined;
+  /**
+   * @internal
+   */
+  public _childNodes: ChildNodes | undefined = undefined;
 
   constructor(
     public readonly ownerDocument: O,

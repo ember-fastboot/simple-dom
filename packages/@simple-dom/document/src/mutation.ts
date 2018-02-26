@@ -1,10 +1,13 @@
 import { SimpleDocumentFragment, SimpleNode, SimpleNodeType } from '@simple-dom/interface';
+import { SimpleElementImpl } from './node';
 
 export function insertBefore(parentNode: SimpleNode, newChild: SimpleNode, refChild: SimpleNode | null): void {
   if (refChild == null) {
     appendChild(parentNode, newChild);
     return;
   }
+
+  invalidate(parentNode as SimpleElementImpl);
 
   if (newChild.nodeType === SimpleNodeType.DOCUMENT_FRAGMENT_NODE) {
     insertFragment(newChild, parentNode, refChild.previousSibling, refChild);
@@ -34,6 +37,8 @@ export function insertBefore(parentNode: SimpleNode, newChild: SimpleNode, refCh
 }
 
 export function appendChild(parentNode: SimpleNode, newChild: SimpleNode): void {
+  invalidate(parentNode as SimpleElementImpl);
+
   if (newChild.nodeType === SimpleNodeType.DOCUMENT_FRAGMENT_NODE) {
     insertFragment(newChild, parentNode, parentNode.lastChild, null);
     return;
@@ -55,7 +60,15 @@ export function appendChild(parentNode: SimpleNode, newChild: SimpleNode): void 
   }
 }
 
+function invalidate(parentNode: SimpleElementImpl) {
+  const childNodes = parentNode._childNodes;
+  if (childNodes !== undefined) {
+    childNodes.stale = true;
+  }
+}
+
 export function removeChild(parentNode: SimpleNode, oldChild: SimpleNode): void {
+  invalidate(parentNode as SimpleElementImpl);
   if (parentNode.firstChild === oldChild) {
     parentNode.firstChild = oldChild.nextSibling;
   }
