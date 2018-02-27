@@ -30,6 +30,10 @@ module.exports = function () {
     });
   })), '..');
 
+  if (build.isProduction()) {
+    return dist;
+  }
+
   const vendor = concat(dist, {
     outputFile: '/test/amd/vendor.js',
     inputFiles: ['packages/**/dist/amd/es5/index.js'],

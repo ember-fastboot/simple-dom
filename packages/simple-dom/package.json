@@ -18,7 +18,7 @@
   "types": "dist/types/index.d.ts",
   "repository": "https://github.com/ember-fastboot/simple-dom",
   "scripts": {
-    "prepare": "ember build"
+    "prepare": "ember build --environment=production"
   },
   "dependencies": {
     "@simple-dom/document": "^1.4.0-alpha.82914663",
