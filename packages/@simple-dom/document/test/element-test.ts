@@ -308,4 +308,28 @@ moduleWithDocument('Element', (helper) => {
 
   });
 
+  QUnit.test('setAttributeNS', (assert) => {
+    const svg = helper.document.createElementNS(Namespace.SVG, 'svg');
+
+    svg.setAttributeNS(Namespace.XMLNS, 'xmlns', 'http://www.w3.org/2000/svg');
+    svg.setAttributeNS(Namespace.XMLNS, 'xmlns:xlink', 'http://www.w3.org/1999/xlink');
+
+    assert.equal(svg.attributes.length, 2);
+
+    assert.equal(svg.getAttributeNS(Namespace.XMLNS, 'xmlns'), 'http://www.w3.org/2000/svg');
+    assert.equal(svg.getAttributeNS(Namespace.XMLNS, 'xlink'), 'http://www.w3.org/1999/xlink');
+
+    assert.strictEqual(svg.attributes[0].prefix, null);
+    assert.equal(svg.attributes[0].localName, 'xmlns');
+    assert.equal(svg.attributes[0].name, 'xmlns');
+    assert.equal(svg.attributes[0].namespaceURI, Namespace.XMLNS);
+    assert.equal(svg.attributes[0].value, 'http://www.w3.org/2000/svg');
+
+    assert.equal(svg.attributes[1].prefix, 'xmlns');
+    assert.equal(svg.attributes[1].localName, 'xlink');
+    assert.equal(svg.attributes[1].name, 'xmlns:xlink');
+    assert.equal(svg.attributes[1].namespaceURI, Namespace.XMLNS);
+    assert.equal(svg.attributes[1].value, 'http://www.w3.org/1999/xlink');
+  });
+
 });
