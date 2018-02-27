@@ -5,9 +5,10 @@
     "build": "ember build",
     "lint": "tslint -p tsconfig.json",
     "prepare": "ember build --environment=production",
-    "test": "yarn run test:browser && yarn run test:node",
+    "test": "yarn run test:browser && yarn run test:node && yarn run test:types",
     "test:browser": "ember test",
-    "test:node": "nyc --check-coverage -- qunit packages/@simple-dom/*/dist/test/commonjs/index.js packages/simple-dom/dist/test/commonjs/index.js"
+    "test:node": "nyc --check-coverage -- qunit packages/@simple-dom/*/dist/test/commonjs/index.js packages/simple-dom/dist/test/commonjs/index.js",
+    "test:types": "tsc -p check-types/tsconfig.json"
   },
   "devDependencies": {
     "@types/qunit": "^2.0.31",
