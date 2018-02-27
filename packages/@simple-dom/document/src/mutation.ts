@@ -2,62 +2,19 @@ import { SimpleDocumentFragment, SimpleNode, SimpleNodeType } from '@simple-dom/
 import { SimpleElementImpl } from './node';
 
 export function insertBefore(parentNode: SimpleNode, newChild: SimpleNode, refChild: SimpleNode | null): void {
-  if (refChild == null) {
-    appendChild(parentNode, newChild);
-    return;
-  }
-
   invalidate(parentNode as SimpleElementImpl);
 
-  if (newChild.nodeType === SimpleNodeType.DOCUMENT_FRAGMENT_NODE) {
-    insertFragment(newChild, parentNode, refChild.previousSibling, refChild);
-    return;
-  }
-
-  if (newChild.parentNode) {
-    removeChild(newChild.parentNode, newChild);
-  }
-
-  newChild.parentNode = parentNode;
-
-  const previousSibling = refChild.previousSibling;
-  if (previousSibling) {
-    previousSibling.nextSibling = newChild;
-    newChild.previousSibling = previousSibling;
-  } else {
-    newChild.previousSibling = null;
-  }
-
-  refChild.previousSibling = newChild;
-  newChild.nextSibling = refChild;
-
-  if (parentNode.firstChild === refChild) {
-    parentNode.firstChild = newChild;
-  }
+  insertBetween(
+    parentNode,
+    newChild,
+    refChild === null ? parentNode.lastChild : refChild.previousSibling,
+    refChild);
 }
 
-export function appendChild(parentNode: SimpleNode, newChild: SimpleNode): void {
+export function removeChild(parentNode: SimpleNode, oldChild: SimpleNode): void {
   invalidate(parentNode as SimpleElementImpl);
 
-  if (newChild.nodeType === SimpleNodeType.DOCUMENT_FRAGMENT_NODE) {
-    insertFragment(newChild, parentNode, parentNode.lastChild, null);
-    return;
-  }
-
-  if (newChild.parentNode !== null) {
-    removeChild(newChild.parentNode, newChild);
-  }
-
-  newChild.parentNode = parentNode;
-  const refNode = parentNode.lastChild;
-  if (refNode === null) {
-    parentNode.firstChild = newChild;
-    parentNode.lastChild = newChild;
-  } else {
-    newChild.previousSibling = refNode;
-    refNode.nextSibling = newChild;
-    parentNode.lastChild = newChild;
-  }
+  removeBetween(parentNode, oldChild, oldChild.previousSibling, oldChild.nextSibling);
 }
 
 function invalidate(parentNode: SimpleElementImpl) {
@@ -67,57 +24,95 @@ function invalidate(parentNode: SimpleElementImpl) {
   }
 }
 
-export function removeChild(parentNode: SimpleNode, oldChild: SimpleNode): void {
-  invalidate(parentNode as SimpleElementImpl);
-  if (parentNode.firstChild === oldChild) {
-    parentNode.firstChild = oldChild.nextSibling;
+function insertBetween(
+  parentNode: SimpleNode,
+  newChild: SimpleNode,
+  previousSibling: SimpleNode | null,
+  nextSibling: SimpleNode | null,
+) {
+  if (newChild.nodeType === SimpleNodeType.DOCUMENT_FRAGMENT_NODE) {
+    insertFragment(newChild, parentNode, previousSibling, nextSibling);
+    return;
   }
-  if (parentNode.lastChild === oldChild) {
-    parentNode.lastChild = oldChild.previousSibling;
+
+  if (newChild.parentNode !== null) {
+    removeChild(newChild.parentNode, newChild);
   }
-  if (oldChild.previousSibling) {
-    oldChild.previousSibling.nextSibling = oldChild.nextSibling;
+
+  newChild.parentNode = parentNode;
+  newChild.previousSibling = previousSibling;
+  newChild.nextSibling = nextSibling;
+
+  if (previousSibling === null) {
+    parentNode.firstChild = newChild;
+  } else {
+    previousSibling.nextSibling = newChild;
   }
-  if (oldChild.nextSibling) {
-    oldChild.nextSibling.previousSibling = oldChild.previousSibling;
+
+  if (nextSibling === null) {
+    parentNode.lastChild = newChild;
+  } else {
+    nextSibling.previousSibling = newChild;
   }
+}
+
+function removeBetween(
+  parentNode: SimpleNode,
+  oldChild: SimpleNode,
+  previousSibling: SimpleNode | null,
+  nextSibling: SimpleNode | null,
+) {
   oldChild.parentNode = null;
-  oldChild.nextSibling = null;
   oldChild.previousSibling = null;
+  oldChild.nextSibling = null;
+
+  if (previousSibling === null) {
+    parentNode.firstChild = nextSibling;
+  } else {
+    previousSibling.nextSibling = nextSibling;
+  }
+
+  if (nextSibling === null) {
+    parentNode.lastChild = previousSibling;
+  } else {
+    nextSibling.previousSibling = previousSibling;
+  }
 }
 
 function insertFragment(
   fragment: SimpleDocumentFragment,
-  newParent: SimpleNode,
-  before: SimpleNode | null,
-  after: SimpleNode | null,
+  parentNode: SimpleNode,
+  previousSibling: SimpleNode | null,
+  nextSibling: SimpleNode | null,
 ): void {
-  if (fragment.firstChild === null) {
+  const firstChild = fragment.firstChild;
+  if (firstChild === null) {
     return;
   }
 
-  const firstChild = fragment.firstChild;
-  fragment.firstChild = fragment.lastChild = null;
+  fragment.firstChild = null;
+  fragment.lastChild = null;
+
   let lastChild = firstChild;
-  let node: SimpleNode | null = firstChild;
+  let newChild: SimpleNode | null = firstChild;
 
-  firstChild.previousSibling = before;
-  if (before) {
-    before.nextSibling = firstChild;
+  firstChild.previousSibling = previousSibling;
+  if (previousSibling === null) {
+    parentNode.firstChild = firstChild;
   } else {
-    newParent.firstChild = firstChild;
+    previousSibling.nextSibling = firstChild;
   }
 
-  while (node) {
-    node.parentNode = newParent;
-    lastChild = node;
-    node = node.nextSibling;
+  while (newChild !== null) {
+    newChild.parentNode = parentNode;
+    lastChild = newChild;
+    newChild = newChild.nextSibling;
   }
 
-  lastChild.nextSibling = after;
-  if (after) {
-    after.previousSibling = lastChild;
+  lastChild.nextSibling = nextSibling;
+  if (nextSibling === null) {
+    parentNode.lastChild = lastChild;
   } else {
-    newParent.lastChild = lastChild;
+    nextSibling.previousSibling = lastChild;
   }
 }

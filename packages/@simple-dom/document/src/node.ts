@@ -24,7 +24,6 @@ import {
 import { ChildNodes } from './child-nodes';
 import { cloneNode } from './clone';
 import {
-  appendChild,
   insertBefore,
   removeChild,
 } from './mutation';
@@ -79,7 +78,7 @@ export default class SimpleNodeImpl<
   }
 
   public appendChild<Node extends SimpleNode>(this: SimpleNode, newChild: Node): Node {
-    appendChild(this, newChild);
+    insertBefore(this, newChild, null);
     return newChild;
   }
 
