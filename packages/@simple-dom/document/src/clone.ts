@@ -1,16 +1,16 @@
 import {
   ElementNamespace,
   Namespace,
+  NodeType,
   SimpleAttr,
   SimpleAttrs,
   SimpleDocument,
   SimpleNode,
-  SimpleNodeType,
 } from '@simple-dom/interface';
 import { EMPTY_ATTRS } from './attributes';
 import SimpleNodeImpl from './node';
 
-export { Namespace, SimpleDocument, SimpleNodeType };
+export { Namespace, SimpleDocument, NodeType };
 
 export function cloneNode(
   node: SimpleNode,
@@ -35,7 +35,7 @@ export function cloneNode(
 function nodeFrom(node: SimpleNode): SimpleNode {
 
   let namespaceURI: ElementNamespace | undefined;
-  if (node.nodeType === SimpleNodeType.ELEMENT_NODE) {
+  if (node.nodeType === NodeType.ELEMENT_NODE) {
     namespaceURI = node.namespaceURI;
   }
 
@@ -47,7 +47,7 @@ function nodeFrom(node: SimpleNode): SimpleNode {
     namespaceURI,
   );
 
-  if (node.nodeType === SimpleNodeType.ELEMENT_NODE) {
+  if (node.nodeType === NodeType.ELEMENT_NODE) {
     clone.attributes = copyAttrs(node.attributes);
   }
 

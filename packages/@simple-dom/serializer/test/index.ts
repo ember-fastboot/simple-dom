@@ -1,5 +1,5 @@
 import { moduleWithDocument } from '@simple-dom/dom-test-helper';
-import { Namespace } from '@simple-dom/interface';
+import { InsertPosition, Namespace } from '@simple-dom/interface';
 import Serializer from '@simple-dom/serializer';
 import voidMap from '@simple-dom/void-map';
 
@@ -80,17 +80,27 @@ moduleWithDocument('Serializer', (helper, hooks) => {
   });
 
   QUnit.test('serializes raw HTML', (assert) => {
-    const { element, fragment, text, insertAdjacentHTML } = helper;
+    const { element, fragment, text } = helper;
     let actual = serializer.serialize(fragment(
       element('div', { id: 'foo' },
         text('<p></p>'))));
 
     assert.equal(actual, '<div id="foo">&lt;p&gt;&lt;/p&gt;</div>');
 
-    actual = serializer.serialize(fragment(insertAdjacentHTML(
-      element('div', { id: 'foo' }), 'afterbegin', '<p></p>')));
+    const el = element('div', { id: 'foo' });
 
-    assert.equal(actual, '<div id="foo"><p></p></div>');
+    // Chrome requires parent to be an element
+    const parent = element('div', undefined, el);
+
+    // serializes a raw
+    el.insertAdjacentHTML(InsertPosition.beforebegin, '<p>beforebegin</p>');
+    el.insertAdjacentHTML(InsertPosition.afterbegin, '<p>afterbegin</p>');
+    el.insertAdjacentHTML(InsertPosition.beforeend, '<p>beforeend</p>');
+    el.insertAdjacentHTML(InsertPosition.afterend, '<p>afterend</p>');
+
+    actual = serializer.serializeChildren(parent);
+
+    assert.equal(actual, '<p>beforebegin</p><div id="foo"><p>afterbegin</p><p>beforeend</p></div><p>afterend</p>');
   });
 
   QUnit.test('svg preserves case', (assert) => {

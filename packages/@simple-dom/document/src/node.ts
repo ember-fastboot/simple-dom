@@ -1,7 +1,9 @@
 import {
   AttrNamespace,
   ElementNamespace,
+  InsertPosition,
   Namespace,
+  NodeType,
   SimpleAttr,
   SimpleChildNodes,
   SimpleComment,
@@ -10,7 +12,6 @@ import {
   SimpleDocumentType,
   SimpleElement,
   SimpleNode,
-  SimpleNodeType,
   SimpleRawHTMLSection,
   SimpleText,
 } from '@simple-dom/interface';
@@ -31,11 +32,11 @@ import {
   parseQualifiedName,
 } from './qualified-name';
 
-export type SimpleElementImpl = SimpleNodeImpl<SimpleNodeType.ELEMENT_NODE, SimpleDocument, null, ElementNamespace>;
-export type SimpleDocumentImpl = SimpleNodeImpl<SimpleNodeType.DOCUMENT_NODE, null, null, Namespace.HTML>;
+export type SimpleElementImpl = SimpleNodeImpl<NodeType.ELEMENT_NODE, SimpleDocument, null, ElementNamespace>;
+export type SimpleDocumentImpl = SimpleNodeImpl<NodeType.DOCUMENT_NODE, null, null, Namespace.HTML>;
 
 export default class SimpleNodeImpl<
-  T extends SimpleNodeType,
+  T extends NodeType,
   O extends SimpleDocument | null,
   V extends string | null,
   N extends ElementNamespace | undefined
@@ -92,6 +93,35 @@ export default class SimpleNodeImpl<
     return oldChild;
   }
 
+  public insertAdjacentHTML(this: SimpleElementImpl, position: InsertPosition, html: string): void {
+    const raw = new SimpleNodeImpl(this.ownerDocument, NodeType.RAW_NODE, '#raw', html, void 0);
+    let parentNode: SimpleNode | null;
+    let nextSibling: SimpleNode | null;
+    switch (position) {
+      case 'beforebegin':
+        parentNode = this.parentNode;
+        nextSibling = this;
+        break;
+      case 'afterbegin':
+        parentNode = this;
+        nextSibling = this.firstChild;
+        break;
+      case 'beforeend':
+        parentNode = this;
+        nextSibling = null;
+        break;
+      case 'afterend':
+        parentNode = this.parentNode;
+        nextSibling = this.nextSibling;
+        break;
+      default: throw new Error('invalid position');
+    }
+    if (parentNode === null) {
+      throw new Error(`${position} requires a parentNode`);
+    }
+    insertBefore(parentNode, raw, nextSibling);
+  }
+
   public getAttribute(this: SimpleElementImpl, name: string): string | null {
     const localName = adjustAttrName(this.namespaceURI, name);
     return getAttribute(this.attributes, null, localName);
@@ -142,28 +172,32 @@ export default class SimpleNodeImpl<
   }
 
   public createElement(this: SimpleDocumentImpl, name: string): SimpleElement {
-    return new SimpleNodeImpl(this, SimpleNodeType.ELEMENT_NODE, name.toUpperCase(), null, Namespace.HTML);
+    return new SimpleNodeImpl(this, NodeType.ELEMENT_NODE, name.toUpperCase(), null, Namespace.HTML);
   }
 
   public createElementNS(this: SimpleDocumentImpl, namespace: ElementNamespace, qualifiedName: string): SimpleElement {
     // we don't care to parse the qualified name because we only support HTML documents
     // which don't support prefixed elements
-    return new SimpleNodeImpl(this, SimpleNodeType.ELEMENT_NODE, qualifiedName, null, namespace);
+    return new SimpleNodeImpl(this, NodeType.ELEMENT_NODE, qualifiedName, null, namespace);
   }
 
   public createTextNode(this: SimpleDocumentImpl, text: string): SimpleText {
-    return new SimpleNodeImpl(this, SimpleNodeType.TEXT_NODE, '#text', text, void 0);
+    return new SimpleNodeImpl(this, NodeType.TEXT_NODE, '#text', text, void 0);
   }
 
   public createComment(this: SimpleDocumentImpl, text: string): SimpleComment {
-    return new SimpleNodeImpl(this, SimpleNodeType.COMMENT_NODE, '#comment', text, void 0);
+    return new SimpleNodeImpl(this, NodeType.COMMENT_NODE, '#comment', text, void 0);
   }
 
+  /**
+   * Backwards compat
+   * @deprecated
+   */
   public createRawHTMLSection(this: SimpleDocumentImpl, text: string): SimpleRawHTMLSection {
-    return new SimpleNodeImpl(this, SimpleNodeType.RAW, '#raw', text, void 0);
+    return new SimpleNodeImpl(this, NodeType.RAW_NODE, '#raw', text, void 0);
   }
 
   public createDocumentFragment(this: SimpleDocumentImpl): SimpleDocumentFragment {
-    return new SimpleNodeImpl(this, SimpleNodeType.DOCUMENT_FRAGMENT_NODE, '#document-fragment', null, void 0);
+    return new SimpleNodeImpl(this, NodeType.DOCUMENT_FRAGMENT_NODE, '#document-fragment', null, void 0);
   }
 }

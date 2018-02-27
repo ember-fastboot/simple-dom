@@ -1,5 +1,5 @@
 import { moduleWithDocument } from '@simple-dom/dom-test-helper';
-import { Namespace, SimpleDocumentFragment } from '@simple-dom/interface';
+import { InsertPosition, Namespace, SimpleDocumentFragment } from '@simple-dom/interface';
 import Serializer from '@simple-dom/serializer';
 import voidMap from '@simple-dom/void-map';
 
@@ -178,7 +178,7 @@ moduleWithDocument('Element', (helper) => {
   });
 
   QUnit.test('cloneNode(true) recursively clones nodes', (assert) => {
-    const { document, insertAdjacentHTML } = helper;
+    const { document } = helper;
 
     const parent = document.createElement('div');
 
@@ -189,7 +189,7 @@ moduleWithDocument('Element', (helper) => {
     const child31 = document.createComment('');
     child3.appendChild(child31);
 
-    insertAdjacentHTML(child3, 'beforeend', '<p data-attr="herp">derp</p>');
+    child3.insertAdjacentHTML(InsertPosition.beforeend, '<p data-attr="herp">derp</p>');
 
     parent.appendChild(child1);
     parent.appendChild(child2);

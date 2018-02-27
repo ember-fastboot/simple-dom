@@ -1,4 +1,4 @@
-import { SimpleDocumentFragment, SimpleNode, SimpleNodeType } from '@simple-dom/interface';
+import { NodeType, SimpleDocumentFragment, SimpleNode } from '@simple-dom/interface';
 import { SimpleElementImpl } from './node';
 
 export function insertBefore(parentNode: SimpleNode, newChild: SimpleNode, refChild: SimpleNode | null): void {
@@ -30,7 +30,7 @@ function insertBetween(
   previousSibling: SimpleNode | null,
   nextSibling: SimpleNode | null,
 ) {
-  if (newChild.nodeType === SimpleNodeType.DOCUMENT_FRAGMENT_NODE) {
+  if (newChild.nodeType === NodeType.DOCUMENT_FRAGMENT_NODE) {
     insertFragment(newChild, parentNode, previousSibling, nextSibling);
     return;
   }

@@ -1,5 +1,5 @@
 import { moduleWithDocument } from '@simple-dom/dom-test-helper';
-import { Namespace, SimpleNodeType } from '@simple-dom/interface';
+import { Namespace, NodeType } from '@simple-dom/interface';
 
 moduleWithDocument('Document', (helper) => {
 
@@ -7,7 +7,7 @@ moduleWithDocument('Document', (helper) => {
     const { document } = helper;
 
     // https://developer.mozilla.org/en-US/docs/Web/API/Node/nodeType
-    assert.strictEqual(document.nodeType, SimpleNodeType.DOCUMENT_NODE, 'document has node type of 9');
+    assert.strictEqual(document.nodeType, NodeType.DOCUMENT_NODE, 'document has node type of 9');
     // https://developer.mozilla.org/en-US/docs/Web/API/Node/nodeName
     assert.strictEqual(document.nodeName, '#document', 'document node has the name #document');
     // https://developer.mozilla.org/en-US/docs/Web/API/Node/nodeValue
@@ -31,7 +31,7 @@ moduleWithDocument('Document', (helper) => {
       assert.ok(false, 'document has lastChild');
     } else {
       /* istanbul ignore else */
-      if (document.lastChild.nodeType === SimpleNodeType.ELEMENT_NODE) {
+      if (document.lastChild.nodeType === NodeType.ELEMENT_NODE) {
         assert.strictEqual(document.lastChild.namespaceURI, Namespace.HTML, 'documentElement is HTML namespace');
       }
       assert.strictEqual(document.lastChild.ownerDocument, document);

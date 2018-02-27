@@ -1,11 +1,18 @@
-export const enum SimpleNodeType {
-  RAW = -1,
+export const enum NodeType {
+  RAW_NODE = -1,
   ELEMENT_NODE = 1,
   TEXT_NODE = 3,
   COMMENT_NODE = 8,
   DOCUMENT_NODE = 9,
   DOCUMENT_TYPE_NODE = 10,
   DOCUMENT_FRAGMENT_NODE = 11,
+}
+
+export const enum InsertPosition {
+  beforebegin = 'beforebegin',
+  afterbegin = 'afterbegin',
+  beforeend = 'beforeend',
+  afterend = 'afterend',
 }
 
 /**
@@ -41,7 +48,7 @@ export type SimpleNode =
 
 export interface SimpleNodeBase {
   readonly ownerDocument: SimpleDocument | null;
-  readonly nodeType: SimpleNodeType;
+  readonly nodeType: NodeType;
   readonly nodeName: string;
 
   nodeValue: string | null;
@@ -83,12 +90,14 @@ export interface SimpleAttrs {
 
 export interface SimpleElement extends SimpleNodeBase {
   readonly ownerDocument: SimpleDocument;
-  readonly nodeType: SimpleNodeType.ELEMENT_NODE;
+  readonly nodeType: NodeType.ELEMENT_NODE;
   readonly nodeValue: null;
 
   readonly namespaceURI: ElementNamespace;
   readonly tagName: string;
   readonly attributes: SimpleAttrs;
+
+  insertAdjacentHTML(position: InsertPosition, html: string): void;
 
   getAttribute(name: string): string | null;
   getAttributeNS(namespaceURI: AttrNamespace | null, localName: string): string | null;
@@ -102,19 +111,19 @@ export interface SimpleElement extends SimpleNodeBase {
 
 export interface SimpleDocumentType extends SimpleNodeBase {
   readonly ownerDocument: SimpleDocument;
-  readonly nodeType: SimpleNodeType.DOCUMENT_TYPE_NODE;
+  readonly nodeType: NodeType.DOCUMENT_TYPE_NODE;
   readonly nodeValue: null;
 }
 
 export interface SimpleDocumentFragment extends SimpleNodeBase {
   readonly ownerDocument: SimpleDocument;
-  readonly nodeType: SimpleNodeType.DOCUMENT_FRAGMENT_NODE;
+  readonly nodeType: NodeType.DOCUMENT_FRAGMENT_NODE;
   readonly nodeValue: null;
 }
 
 export interface SimpleDocument extends SimpleNodeBase {
   readonly ownerDocument: null;
-  readonly nodeType: SimpleNodeType.DOCUMENT_NODE;
+  readonly nodeType: NodeType.DOCUMENT_NODE;
   readonly nodeValue: null;
 
   readonly doctype: SimpleDocumentType;
@@ -130,27 +139,27 @@ export interface SimpleDocument extends SimpleNodeBase {
 
   createDocumentFragment(): SimpleDocumentFragment;
 
-  // should we just add insertAdjacentHTML?
-  // it isn't parsed so the DOM tree wouldn't reflect it
-  // but would work the same for serializing
+  /**
+   * @deprecated
+   */
   createRawHTMLSection?(html: string): SimpleRawHTMLSection;
 }
 
 export interface SimpleRawHTMLSection extends SimpleNodeBase {
   readonly ownerDocument: SimpleDocument;
-  readonly nodeType: SimpleNodeType.RAW;
+  readonly nodeType: NodeType.RAW_NODE;
   readonly nodeValue: string;
 }
 
 export interface SimpleText extends SimpleNodeBase {
   readonly ownerDocument: SimpleDocument;
-  readonly nodeType: SimpleNodeType.TEXT_NODE;
+  readonly nodeType: NodeType.TEXT_NODE;
   readonly nodeValue: string;
 }
 
 export interface SimpleComment extends SimpleNodeBase {
   readonly ownerDocument: SimpleDocument;
-  readonly nodeType: SimpleNodeType.COMMENT_NODE;
+  readonly nodeType: NodeType.COMMENT_NODE;
   readonly nodeValue: string;
 }
 

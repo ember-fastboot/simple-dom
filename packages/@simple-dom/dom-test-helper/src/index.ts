@@ -19,8 +19,6 @@ export const BROWSER_DOCUMENT_TYPE = 'browser document';
 
 export type DOCUMENT_TYPE = typeof SIMPLE_DOCUMENT_TYPE | typeof BROWSER_DOCUMENT_TYPE;
 
-export type InsertPosition = 'beforebegin' | 'afterbegin' | 'beforeend' | 'afterend';
-
 export interface ModuleWithDocumentHelper {
   type: DOCUMENT_TYPE;
   document: SimpleDocument;
@@ -28,7 +26,6 @@ export interface ModuleWithDocumentHelper {
   text(s: string): SimpleText;
   comment(s: string): SimpleComment;
   fragment(...children: SimpleNode[]): SimpleDocumentFragment;
-  insertAdjacentHTML(element: SimpleElement, position: InsertPosition, text: string): SimpleElement;
 }
 
 export type ModuleWithDocument = (name: string, callback: ModuleWithDocumentCallback) => void;
@@ -44,7 +41,6 @@ export const moduleWithDocument = (() => {
 
     constructor() {
       // allow helpers to be destructured
-      this.insertAdjacentHTML = this.insertAdjacentHTML.bind(this);
       this.text = this.text.bind(this);
       this.comment = this.comment.bind(this);
       this.fragment = this.fragment.bind(this);
@@ -52,8 +48,6 @@ export const moduleWithDocument = (() => {
     }
 
     public abstract setup(hooks: NestedHooks): void;
-
-    public abstract insertAdjacentHTML(element: SimpleElement, position: InsertPosition, text: string): SimpleElement;
 
     public text(s: string): SimpleText {
       return this.document.createTextNode(s);
@@ -102,26 +96,6 @@ export const moduleWithDocument = (() => {
         this.document = undefined as any;
       });
     }
-
-    public insertAdjacentHTML(element: SimpleElement, position: InsertPosition, text: string): SimpleElement {
-      const raw = this.document.createRawHTMLSection!(text);
-      switch (position) {
-        case 'beforebegin':
-          element.parentNode!.insertBefore(raw, element);
-          break;
-        case 'afterbegin':
-          element.insertBefore(raw, element.firstChild);
-          break;
-        case 'beforeend':
-          element.insertBefore(raw, null);
-          break;
-        case 'afterend':
-          element.parentNode!.insertBefore(raw, element.nextSibling);
-          break;
-        default: throw Error('not implemented');
-      }
-      return element;
-    }
   }
 
   class RealHelper extends Helper {
@@ -135,11 +109,6 @@ export const moduleWithDocument = (() => {
       hooks.afterEach(() => {
         this.document = undefined as any;
       });
-    }
-
-    public insertAdjacentHTML(element: SimpleElement, position: InsertPosition, text: string): SimpleElement {
-      (element as any).insertAdjacentHTML(position, text);
-      return element;
     }
   }
 
