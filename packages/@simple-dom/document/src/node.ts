@@ -32,12 +32,11 @@ import {
   parseQualifiedName,
 } from './qualified-name';
 
-export type SimpleElementImpl = SimpleNodeImpl<NodeType.ELEMENT_NODE, SimpleDocument, null, ElementNamespace>;
-export type SimpleDocumentImpl = SimpleNodeImpl<NodeType.DOCUMENT_NODE, null, null, Namespace.HTML>;
+export type SimpleElementImpl = SimpleNodeImpl<NodeType.ELEMENT_NODE, null, ElementNamespace>;
+export type SimpleDocumentImpl = SimpleNodeImpl<NodeType.DOCUMENT_NODE, null, Namespace.HTML>;
 
 export default class SimpleNodeImpl<
   T extends NodeType,
-  O extends SimpleDocument | null,
   V extends string | null,
   N extends ElementNamespace | undefined
 > {
@@ -55,7 +54,7 @@ export default class SimpleNodeImpl<
   public _childNodes: ChildNodes | undefined = undefined;
 
   constructor(
-    public readonly ownerDocument: O,
+    public readonly ownerDocument: SimpleDocument,
     public readonly nodeType: T,
     public readonly nodeName: string,
     public nodeValue: V,

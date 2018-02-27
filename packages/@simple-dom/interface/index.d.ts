@@ -47,7 +47,7 @@ export type SimpleNode =
   SimpleDocumentFragment;
 
 export interface SimpleNodeBase {
-  readonly ownerDocument: SimpleDocument | null;
+  readonly ownerDocument: SimpleDocument;
   readonly nodeType: NodeType;
   readonly nodeName: string;
 
@@ -89,7 +89,6 @@ export interface SimpleAttrs {
 }
 
 export interface SimpleElement extends SimpleNodeBase {
-  readonly ownerDocument: SimpleDocument;
   readonly nodeType: NodeType.ELEMENT_NODE;
   readonly nodeValue: null;
 
@@ -110,19 +109,16 @@ export interface SimpleElement extends SimpleNodeBase {
 }
 
 export interface SimpleDocumentType extends SimpleNodeBase {
-  readonly ownerDocument: SimpleDocument;
   readonly nodeType: NodeType.DOCUMENT_TYPE_NODE;
   readonly nodeValue: null;
 }
 
 export interface SimpleDocumentFragment extends SimpleNodeBase {
-  readonly ownerDocument: SimpleDocument;
   readonly nodeType: NodeType.DOCUMENT_FRAGMENT_NODE;
   readonly nodeValue: null;
 }
 
 export interface SimpleDocument extends SimpleNodeBase {
-  readonly ownerDocument: null;
   readonly nodeType: NodeType.DOCUMENT_NODE;
   readonly nodeValue: null;
 
@@ -146,19 +142,16 @@ export interface SimpleDocument extends SimpleNodeBase {
 }
 
 export interface SimpleRawHTMLSection extends SimpleNodeBase {
-  readonly ownerDocument: SimpleDocument;
   readonly nodeType: NodeType.RAW_NODE;
   readonly nodeValue: string;
 }
 
 export interface SimpleText extends SimpleNodeBase {
-  readonly ownerDocument: SimpleDocument;
   readonly nodeType: NodeType.TEXT_NODE;
   readonly nodeValue: string;
 }
 
 export interface SimpleComment extends SimpleNodeBase {
-  readonly ownerDocument: SimpleDocument;
   readonly nodeType: NodeType.COMMENT_NODE;
   readonly nodeValue: string;
 }
@@ -196,6 +189,6 @@ export interface SerializableAttr {
 }
 
 export interface SerializableElement extends SerializableNode {
-  readonly namespaceURI: string;
+  readonly namespaceURI: string | null;
   readonly attributes: SerializableAttrs;
 }

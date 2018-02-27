@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "noEmit": true,
+    "moduleResolution": "node",
+    "module": "es2015",
+    "target": "es2017",
+    "declaration": true
+  },
+  "files": [
+    "index.ts"
+  ]
+}
