@@ -19,7 +19,7 @@
     "broccoli-persistent-filter": "^1.4.3",
     "broccoli-rollup": "^2.0.0",
     "broccoli-tee": "^1.0.2",
-    "broccoli-typescript-compiler": "^2.2.0",
+    "broccoli-typescript-compiler": "^4.0.1",
     "do-you-even-bench": "^1.0.5",
     "ember-cli": "^3.0.0",
     "lerna": "^2.5.1",
