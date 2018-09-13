@@ -16,7 +16,7 @@
     "broccoli-debug": "^0.6.4",
     "broccoli-funnel": "^2.0.1",
     "broccoli-merge-trees": "^3.0.0",
-    "broccoli-persistent-filter": "^1.4.3",
+    "broccoli-persistent-filter": "^2.0.0",
     "broccoli-rollup": "^2.0.0",
     "broccoli-tee": "^1.0.2",
     "broccoli-typescript-compiler": "^2.2.0",
