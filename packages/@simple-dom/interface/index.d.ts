@@ -148,12 +148,12 @@ export interface SimpleRawHTMLSection extends SimpleNodeBase {
 
 export interface SimpleText extends SimpleNodeBase {
   readonly nodeType: NodeType.TEXT_NODE;
-  readonly nodeValue: string;
+  nodeValue: string;
 }
 
 export interface SimpleComment extends SimpleNodeBase {
   readonly nodeType: NodeType.COMMENT_NODE;
-  readonly nodeValue: string;
+  nodeValue: string;
 }
 
 /**
