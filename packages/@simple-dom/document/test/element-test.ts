@@ -22,6 +22,17 @@ moduleWithDocument('Element', (helper) => {
     assert.strictEqual(body.firstChild!.nodeName, 'DIV', 'fragment\'s child is added as child of document');
   });
 
+  QUnit.test('create HTML-namespaced div element', (assert) => {
+    const { document } = helper;
+
+    const svg = document.createElementNS(Namespace.HTML, 'div');
+
+    assert.strictEqual(svg.namespaceURI, Namespace.HTML, 'has HTML namespace');
+
+    assert.strictEqual(svg.nodeName, 'DIV', 'nodeName is uppercased');
+    assert.strictEqual(svg.tagName, 'DIV', 'tagName is uppercased');
+  });
+
   QUnit.test('create svg element', (assert) => {
     const { document } = helper;
 
