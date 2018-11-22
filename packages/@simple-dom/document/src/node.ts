@@ -175,9 +175,12 @@ export default class SimpleNodeImpl<
   }
 
   public createElementNS(this: SimpleDocumentImpl, namespace: ElementNamespace, qualifiedName: string): SimpleElement {
+    // Node name is case-preserving in XML contexts, but returns canonical uppercase form in HTML contexts
+    // https://www.w3.org/TR/2004/REC-DOM-Level-3-Core-20040407/core.html#ID-104682815
+    const nodeName = namespace === Namespace.HTML ? qualifiedName.toUpperCase() : qualifiedName;
     // we don't care to parse the qualified name because we only support HTML documents
     // which don't support prefixed elements
-    return new SimpleNodeImpl(this, NodeType.ELEMENT_NODE, qualifiedName, null, namespace);
+    return new SimpleNodeImpl(this, NodeType.ELEMENT_NODE, nodeName, null, namespace);
   }
 
   public createTextNode(this: SimpleDocumentImpl, text: string): SimpleText {
