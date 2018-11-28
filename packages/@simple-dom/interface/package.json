@@ -1,6 +1,6 @@
 {
   "name": "@simple-dom/interface",
-  "version": "1.4.0-alpha.82914663",
+  "version": "1.4.0",
   "description": "Simple DOM typescript interfaces",
   "keywords": [
     "dom",

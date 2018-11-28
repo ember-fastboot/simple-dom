@@ -1,6 +1,6 @@
 {
   "name": "@simple-dom/dom-test-helper",
-  "version": "1.4.0-alpha.82914663",
+  "version": "1.4.0",
   "private": true,
   "description": "Test helper for running test with a real document and simple-dom document",
   "license": "MIT",
@@ -15,7 +15,7 @@
   "types": "dist/types/index.d.ts",
   "repository": "https://github.com/ember-fastboot/simple-dom/tree/master/packages/@simple-dom/dom-test-helper",
   "dependencies": {
-    "@simple-dom/interface": "1.4.0-alpha.82914663"
+    "@simple-dom/interface": "^1.4.0"
   },
   "peerDependencies": {
     "@simple-dom/document": "*"

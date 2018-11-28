@@ -1,6 +1,6 @@
 {
   "name": "simple-dom",
-  "version": "1.4.0-alpha.82914663",
+  "version": "1.4.0",
   "keywords": [
     "dom",
     "html",
@@ -21,11 +21,11 @@
     "prepare": "ember build --environment=production"
   },
   "dependencies": {
-    "@simple-dom/document": "^1.4.0-alpha.82914663",
-    "@simple-dom/interface": "^1.4.0-alpha.82914663",
-    "@simple-dom/parser": "^1.4.0-alpha.82914663",
-    "@simple-dom/serializer": "^1.4.0-alpha.82914663",
-    "@simple-dom/void-map": "^1.4.0-alpha.82914663"
+    "@simple-dom/document": "^1.4.0",
+    "@simple-dom/interface": "^1.4.0",
+    "@simple-dom/parser": "^1.4.0",
+    "@simple-dom/serializer": "^1.4.0",
+    "@simple-dom/void-map": "^1.4.0"
   },
   "devDependencies": {
     "ember-cli": "^3.0.0"

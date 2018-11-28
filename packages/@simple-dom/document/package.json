@@ -1,6 +1,6 @@
 {
   "name": "@simple-dom/document",
-  "version": "1.4.0-alpha.82914663",
+  "version": "1.4.0",
   "description": "A subset of the DOM API for serializing",
   "keywords": [
     "SSR",
@@ -27,12 +27,12 @@
     "test:node": "nyc --check-coverage -- qunit dist/test/commonjs/index.js"
   },
   "dependencies": {
-    "@simple-dom/interface": "^1.4.0-alpha.82914663"
+    "@simple-dom/interface": "^1.4.0"
   },
   "devDependencies": {
-    "@simple-dom/dom-test-helper": "^1.4.0-alpha.82914663",
-    "@simple-dom/serializer": "^1.4.0-alpha.82914663",
-    "@simple-dom/void-map": "^1.4.0-alpha.82914663",
+    "@simple-dom/dom-test-helper": "^1.4.0",
+    "@simple-dom/serializer": "^1.4.0",
+    "@simple-dom/void-map": "^1.4.0",
     "ember-cli": "^3.0.0",
     "nyc": "^11.3.0",
     "qunit": "^2.4.1"
