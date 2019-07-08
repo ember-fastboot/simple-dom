@@ -21,6 +21,21 @@ moduleWithDocument('Serializer', (helper, hooks) => {
     assert.equal(actual, '<div></div>');
   });
 
+  QUnit.test('serializes single element correctly preserves whitespace if trimWhitespace is not set', (assert) => {
+    const { element, text } = helper;
+    const actual = serializer.serialize(element('div', undefined, text('         ')));
+    assert.equal(actual, '<div>         </div>');
+  });
+
+  QUnit.test('serializes single element correctly and trims rightspace if trimWhitespace is true', (assert) => {
+    serializer = new Serializer(voidMap, {
+      trimWhitespace: true,
+    });
+    const { element, text } = helper;
+    const actual = serializer.serialize(element('div', undefined, text('         ')));
+    assert.equal(actual, '<div></div>');
+  });
+
   QUnit.test('serializes element with attribute number value correctly', (assert) => {
     const { element } = helper;
     const actual = serializer.serialize(element('div', {
@@ -47,6 +62,23 @@ moduleWithDocument('Serializer', (helper, hooks) => {
       ),
     ));
     assert.equal(actual, '<div id="foo"><b>Foo &amp; Bar</b>!<img src="foo"></div>');
+  });
+
+  QUnit.test('serializes complex tree correctly, removing rightspace if trimWhitespace is true', (assert) => {
+    serializer = new Serializer(voidMap, {
+      trimWhitespace: true,
+    });
+    const { element, fragment, text } = helper;
+    const actual = serializer.serialize(fragment(
+      element('div', { id: 'foo' },
+        element('b', {},
+          text('  Foo & Bar   '),
+        ),
+        text('  !   '),
+        element('img', { src: 'foo' }),
+      ),
+    ));
+    assert.equal(actual, '<div id="foo"><b>  Foo &amp; Bar</b>  !<img src="foo"></div>');
   });
 
   QUnit.test('does not serialize siblings of an element', (assert) => {
@@ -108,6 +140,25 @@ moduleWithDocument('Serializer', (helper, hooks) => {
     const svg = document.createElementNS(Namespace.SVG, 'linearGradient');
 
     assert.equal(serializer.serialize(svg), '<linearGradient></linearGradient>');
+  });
+
+  QUnit.test('it serializes comments if stripComments is not set', (assert) => {
+    const { comment } = helper;
+    const commentVal = 'This is a comment';
+    const actual = serializer.comment(comment(commentVal));
+    const expected = `<!--${commentVal}-->`;
+
+    assert.equal(actual, expected);
+  });
+
+  QUnit.test('it returns an empty string for comments if stripComments is true', (assert) => {
+    serializer = new Serializer(voidMap, {
+      stripComments: true,
+    });
+    const { comment } = helper;
+    const actual = serializer.comment(comment('I will be gone'));
+
+    assert.equal(actual, '');
   });
 
 });

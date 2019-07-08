@@ -15,18 +15,35 @@ const ESC: {
   '>': '&gt;',
 };
 
+const VALID_UPPER_TAGS: {
+  [upper: string]: string;
+} = {
+  DIV: 'div',
+  SPAN: 'span',
+};
+
 function matcher(char: string) {
   return ESC[char];
 }
 
 function toLowerCase(name: string) {
-  return name === 'DIV' ? 'div' : name === 'SPAN' ? 'span' : name.toLowerCase();
+  return VALID_UPPER_TAGS[name] || name.toLowerCase();
+}
+
+export interface HTMLSerializerOpts {
+  trimWhitespace?: boolean;
+  stripComments?: boolean;
 }
 
 export default class HTMLSerializer {
-  constructor(private voidMap: {
-    [tagName: string]: boolean,
-  }) {
+  private opts: HTMLSerializerOpts;
+
+  constructor(
+    private voidMap: {
+      [tagName: string]: boolean,
+    },
+    opts?: HTMLSerializerOpts) {
+      this.opts = opts || {};
   }
 
   public openTag(element: SerializableElement) {
@@ -83,14 +100,24 @@ export default class HTMLSerializer {
   }
 
   public text(text: SerializableNode) {
-    return this.escapeText(text.nodeValue!);
+    const escapedText = this.escapeText(text.nodeValue!);
+    if (this.opts.trimWhitespace) {
+      return escapedText.trimRight();
+    }
+    return escapedText;
   }
 
   public rawHTMLSection(text: SerializableNode): string {
+    if (this.opts.trimWhitespace) {
+      return text.nodeValue!.trimRight();
+    }
     return text.nodeValue!;
   }
 
   public comment(comment: SerializableNode) {
+    if (this.opts.stripComments) {
+      return '';
+    }
     return '<!--' + comment.nodeValue + '-->';
   }
 
