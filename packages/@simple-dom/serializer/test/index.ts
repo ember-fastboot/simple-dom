@@ -1,6 +1,6 @@
 import { moduleWithDocument } from '@simple-dom/dom-test-helper';
 import { InsertPosition, Namespace } from '@simple-dom/interface';
-import Serializer from '@simple-dom/serializer';
+import Serializer, { WHITESPACE_TRIM_VALS } from '@simple-dom/serializer';
 import voidMap from '@simple-dom/void-map';
 
 moduleWithDocument('Serializer', (helper, hooks) => {
@@ -27,13 +27,31 @@ moduleWithDocument('Serializer', (helper, hooks) => {
     assert.equal(actual, '<div>         </div>');
   });
 
-  QUnit.test('serializes single element correctly and trims rightspace if trimWhitespace is true', (assert) => {
+  QUnit.test('serializes single element correctly and trims left whitespace if trimWhitespace is LEFT', (assert) => {
     serializer = new Serializer(voidMap, {
-      trimWhitespace: true,
+      trimWhitespace: WHITESPACE_TRIM_VALS.LEFT,
     });
     const { element, text } = helper;
-    const actual = serializer.serialize(element('div', undefined, text('         ')));
-    assert.equal(actual, '<div></div>');
+    const actual = serializer.serialize(element('div', undefined, text('    a     ')));
+    assert.equal(actual, '<div>a     </div>');
+  });
+
+  QUnit.test('serializes single element correctly and trims right whitespace if trimWhitespace is RIGHT', (assert) => {
+    serializer = new Serializer(voidMap, {
+      trimWhitespace: WHITESPACE_TRIM_VALS.RIGHT,
+    });
+    const { element, text } = helper;
+    const actual = serializer.serialize(element('div', undefined, text('    a     ')));
+    assert.equal(actual, '<div>    a</div>');
+  });
+
+  QUnit.test('serializes single element correctly and trims all whitespace if trimWhitespace is ALL', (assert) => {
+    serializer = new Serializer(voidMap, {
+      trimWhitespace: WHITESPACE_TRIM_VALS.ALL,
+    });
+    const { element, text } = helper;
+    const actual = serializer.serialize(element('div', undefined, text('    a     ')));
+    assert.equal(actual, '<div>a</div>');
   });
 
   QUnit.test('serializes element with attribute number value correctly', (assert) => {
@@ -64,9 +82,26 @@ moduleWithDocument('Serializer', (helper, hooks) => {
     assert.equal(actual, '<div id="foo"><b>Foo &amp; Bar</b>!<img src="foo"></div>');
   });
 
-  QUnit.test('serializes complex tree correctly, removing rightspace if trimWhitespace is true', (assert) => {
+  QUnit.test('serializes complex tree correctly, removing left whitespace if trimWhitespace is LEFT', (assert) => {
     serializer = new Serializer(voidMap, {
-      trimWhitespace: true,
+      trimWhitespace: WHITESPACE_TRIM_VALS.LEFT,
+    });
+    const { element, fragment, text } = helper;
+    const actual = serializer.serialize(fragment(
+      element('div', { id: 'foo' },
+        element('b', {},
+          text('  Foo & Bar   '),
+        ),
+        text('  !   '),
+        element('img', { src: 'foo' }),
+      ),
+    ));
+    assert.equal(actual, '<div id="foo"><b>Foo &amp; Bar   </b>!   <img src="foo"></div>');
+  });
+
+  QUnit.test('serializes complex tree correctly, removing right whitespace if trimWhitespace is RIGHT', (assert) => {
+    serializer = new Serializer(voidMap, {
+      trimWhitespace: WHITESPACE_TRIM_VALS.RIGHT,
     });
     const { element, fragment, text } = helper;
     const actual = serializer.serialize(fragment(
@@ -79,6 +114,23 @@ moduleWithDocument('Serializer', (helper, hooks) => {
       ),
     ));
     assert.equal(actual, '<div id="foo"><b>  Foo &amp; Bar</b>  !<img src="foo"></div>');
+  });
+
+  QUnit.test('serializes complex tree correctly, removing all whitespace if trimWhitespace is ALL', (assert) => {
+    serializer = new Serializer(voidMap, {
+      trimWhitespace: WHITESPACE_TRIM_VALS.ALL,
+    });
+    const { element, fragment, text } = helper;
+    const actual = serializer.serialize(fragment(
+      element('div', { id: 'foo' },
+        element('b', {},
+          text('  Foo & Bar   '),
+        ),
+        text('  !   '),
+        element('img', { src: 'foo' }),
+      ),
+    ));
+    assert.equal(actual, '<div id="foo"><b>Foo &amp; Bar</b>!<img src="foo"></div>');
   });
 
   QUnit.test('does not serialize siblings of an element', (assert) => {

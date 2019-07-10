@@ -22,6 +22,12 @@ const VALID_UPPER_TAGS: {
   SPAN: 'span',
 };
 
+export enum WHITESPACE_TRIM_VALS {
+  LEFT = 'trimLeft',
+  RIGHT = 'trimRight',
+  ALL = 'trim',
+}
+
 function matcher(char: string) {
   return ESC[char];
 }
@@ -31,7 +37,7 @@ function toLowerCase(name: string) {
 }
 
 export interface HTMLSerializerOpts {
-  trimWhitespace?: boolean;
+  trimWhitespace?: WHITESPACE_TRIM_VALS;
   stripComments?: boolean;
 }
 
@@ -102,15 +108,12 @@ export default class HTMLSerializer {
   public text(text: SerializableNode) {
     const escapedText = this.escapeText(text.nodeValue!);
     if (this.opts.trimWhitespace) {
-      return escapedText.trimRight();
+      return escapedText[this.opts.trimWhitespace]();
     }
     return escapedText;
   }
 
   public rawHTMLSection(text: SerializableNode): string {
-    if (this.opts.trimWhitespace) {
-      return text.nodeValue!.trimRight();
-    }
     return text.nodeValue!;
   }
 
