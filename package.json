@@ -11,7 +11,7 @@
     "test:types": "tsc -p check-types/tsconfig.json"
   },
   "devDependencies": {
-    "@types/qunit": "^2.0.31",
+    "@types/qunit": "^2.9.1",
     "broccoli-concat": "^3.2.2",
     "broccoli-debug": "^0.6.4",
     "broccoli-funnel": "^2.0.1",
