@@ -1,7 +1,6 @@
 {
   "test_page": "test/index.html",
   "parallel": 5,
-  "before_tests": "yarn run build",
   "launch_in_ci":  ["Chrome"],
   "launch_in_dev":  ["Chrome", "Firefox", "Safari"],
   "browser_args": {
