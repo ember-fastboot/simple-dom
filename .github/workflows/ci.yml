@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+    tags:
+      - 'v*'
+  pull_request: {}
+
+jobs:
+  lint:
+    name: Linting
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 12.x
+          cache: yarn
+      - name: install dependencies
+        run: yarn install --frozen-lockfile --non-interactive
+      - name: linting
+        run: yarn lint
+  test:
+    name: Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 12.x
+          cache: yarn
+      - name: install dependencies
+        run: yarn install --frozen-lockfile --non-interactive
+      - name: linting
+        run: yarn test
