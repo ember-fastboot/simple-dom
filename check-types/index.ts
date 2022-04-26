@@ -1,4 +1,4 @@
-import { SimpleNode, SimpleDocument, SimpleElement, SimpleText, SimpleComment, SimpleDocumentFragment, SerializableNode, SerializableElement } from '@simple-dom/interface';
+import { SimpleDocument, SimpleElement, SimpleText, SimpleComment, SimpleDocumentFragment, SerializableNode, SerializableElement } from '@simple-dom/interface';
 
 export class CheckSimple {
   createHTMLDocument(): SimpleDocument {
@@ -19,6 +19,10 @@ export class CheckSimple {
 
   createDocumentFragment(text: string): SimpleDocumentFragment {
     return document.createDocumentFragment() as SimpleDocumentFragment;
+  }
+
+  getOffsetParent(): SimpleElement | null {
+    return document.createElement('div').offsetParent as SimpleElement | null;
   }
 }
 

@@ -47,7 +47,7 @@ export type SimpleNode =
   SimpleDocumentFragment;
 
 export interface SimpleNodeBase {
-  readonly ownerDocument: SimpleDocument;
+  readonly ownerDocument: SimpleDocument | null;
   readonly nodeType: NodeType;
   readonly nodeName: string;
 

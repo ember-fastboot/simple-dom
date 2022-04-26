@@ -15,7 +15,7 @@
     "prepare": "ember build --environment=production"
   },
   "devDependencies": {
-    "ember-cli": "^3.0.0"
+    "ember-cli": "^4.3.0"
   },
   "publishConfig": {
     "access": "public"
