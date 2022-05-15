@@ -19,10 +19,6 @@ function matcher(char: string) {
   return ESC[char];
 }
 
-function toLowerCase(name: string) {
-  return name === 'DIV' ? 'div' : name === 'SPAN' ? 'span' : name.toLowerCase();
-}
-
 export default class HTMLSerializer {
   constructor(private voidMap: {
     [tagName: string]: boolean,
@@ -38,7 +34,7 @@ export default class HTMLSerializer {
   }
 
   public tagName(element: SerializableElement) {
-    return element.namespaceURI === Namespace.HTML ? toLowerCase(element.nodeName) : element.nodeName;
+    return element.namespaceURI === Namespace.HTML ? element.nodeName.toLowerCase() : element.nodeName;
   }
 
   public isVoid(element: SerializableElement) {
